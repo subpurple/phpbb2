@@ -707,7 +707,7 @@ if( isset($HTTP_GET_VARS['perform']) || isset($HTTP_POST_VARS['perform']) )
 			{
 				if(preg_match("/,/", $additional_tables))
 				{
-					$additional_tables = split(",", $additional_tables);
+					$additional_tables = explode(",", $additional_tables);
 
 					for($i = 0; $i < count($additional_tables); $i++)
 					{
