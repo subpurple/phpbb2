@@ -828,6 +828,7 @@ if( isset($HTTP_GET_VARS['perform']) || isset($HTTP_POST_VARS['perform']) )
 
 					case 'mysql':
 					case 'mysql4':
+					case 'mysqli':
 						$table_def_function = "get_table_def_mysql";
 						$table_content_function = "get_table_content_mysql";
 						break;
