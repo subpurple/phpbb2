@@ -327,54 +327,12 @@ include($phpbb_root_path.'includes/sessions.'.$phpEx);
 
 // Define schema info
 $available_dbms = array(
-	'mysql'=> array(
-		'LABEL'			=> 'MySQL 3.x',
-		'SCHEMA'		=> 'mysql', 
-		'DELIM'			=> ';',
-		'DELIM_BASIC'	=> ';',
-		'COMMENTS'		=> 'remove_remarks'
-	), 
-	'mysql4' => array(
-		'LABEL'			=> 'MySQL 4.x/5.x',
-		'SCHEMA'		=> 'mysql', 
-		'DELIM'			=> ';', 
-		'DELIM_BASIC'	=> ';',
-		'COMMENTS'		=> 'remove_remarks'
-	), 
 	'mysqli' => array(
 		'LABEL'			=> 'MySQLi',
 		'SCHEMA'		=> 'mysql',
 		'DELIM'			=> ';',
 		'DELIM_BASIC'	=> ';',
 		'COMMENTS'		=> 'remove_remarks'
-	), 
-	'postgres' => array(
-		'LABEL'			=> 'PostgreSQL 7.x',
-		'SCHEMA'		=> 'postgres', 
-		'DELIM'			=> ';', 
-		'DELIM_BASIC'	=> ';',
-		'COMMENTS'		=> 'remove_comments'
-	), 
-	'mssql' => array(
-		'LABEL'			=> 'MS SQL Server 7/2000',
-		'SCHEMA'		=> 'mssql', 
-		'DELIM'			=> 'GO', 
-		'DELIM_BASIC'	=> ';',
-		'COMMENTS'		=> 'remove_comments'
-	),
-	'msaccess' => array(
-		'LABEL'			=> 'MS Access [ ODBC ]',
-		'SCHEMA'		=> '', 
-		'DELIM'			=> '', 
-		'DELIM_BASIC'	=> ';',
-		'COMMENTS'		=> ''
-	),
-	'mssql-odbc' =>	array(
-		'LABEL'			=> 'MS SQL Server [ ODBC ]',
-		'SCHEMA'		=> 'mssql', 
-		'DELIM'			=> 'GO',
-		'DELIM_BASIC'	=> ';',
-		'COMMENTS'		=> 'remove_comments'
 	)
 );
 
@@ -794,7 +752,6 @@ else
 				break;
 
 			case 'mysql':
-			case 'mysql4':
 			case 'mysqli':
 				$check_exts = 'mysqli';
 				$check_other = 'mysqli';
