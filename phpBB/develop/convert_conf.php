@@ -52,7 +52,7 @@ if( !$result = $db->sql_query($sql) )
 }
 
 $error = 0;
-while (list($name, $value) = each($board_config))
+foreach ($board_config as $name => $value)
 {
 	if(is_int($name))
 	{

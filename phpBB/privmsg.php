@@ -808,16 +808,16 @@ else if ( ( $delete && $mark_list ) || $delete_all )
 
 					if (sizeof($update_users))
 					{
-						while (list($type, $users) = each($update_users))
+						foreach ($update_users as $type => $users)
 						{
-							while (list($user_id, $dec) = each($users))
+							foreach ($users as $user_id => $dec)
 							{
 								$update_list[$type][$dec][] = $user_id;
 							}
 						}
 						unset($update_users);
 
-						while (list($type, $dec_ary) = each($update_list))
+						foreach ($update_list as $type => $dec_ary)
 						{
 							switch ($type)
 							{
@@ -830,7 +830,7 @@ else if ( ( $delete && $mark_list ) || $delete_all )
 									break;
 							}
 
-							while (list($dec, $user_ary) = each($dec_ary))
+							foreach ($dec_ary as $dec => $user_ary)
 							{
 								$user_ids = implode(', ', $user_ary);
 
@@ -1003,16 +1003,16 @@ else if ( $save && $mark_list && $folder != 'savebox' && $folder != 'outbox' )
 
 				if (sizeof($update_users))
 				{
-					while (list($type, $users) = each($update_users))
+					foreach ($update_users as $type => $users)
 					{
-						while (list($user_id, $dec) = each($users))
+						foreach ($users as $user_id => $dec)
 						{
 							$update_list[$type][$dec][] = $user_id;
 						}
 					}
 					unset($update_users);
 
-					while (list($type, $dec_ary) = each($update_list))
+					foreach ($update_list as $type => $dec_ary)
 					{
 						switch ($type)
 						{
@@ -1025,7 +1025,7 @@ else if ( $save && $mark_list && $folder != 'savebox' && $folder != 'outbox' )
 								break;
 						}
 
-						while (list($dec, $user_ary) = each($dec_ary))
+						foreach ($dec_ary as $dec => $user_ary)
 						{
 							$user_ids = implode(', ', $user_ary);
 

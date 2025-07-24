@@ -724,7 +724,7 @@ function bbcode_array_pop(&$stack)
    $arrSize = count($stack);
    $x = 1;
 
-   while(list($key, $val) = each($stack))
+   foreach ($stack as $key => $val)
    {
       if($x < count($stack))
       {

@@ -93,7 +93,7 @@ function split_words($entry, $mode = 'post')
 {
 	// If you experience problems with the new method, uncomment this block.
 /*	
-	$rex = ( $mode == 'post' ) ? "/\b([\w±µ-ÿ][\w±µ-ÿ']*[\w±µ-ÿ]+|[\w±µ-ÿ]+?)\b/" : '/(\*?[a-z0-9±µ-ÿ]+\*?)|\b([a-z0-9±µ-ÿ]+)\b/';
+	$rex = ( $mode == 'post' ) ? "/\b([\wï¿½ï¿½-ï¿½][\wï¿½ï¿½-ï¿½']*[\wï¿½ï¿½-ï¿½]+|[\wï¿½ï¿½-ï¿½]+?)\b/" : '/(\*?[a-z0-9ï¿½ï¿½-ï¿½]+\*?)|\b([a-z0-9ï¿½ï¿½-ï¿½]+)\b/';
 	preg_match_all($rex, $entry, $split_entries);
 
 	return $split_entries[1];
@@ -117,7 +117,7 @@ function add_search_words($mode, $post_id, $post_text, $post_title = '')
 
 	$word = array();
 	$word_insert_sql = array();
-	while ( list($word_in, $search_matches) = @each($search_raw_words) )
+	foreach ($search_raw_words as $word_in => $search_matches)
 	{
 		$word_insert_sql[$word_in] = '';
 		if ( !empty($search_matches) )
@@ -238,7 +238,7 @@ function add_search_words($mode, $post_id, $post_text, $post_title = '')
 		}
 	}
 
-	while( list($word_in, $match_sql) = @each($word_insert_sql) )
+	foreach ($word_insert_sql as $word_in => $match_sql)
 	{
 		$title_match = ( $word_in == 'title' ) ? 1 : 0;
 
