@@ -505,7 +505,7 @@ function setup_style($style)
 
 		$img_lang = ( file_exists(@phpbb_realpath($phpbb_root_path . $current_template_path . '/images/lang_' . $board_config['default_lang'])) ) ? $board_config['default_lang'] : 'english';
 
-		while( list($key, $value) = @each($images) )
+		foreach ($images as $key => $value)
 		{
 			if ( !is_array($value) )
 			{
@@ -540,7 +540,7 @@ function create_date($format, $gmepoch, $tz)
 	if ( empty($translate) && $board_config['default_lang'] != 'english' )
 	{
 		@reset($lang['datetime']);
-		while ( list($match, $replace) = @each($lang['datetime']) )
+		foreach ($lang['datetime'] as $match => $replace)
 		{
 			$translate[$match] = $replace;
 		}

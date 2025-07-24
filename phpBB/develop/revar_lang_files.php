@@ -45,7 +45,7 @@ while ( $file = readdir($dir) )
 			include($dirname . "/" . $file . "/" . $lang_file . '.php');
 
 			$store = "";
-			while( list($key, $value) = each($$lang_var) )
+			foreach ($$lang_var as $key => $value)
 			{
 				if ( !is_array($value) )
 				{
@@ -58,7 +58,7 @@ while ( $file = readdir($dir) )
 					$store .= ( ( $store != "" ) ? ", \n\t" : "" ) . "$key => array(\n\t\t";
 
 					$store2 = "";
-					while( list($key2, $value2) = each($value) )
+					foreach ($value as $key2 => $value2)
 					{
 						$key2 = ( is_string($key) ) ? "'$key2'" : $key2;
 						$store2 .= ( ( $store2 != "" ) ? ", \n\t\t" : "" ) . "$key2 => '" . addslashes($value2) . "'";
