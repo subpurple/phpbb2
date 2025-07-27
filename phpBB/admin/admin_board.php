@@ -27,9 +27,9 @@ if( !empty($setmodules) )
 // Let's set the root dir for phpBB
 //
 $phpbb_root_path = "./../";
-require($phpbb_root_path . 'extension.inc');
-require('./pagestart.' . $phpEx);
-include($phpbb_root_path . 'includes/functions_selects.'.$phpEx);
+
+require('./pagestart.php');
+include($phpbb_root_path . 'includes/functions_selects.php');
 
 //
 // Pull all config data
@@ -86,7 +86,7 @@ else
 
 	if( isset($HTTP_POST_VARS['submit']) )
 	{
-		$message = $lang['Config_updated'] . "<br /><br />" . sprintf($lang['Click_return_config'], "<a href=\"" . append_sid("admin_board.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+		$message = $lang['Config_updated'] . "<br /><br />" . sprintf($lang['Click_return_config'], "<a href=\"" . append_sid("admin_board.php") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.php?pane=right") . "\">", "</a>");
 
 		message_die(GENERAL_MESSAGE, $message);
 	}
@@ -165,7 +165,7 @@ $template->set_filenames(array(
 $new['site_desc'] = str_replace('"', '&quot;', $new['site_desc']);
 $new['sitename'] = str_replace('"', '&quot;', strip_tags($new['sitename']));
 $template->assign_vars(array(
-	"S_CONFIG_ACTION" => append_sid("admin_board.$phpEx"),
+	"S_CONFIG_ACTION" => append_sid("admin_board.php"),
 
 	"L_YES" => $lang['Yes'],
 	"L_NO" => $lang['No'],
@@ -364,6 +364,6 @@ $template->assign_vars(array(
 
 $template->pparse("body");
 
-include('./page_footer_admin.'.$phpEx);
+include('./page_footer_admin.php');
 
 ?>

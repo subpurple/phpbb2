@@ -18,10 +18,9 @@ die("Please read the first lines of this script for instructions on how to enabl
 
 chdir("../");
 
-include('extension.inc');
-include('config.'.$phpEx);
-include('includes/constants.'.$phpEx);
-include('includes/db.'.$phpEx);
+include('config.php');
+include('includes/constants.php');
+include('includes/db.php');
 
 	$months = array(
 		"Jan" => 1,

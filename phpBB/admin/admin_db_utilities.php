@@ -53,9 +53,9 @@ if( !empty($setmodules) )
 //
 $no_page_header = TRUE;
 $phpbb_root_path = "./../";
-require($phpbb_root_path . 'extension.inc');
-require('./pagestart.' . $phpEx);
-include($phpbb_root_path . 'includes/sql_parse.'.$phpEx);
+
+require('./pagestart.php');
+include($phpbb_root_path . 'includes/sql_parse.php');
 
 //
 // Set VERBOSE to 1  for debugging info..
@@ -686,7 +686,7 @@ if( isset($HTTP_GET_VARS['perform']) || isset($HTTP_POST_VARS['perform']) )
 
 			if ($error)
 			{
-				include('./page_header_admin.'.$phpEx);
+				include('./page_header_admin.php');
 
 				$template->set_filenames(array(
 					"body" => "admin/admin_message_body.tpl")
@@ -699,7 +699,7 @@ if( isset($HTTP_GET_VARS['perform']) || isset($HTTP_POST_VARS['perform']) )
 
 				$template->pparse("body");
 
-				include('./page_footer_admin.'.$phpEx);
+				include('./page_footer_admin.php');
 			}
 
 			$tables = array('auth_access', 'banlist', 'categories', 'config', 'disallow', 'forums', 'forum_prune', 'groups', 'posts', 'posts_text', 'privmsgs', 'privmsgs_text', 'ranks', 'search_results', 'search_wordlist', 'search_wordmatch', 'sessions', 'smilies', 'themes', 'themes_name', 'topics', 'topics_watch', 'user_group', 'users', 'vote_desc', 'vote_results', 'vote_voters', 'words', 'confirm', 'sessions_keys');
@@ -732,7 +732,7 @@ if( isset($HTTP_GET_VARS['perform']) || isset($HTTP_POST_VARS['perform']) )
 
 			if( !isset($HTTP_POST_VARS['backupstart']) && !isset($HTTP_GET_VARS['backupstart']))
 			{
-				include('./page_header_admin.'.$phpEx);
+				include('./page_header_admin.php');
 
 				$template->set_filenames(array(
 					"body" => "admin/db_utils_backup_body.tpl")
@@ -753,7 +753,7 @@ if( isset($HTTP_GET_VARS['perform']) || isset($HTTP_POST_VARS['perform']) )
 					"L_YES" => $lang['Yes'],
 
 					"S_HIDDEN_FIELDS" => $s_hidden_fields,
-					"S_DBUTILS_ACTION" => append_sid("admin_db_utilities.$phpEx"))
+					"S_DBUTILS_ACTION" => append_sid("admin_db_utilities.php"))
 				);
 				$template->pparse("body");
 
@@ -771,17 +771,17 @@ if( isset($HTTP_GET_VARS['perform']) || isset($HTTP_POST_VARS['perform']) )
 				);
 
 				$template->assign_vars(array(
-					"META" => '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_db_utilities.$phpEx?perform=backup&additional_tables=" . quotemeta($additional_tables) . "&backup_type=$backup_type&drop=1&amp;backupstart=1&gzipcompress=$gzipcompress&startdownload=1") . '">',
+					"META" => '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_db_utilities.php?perform=backup&additional_tables=" . quotemeta($additional_tables) . "&backup_type=$backup_type&drop=1&amp;backupstart=1&gzipcompress=$gzipcompress&startdownload=1") . '">',
 
 					"MESSAGE_TITLE" => $lang['Database_Utilities'] . " : " . $lang['Backup'],
 					"MESSAGE_TEXT" => $lang['Backup_download'])
 				);
 
-				include('./page_header_admin.'.$phpEx);
+				include('./page_header_admin.php');
 
 				$template->pparse("body");
 
-				include('./page_footer_admin.'.$phpEx);
+				include('./page_footer_admin.php');
 
 			}
 			header("Pragma: no-cache");
@@ -873,7 +873,7 @@ if( isset($HTTP_GET_VARS['perform']) || isset($HTTP_POST_VARS['perform']) )
 				//
 				// Define Template files...
 				//
-				include('./page_header_admin.'.$phpEx);
+				include('./page_header_admin.php');
 
 				$template->set_filenames(array(
 					"body" => "admin/db_utils_restore_body.tpl")
@@ -887,7 +887,7 @@ if( isset($HTTP_GET_VARS['perform']) || isset($HTTP_POST_VARS['perform']) )
 					"L_SELECT_FILE" => $lang['Select_file'],
 					"L_START_RESTORE" => $lang['Start_Restore'],
 
-					"S_DBUTILS_ACTION" => append_sid("admin_db_utilities.$phpEx"),
+					"S_DBUTILS_ACTION" => append_sid("admin_db_utilities.php"),
 					"S_HIDDEN_FIELDS" => $s_hidden_fields)
 				);
 				$template->pparse("body");
@@ -993,7 +993,7 @@ if( isset($HTTP_GET_VARS['perform']) || isset($HTTP_POST_VARS['perform']) )
 					}
 				}
 
-				include('./page_header_admin.'.$phpEx);
+				include('./page_header_admin.php');
 
 				$template->set_filenames(array(
 					"body" => "admin/admin_message_body.tpl")
@@ -1013,6 +1013,6 @@ if( isset($HTTP_GET_VARS['perform']) || isset($HTTP_POST_VARS['perform']) )
 	}
 }
 
-include('./page_footer_admin.'.$phpEx);
+include('./page_footer_admin.php');
 
 ?>

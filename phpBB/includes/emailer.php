@@ -138,7 +138,7 @@ class emailer
 	// Send the mail out to the recipients set previously in var $this->address
 	function send()
 	{
-		global $board_config, $lang, $phpEx, $phpbb_root_path, $db;
+		global $board_config, $lang, $phpbb_root_path, $db;
 
     	// Escape all quotes, else the eval will fail.
 		$this->msg = str_replace ("'", "\'", $this->msg);
@@ -202,7 +202,7 @@ class emailer
 		{
 			if ( !defined('SMTP_INCLUDED') ) 
 			{
-				include($phpbb_root_path . 'includes/smtp.' . $phpEx);
+				include($phpbb_root_path . 'includes/smtp.php');
 			}
 
 			$result = smtpmail($to, $this->subject, $this->msg, $this->extra_headers);

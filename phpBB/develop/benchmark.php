@@ -15,10 +15,9 @@ die("Please read the first lines of this script for instructions on how to enabl
 
 define('IN_PHPBB', true);
 $phpbb_root_path = "../";
-include($phpbb_root_path . 'extension.inc');
-include($phpbb_root_path . 'common.'.$phpEx);
-include($phpbb_root_path . 'includes/functions_post.'.$phpEx);
-include($phpbb_root_path . 'includes/bbcode.'.$phpEx);
+include($phpbb_root_path . 'common.php');
+include($phpbb_root_path . 'includes/functions_post.php');
+include($phpbb_root_path . 'includes/bbcode.php');
 
 srand ((double) microtime() * 1000000);
 set_time_limit(240*60);

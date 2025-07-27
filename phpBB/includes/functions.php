@@ -200,7 +200,7 @@ function get_userdata($user, $force_str = false)
 
 function make_jumpbox($action, $match_forum_id = 0)
 {
-	global $template, $userdata, $lang, $db, $nav_links, $phpEx, $SID;
+	global $template, $userdata, $lang, $db, $nav_links, $SID;
 
 //	$is_auth = auth(AUTH_VIEW, AUTH_LIST_ALL, $userdata);
 
@@ -258,7 +258,7 @@ function make_jumpbox($action, $match_forum_id = 0)
 						// 'chapter' and 'forum' can create multiple items, therefore we are using a nested array.
 						//
 						$nav_links['chapter forum'][$forum_rows[$j]['forum_id']] = array (
-							'url' => append_sid("viewforum.$phpEx?" . POST_FORUM_URL . "=" . $forum_rows[$j]['forum_id']),
+							'url' => append_sid("viewforum.php?" . POST_FORUM_URL . "=" . $forum_rows[$j]['forum_id']),
 							'title' => $forum_rows[$j]['forum_name']
 						);
 								
@@ -309,7 +309,7 @@ function make_jumpbox($action, $match_forum_id = 0)
 function init_userprefs($userdata)
 {
 	global $board_config, $theme, $images;
-	global $template, $lang, $phpEx, $phpbb_root_path, $db;
+	global $template, $lang, $phpbb_root_path, $db;
 	global $nav_links;
 
 	if ( $userdata['user_id'] != ANONYMOUS )
@@ -334,7 +334,7 @@ function init_userprefs($userdata)
 		$default_lang = phpbb_ltrim(basename(phpbb_rtrim($board_config['default_lang'])), "'");
 	}
 
-	if ( !file_exists(@phpbb_realpath($phpbb_root_path . 'language/lang_' . $default_lang . '/lang_main.'.$phpEx)) )
+	if ( !file_exists(@phpbb_realpath($phpbb_root_path . 'language/lang_' . $default_lang . '/lang_main.php')) )
 	{
 		if ( $userdata['user_id'] != ANONYMOUS )
 		{
@@ -349,7 +349,7 @@ function init_userprefs($userdata)
 			$default_lang = 'english';
 		}
 
-		if ( !file_exists(@phpbb_realpath($phpbb_root_path . 'language/lang_' . $default_lang . '/lang_main.'.$phpEx)) )
+		if ( !file_exists(@phpbb_realpath($phpbb_root_path . 'language/lang_' . $default_lang . '/lang_main.php')) )
 		{
 			message_die(CRITICAL_ERROR, 'Could not locate valid language pack');
 		}
@@ -384,16 +384,16 @@ function init_userprefs($userdata)
 
 	$board_config['default_lang'] = $default_lang;
 
-	include($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_main.' . $phpEx);
+	include($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_main.php');
 
 	if ( defined('IN_ADMIN') )
 	{
-		if( !file_exists(@phpbb_realpath($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_admin.'.$phpEx)) )
+		if( !file_exists(@phpbb_realpath($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_admin.php')) )
 		{
 			$board_config['default_lang'] = 'english';
 		}
 
-		include($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_admin.' . $phpEx);
+		include($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_admin.php');
 	}
 
 	//
@@ -419,19 +419,19 @@ function init_userprefs($userdata)
 	// and be able to change the variables within code.
 	//
 	$nav_links['top'] = array ( 
-		'url' => append_sid($phpbb_root_path . 'index.' . $phpEx),
+		'url' => append_sid($phpbb_root_path . 'index.php'),
 		'title' => sprintf($lang['Forum_Index'], $board_config['sitename'])
 	);
 	$nav_links['search'] = array ( 
-		'url' => append_sid($phpbb_root_path . 'search.' . $phpEx),
+		'url' => append_sid($phpbb_root_path . 'search.php'),
 		'title' => $lang['Search']
 	);
 	$nav_links['help'] = array ( 
-		'url' => append_sid($phpbb_root_path . 'faq.' . $phpEx),
+		'url' => append_sid($phpbb_root_path . 'faq.php'),
 		'title' => $lang['FAQ']
 	);
 	$nav_links['author'] = array ( 
-		'url' => append_sid($phpbb_root_path . 'memberlist.' . $phpEx),
+		'url' => append_sid($phpbb_root_path . 'memberlist.php'),
 		'title' => $lang['Memberlist']
 	);
 
@@ -711,9 +711,8 @@ function obtain_word_list(&$orig_word, &$replacement_word)
 //
 function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '', $err_file = '', $sql = '')
 {
-	global $db, $template, $board_config, $theme, $lang, $phpEx, $phpbb_root_path, $nav_links, $gen_simple_header, $images;
+	global $db, $template, $board_config, $theme, $lang, $phpbb_root_path, $nav_links, $gen_simple_header, $images;
 	global $userdata, $user_ip, $session_length;
-	global $starttime;
 
 	if(defined('HAS_DIED'))
 	{
@@ -766,11 +765,11 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 		{
 			if ( !empty($board_config['default_lang']) )
 			{
-				include($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_main.'.$phpEx);
+				include($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_main.php');
 			}
 			else
 			{
-				include($phpbb_root_path . 'language/lang_english/lang_main.'.$phpEx);
+				include($phpbb_root_path . 'language/lang_english/lang_main.php');
 			}
 		}
 
@@ -784,11 +783,11 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 		//
 		if ( !defined('IN_ADMIN') )
 		{
-			include($phpbb_root_path . 'includes/page_header.'.$phpEx);
+			include($phpbb_root_path . 'includes/page_header.php');
 		}
 		else
 		{
-			include($phpbb_root_path . 'admin/page_header_admin.'.$phpEx);
+			include($phpbb_root_path . 'admin/page_header_admin.php');
 		}
 	}
 
@@ -825,7 +824,7 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 			// Critical errors mean we cannot rely on _ANY_ DB information being
 			// available so we're going to dump out a simple echo'd statement
 			//
-			include($phpbb_root_path . 'language/lang_english/lang_main.'.$phpEx);
+			include($phpbb_root_path . 'language/lang_english/lang_main.php');
 
 			if ( $msg_text == '' )
 			{
@@ -880,11 +879,11 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 
 		if ( !defined('IN_ADMIN') )
 		{
-			include($phpbb_root_path . 'includes/page_tail.'.$phpEx);
+			include($phpbb_root_path . 'includes/page_tail.php');
 		}
 		else
 		{
-			include($phpbb_root_path . 'admin/page_footer_admin.'.$phpEx);
+			include($phpbb_root_path . 'admin/page_footer_admin.php');
 		}
 	}
 	else
@@ -903,9 +902,9 @@ function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '',
 // dougk_ff7 <October 5, 2002>
 function phpbb_realpath($path)
 {
-	global $phpbb_root_path, $phpEx;
+	global $phpbb_root_path;
 
-	return (!@function_exists('realpath') || !@realpath($phpbb_root_path . 'includes/functions.'.$phpEx)) ? $path : @realpath($path);
+	return (!@function_exists('realpath') || !@realpath($phpbb_root_path . 'includes/functions.php')) ? $path : @realpath($path);
 }
 
 function redirect($url)

@@ -35,12 +35,11 @@ die("Please read the first lines of this script for instructions on how to enabl
 // Do not change anything below this line.
 //
  
-include('../extension.inc');
-include('../config.'.$phpEx);
-include('../includes/constants.'.$phpEx);
-include('../functions/functions.'.$phpEx);
-include('../includes/db.'.$phpEx);
-include('../functions/bbcode.'.$phpEx);
+include('../config.php');
+include('../includes/constants.php');
+include('../functions/functions.php');
+include('../includes/db.php');
+include('../functions/bbcode.php');
  
 set_time_limit(60*60);  // Increase maximum execution time to 60 minutes. 
  

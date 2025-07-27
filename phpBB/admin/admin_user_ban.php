@@ -37,8 +37,8 @@ if ( !empty($setmodules) )
 // Load default header
 //
 $phpbb_root_path = './../';
-require($phpbb_root_path . 'extension.inc');
-require('./pagestart.' . $phpEx);
+
+require('./pagestart.php');
 
 //
 // Start program
@@ -321,7 +321,7 @@ if ( isset($HTTP_POST_VARS['submit']) )
 		}
 	}
 
-	$message = $lang['Ban_update_sucessful'] . '<br /><br />' . sprintf($lang['Click_return_banadmin'], '<a href="' . append_sid("admin_user_ban.$phpEx") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.$phpEx?pane=right") . '">', '</a>');
+	$message = $lang['Ban_update_sucessful'] . '<br /><br />' . sprintf($lang['Click_return_banadmin'], '<a href="' . append_sid("admin_user_ban.php") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>');
 
 	message_die(GENERAL_MESSAGE, $message);
 
@@ -341,7 +341,7 @@ else
 		'L_SUBMIT' => $lang['Submit'],
 		'L_RESET' => $lang['Reset'],
 
-		'S_BANLIST_ACTION' => append_sid("admin_user_ban.$phpEx"))
+		'S_BANLIST_ACTION' => append_sid("admin_user_ban.php"))
 	);
 
 	$template->assign_vars(array(
@@ -440,16 +440,16 @@ else
 		'L_LOOK_UP' => $lang['Look_up_User'],
 		'L_FIND_USERNAME' => $lang['Find_username'],
 
-		'U_SEARCH_USER' => append_sid("./../search.$phpEx?mode=searchuser"), 
+		'U_SEARCH_USER' => append_sid("./../search.php?mode=searchuser"), 
 		'S_UNBAN_USERLIST_SELECT' => $select_userlist,
 		'S_UNBAN_IPLIST_SELECT' => $select_iplist,
 		'S_UNBAN_EMAILLIST_SELECT' => $select_emaillist,
-		'S_BAN_ACTION' => append_sid("admin_user_ban.$phpEx"))
+		'S_BAN_ACTION' => append_sid("admin_user_ban.php"))
 	);
 }
 
 $template->pparse('body');
 
-include('./page_footer_admin.'.$phpEx);
+include('./page_footer_admin.php');
 
 ?>

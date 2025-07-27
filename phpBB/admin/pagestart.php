@@ -27,7 +27,7 @@ if (!defined('IN_PHPBB'))
 
 define('IN_ADMIN', true);
 // Include files
-include($phpbb_root_path . 'common.'.$phpEx);
+include($phpbb_root_path . 'common.php');
 
 //
 // Start session management
@@ -40,7 +40,7 @@ init_userprefs($userdata);
 
 if (!$userdata['session_logged_in'])
 {
-	redirect(append_sid("login.$phpEx?redirect=admin/index.$phpEx", true));
+	redirect(append_sid("login.php?redirect=admin/index.php", true));
 }
 else if ($userdata['user_level'] != ADMIN)
 {
@@ -49,19 +49,19 @@ else if ($userdata['user_level'] != ADMIN)
 
 if ($HTTP_GET_VARS['sid'] != $userdata['session_id'])
 {
-	redirect("index.$phpEx?sid=" . $userdata['session_id']);
+	redirect("index.php?sid=" . $userdata['session_id']);
 }
 
 if (!$userdata['session_admin'])
 {
-	redirect(append_sid("login.$phpEx?redirect=admin/index.$phpEx&admin=1", true));
+	redirect(append_sid("login.php?redirect=admin/index.php&admin=1", true));
 }
 
 if (empty($no_page_header))
 {
 	// Not including the pageheader can be neccesarry if META tags are
 	// needed in the calling script.
-	include('./page_header_admin.'.$phpEx);
+	include('./page_header_admin.php');
 }
 
 ?>

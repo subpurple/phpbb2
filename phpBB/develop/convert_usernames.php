@@ -23,10 +23,9 @@ die("Please read the first lines of this script for instructions on how to enabl
 chdir("../");
 
 define('IN_PHPBB', true);
-include('extension.inc');
-include('config.'.$phpEx);
-include('includes/constants.'.$phpEx);
-include('includes/db.'.$phpEx);
+include('config.php');
+include('includes/constants.php');
+include('includes/db.php');
 
 $sql = "SELECT user_id, username 
 	FROM " . USERS_TABLE;

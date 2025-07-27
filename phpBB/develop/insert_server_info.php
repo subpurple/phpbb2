@@ -13,8 +13,7 @@ die("Please read the first lines of this script for instructions on how to enabl
 // Do not change anything below this line.
 //
 $phpbb_root_path = "../";
-include($phpbb_root_path . 'extension.inc');
-include($phpbb_root_path . 'common.'.$phpEx);
+include($phpbb_root_path . 'common.php');
 
 echo "Inserting new config vars<br /><br />\n";
 

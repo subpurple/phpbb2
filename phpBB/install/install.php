@@ -24,7 +24,7 @@
 //
 function page_header($text, $form_action = false)
 {
-	global $phpEx, $lang;
+	global $lang;
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -73,7 +73,7 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 				<td><br /><br /></td>
 			</tr>
 			<tr>
-				<td width="100%"><table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline"><form action="<?php echo ($form_action) ? $form_action : 'install.'.$phpEx; ?>" name="install" method="post">
+				<td width="100%"><table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline"><form action="<?php echo ($form_action) ? $form_action : 'install.php'; ?>" name="install" method="post">
 <?php
 
 }
@@ -313,7 +313,6 @@ if (!defined('IN_PHPBB'))
 // Uncomment the following line to completely disable the ftp option...
 // define('NO_FTP', true);
 $phpbb_root_path = './../';
-include($phpbb_root_path.'extension.inc');
 
 // Initialise some basic arrays
 $userdata = array();
@@ -323,9 +322,9 @@ $error = false;
 $table_prefix = '';
 
 // Include some required functions
-include($phpbb_root_path.'includes/constants.'.$phpEx);
-include($phpbb_root_path.'includes/functions.'.$phpEx);
-include($phpbb_root_path.'includes/sessions.'.$phpEx);
+include($phpbb_root_path.'includes/constants.php');
+include($phpbb_root_path.'includes/functions.php');
+include($phpbb_root_path.'includes/sessions.php');
 
 // Define schema info
 $available_dbms = array(
@@ -463,35 +462,35 @@ else
 }
 
 // Open config.php ... if it exists
-if (@file_exists(@phpbb_realpath('config.'.$phpEx)))
+if (@file_exists(@phpbb_realpath('config.php')))
 {
-	include($phpbb_root_path.'config.'.$phpEx);
+	include($phpbb_root_path.'config.php');
 }
 
 // Is phpBB already installed? Yes? Redirect to the index
 if (defined("PHPBB_INSTALLED"))
 {
-	redirect('../index.'.$phpEx);
+	redirect('../index.php');
 }
 
 // Import language file, setup template ...
-include($phpbb_root_path.'language/lang_' . $language . '/lang_main.'.$phpEx);
-include($phpbb_root_path.'language/lang_' . $language . '/lang_admin.'.$phpEx);
+include($phpbb_root_path.'language/lang_' . $language . '/lang_main.php');
+include($phpbb_root_path.'language/lang_' . $language . '/lang_admin.php');
 
 // Ok for the time being I'm commenting this out whilst I'm working on
 // better integration of the install with upgrade as per Bart's request
 // JLH
 if ($upgrade == 1)
 {
-	// require('upgrade.'.$phpEx);
+	// require('upgrade.php');
 	$install_step = 1;
 }
 
 // What do we need to do?
 if (!empty($HTTP_POST_VARS['send_file']) && $HTTP_POST_VARS['send_file'] == 1 && empty($HTTP_POST_VARS['upgrade_now']))
 {
-	header('Content-Type: text/x-delimtext; name="config.' . $phpEx . '"');
-	header('Content-disposition: attachment; filename="config.' . $phpEx . '"');
+	header('Content-Type: text/x-delimtext; name="config.php' . '"');
+	header('Content-disposition: attachment; filename="config.php' . '"');
 
 	// We need to stripslashes no matter what the setting of magic_quotes_gpc is
 	// because we add slashes at the top if its off, and they are added automaticlly 
@@ -594,7 +593,7 @@ else if (!empty($HTTP_POST_VARS['ftp_file']))
 		// Now ftp it across.
 		@ftp_chdir($conn_id, $ftp_dir);
 
-		$res = ftp_put($conn_id, 'config.'.$phpEx, $tmpfname, FTP_ASCII);
+		$res = ftp_put($conn_id, 'config.php', $tmpfname, FTP_ASCII);
 
 		@ftp_quit($conn_id);
 
@@ -602,7 +601,7 @@ else if (!empty($HTTP_POST_VARS['ftp_file']))
 
 		if ($upgrade == 1)	
 		{
-			require('upgrade.'.$phpEx);
+			require('upgrade.php');
 			exit;
 		}
 
@@ -612,7 +611,7 @@ else if (!empty($HTTP_POST_VARS['ftp_file']))
 		// section.
 		$s_hidden_fields = '<input type="hidden" name="username" value="' . $admin_name . '" />';
 		$s_hidden_fields .= '<input type="hidden" name="password" value="' . $admin_pass1 . '" />';
-		$s_hidden_fields .= '<input type="hidden" name="redirect" value="../admin/index.'.$phpEx.'" />';
+		$s_hidden_fields .= '<input type="hidden" name="redirect" value="../admin/index.php'.'" />';
 		$s_hidden_fields .= '<input type="hidden" name="submit" value="' . $lang['Login'] . '" />';
 
 		page_header($lang['Inst_Step_2']);
@@ -816,7 +815,7 @@ else
 			exit;
 		}
 
-		include($phpbb_root_path.'includes/db.'.$phpEx);
+		include($phpbb_root_path.'includes/db.php');
 	}
 
 	$dbms_schema = 'schemas/' . $available_dbms[$dbms]['SCHEMA'] . '_schema.sql';
@@ -833,7 +832,7 @@ else
 			if ($dbms != 'msaccess')
 			{
 				// Load in the sql parser
-				include($phpbb_root_path.'includes/sql_parse.'.$phpEx);
+				include($phpbb_root_path.'includes/sql_parse.php');
 
 				// Ok we have the db info go ahead and read in the relevant schema
 				// and work on building the table.. probably ought to provide some
@@ -970,7 +969,7 @@ else
 
 			// Unable to open the file writeable do something here as an attempt
 			// to get around that...
-			if (!($fp = @fopen($phpbb_root_path . 'config.'.$phpEx, 'w')))
+			if (!($fp = @fopen($phpbb_root_path . 'config.php', 'w')))
 			{
 				$s_hidden_fields = '<input type="hidden" name="config_data" value="' . htmlspecialchars($config_data) . '" />';
 
@@ -1038,7 +1037,7 @@ else
 		if ($upgrade == 1 && $upgrade_now == $lang['upgrade_submit'])
 		{
 			define('INSTALLING', true);
-			require('upgrade.'.$phpEx);
+			require('upgrade.php');
 			exit;
 		}
 
@@ -1048,10 +1047,10 @@ else
 		// section.
 		$s_hidden_fields = '<input type="hidden" name="username" value="' . $admin_name . '" />';
 		$s_hidden_fields .= '<input type="hidden" name="password" value="' . $admin_pass1 . '" />';
-		$s_hidden_fields .= '<input type="hidden" name="redirect" value="admin/index.'.$phpEx.'" />';
+		$s_hidden_fields .= '<input type="hidden" name="redirect" value="admin/index.php'.'" />';
 		$s_hidden_fields .= '<input type="hidden" name="login" value="true" />';
 
-		page_header($lang['Inst_Step_2'], '../login.'.$phpEx);
+		page_header($lang['Inst_Step_2'], '../login.php');
 		page_common_form($s_hidden_fields, $lang['Finish_Install']);
 		page_footer();
 		exit;

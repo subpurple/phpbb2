@@ -36,7 +36,7 @@ switch($dbms)
 		break;
 
 	case 'mysqli':
-		include($phpbb_root_path . 'db/mysqli.'.$phpEx);
+		include($phpbb_root_path . 'db/mysqli.php');
 		break;
 
 	case 'postgres':

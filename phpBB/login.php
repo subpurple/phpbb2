@@ -31,8 +31,7 @@ if (!defined('IN_PHPBB'))
     define( 'IN_PHPBB', true);
 }
 $phpbb_root_path = './';
-include($phpbb_root_path . 'extension.inc');
-include($phpbb_root_path . 'common.'.$phpEx);
+include($phpbb_root_path . 'common.php');
 
 //
 // Set page ID for session management
@@ -72,7 +71,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 		{
 			if( $row['user_level'] != ADMIN && $board_config['board_disable'] )
 			{
-				redirect(append_sid("index.$phpEx", true));
+				redirect(append_sid("index.php", true));
 			}
 			else
 			{
@@ -102,7 +101,7 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 
 					if( $session_id )
 					{
-						$url = ( !empty($HTTP_POST_VARS['redirect']) ) ? str_replace('&amp;', '&', htmlspecialchars($HTTP_POST_VARS['redirect'])) : "index.$phpEx";
+						$url = ( !empty($HTTP_POST_VARS['redirect']) ) ? str_replace('&amp;', '&', htmlspecialchars($HTTP_POST_VARS['redirect'])) : "index.php";
 						redirect(append_sid($url, true));
 					}
 					else
@@ -132,10 +131,10 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 				}
 
 				$template->assign_vars(array(
-					'META' => "<meta http-equiv=\"refresh\" content=\"3;url=login.$phpEx?redirect=$redirect\">")
+					'META' => "<meta http-equiv=\"refresh\" content=\"3;url=login.php?redirect=$redirect\">")
 				);
 
-				$message = $lang['Error_login'] . '<br /><br />' . sprintf($lang['Click_return_login'], "<a href=\"login.$phpEx?redirect=$redirect\">", '</a>') . '<br /><br />' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("index.$phpEx") . '">', '</a>');
+				$message = $lang['Error_login'] . '<br /><br />' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br /><br />' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("index.php") . '">', '</a>');
 
 				message_die(GENERAL_MESSAGE, $message);
 			}
@@ -151,10 +150,10 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 			}
 
 			$template->assign_vars(array(
-				'META' => "<meta http-equiv=\"refresh\" content=\"3;url=login.$phpEx?redirect=$redirect\">")
+				'META' => "<meta http-equiv=\"refresh\" content=\"3;url=login.php?redirect=$redirect\">")
 			);
 
-			$message = $lang['Error_login'] . '<br /><br />' . sprintf($lang['Click_return_login'], "<a href=\"login.$phpEx?redirect=$redirect\">", '</a>') . '<br /><br />' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("index.$phpEx") . '">', '</a>');
+			$message = $lang['Error_login'] . '<br /><br />' . sprintf($lang['Click_return_login'], "<a href=\"login.php?redirect=$redirect\">", '</a>') . '<br /><br />' .  sprintf($lang['Click_return_index'], '<a href="' . append_sid("index.php") . '">', '</a>');
 
 			message_die(GENERAL_MESSAGE, $message);
 		}
@@ -180,12 +179,12 @@ if( isset($HTTP_POST_VARS['login']) || isset($HTTP_GET_VARS['login']) || isset($
 		}
 		else
 		{
-			redirect(append_sid("index.$phpEx", true));
+			redirect(append_sid("index.php", true));
 		}
 	}
 	else
 	{
-		$url = ( !empty($HTTP_POST_VARS['redirect']) ) ? str_replace('&amp;', '&', htmlspecialchars($HTTP_POST_VARS['redirect'])) : "index.$phpEx";
+		$url = ( !empty($HTTP_POST_VARS['redirect']) ) ? str_replace('&amp;', '&', htmlspecialchars($HTTP_POST_VARS['redirect'])) : "index.php";
 		redirect(append_sid($url, true));
 	}
 }
@@ -198,7 +197,7 @@ else
 	if( !$userdata['session_logged_in'] || (isset($HTTP_GET_VARS['admin']) && $userdata['session_logged_in'] && $userdata['user_level'] == ADMIN))
 	{
 		$page_title = $lang['Login'];
-		include($phpbb_root_path . 'includes/page_header.'.$phpEx);
+		include($phpbb_root_path . 'includes/page_header.php');
 
 		$template->set_filenames(array(
 			'body' => 'login_body.tpl')
@@ -242,25 +241,25 @@ else
 		$s_hidden_fields = '<input type="hidden" name="redirect" value="' . $forward_page . '" />';
 		$s_hidden_fields .= (isset($HTTP_GET_VARS['admin'])) ? '<input type="hidden" name="admin" value="1" />' : '';
 
-		make_jumpbox('viewforum.'.$phpEx);
+		make_jumpbox('viewforum.php');
 		$template->assign_vars(array(
 			'USERNAME' => $username,
 
 			'L_ENTER_PASSWORD' => (isset($HTTP_GET_VARS['admin'])) ? $lang['Admin_reauthenticate'] : $lang['Enter_password'],
 			'L_SEND_PASSWORD' => $lang['Forgotten_password'],
 
-			'U_SEND_PASSWORD' => append_sid("profile.$phpEx?mode=sendpassword"),
+			'U_SEND_PASSWORD' => append_sid("profile.php?mode=sendpassword"),
 
 			'S_HIDDEN_FIELDS' => $s_hidden_fields)
 		);
 
 		$template->pparse('body');
 
-		include($phpbb_root_path . 'includes/page_tail.'.$phpEx);
+		include($phpbb_root_path . 'includes/page_tail.php');
 	}
 	else
 	{
-		redirect(append_sid("index.$phpEx", true));
+		redirect(append_sid("index.php", true));
 	}
 
 }

@@ -38,8 +38,8 @@ if( !empty($setmodules) )
 //
 $no_page_header = TRUE;
 $phpbb_root_path = './../';
-require($phpbb_root_path . 'extension.inc');
-require('./pagestart.' . $phpEx);
+
+require('./pagestart.php');
 
 //
 // Start program - define vars
@@ -150,9 +150,9 @@ if( isset($HTTP_POST_VARS['submit']) )
 	}
 
 	$template->assign_vars(array(
-		'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_forumauth.$phpEx?" . POST_FORUM_URL . "=$forum_id") . '">')
+		'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_forumauth.php?" . POST_FORUM_URL . "=$forum_id") . '">')
 	);
-	$message = $lang['Forum_auth_updated'] . '<br /><br />' . sprintf($lang['Click_return_forumauth'],  '<a href="' . append_sid("admin_forumauth.$phpEx") . '">', "</a>");
+	$message = $lang['Forum_auth_updated'] . '<br /><br />' . sprintf($lang['Click_return_forumauth'],  '<a href="' . append_sid("admin_forumauth.php") . '">', "</a>");
 	message_die(GENERAL_MESSAGE, $message);
 
 } // End of submit
@@ -198,7 +198,7 @@ if( empty($forum_id) )
 		'L_AUTH_SELECT' => $lang['Select_a_Forum'],
 		'L_LOOK_UP' => $lang['Look_up_Forum'],
 
-		'S_AUTH_ACTION' => append_sid("admin_forumauth.$phpEx"),
+		'S_AUTH_ACTION' => append_sid("admin_forumauth.php"),
 		'S_AUTH_SELECT' => $select_list)
 	);
 
@@ -298,7 +298,7 @@ else
 	}
 
 	$adv_mode = ( empty($adv) ) ? '1' : '0';
-	$switch_mode = append_sid("admin_forumauth.$phpEx?" . POST_FORUM_URL . "=" . $forum_id . "&adv=". $adv_mode);
+	$switch_mode = append_sid("admin_forumauth.php?" . POST_FORUM_URL . "=" . $forum_id . "&adv=". $adv_mode);
 	$switch_mode_text = ( empty($adv) ) ? $lang['Advanced_mode'] : $lang['Simple_mode'];
 	$u_switch_mode = '<a href="' . $switch_mode . '">' . $switch_mode_text . '</a>';
 
@@ -315,17 +315,17 @@ else
 
 		'U_SWITCH_MODE' => $u_switch_mode,
 
-		'S_FORUMAUTH_ACTION' => append_sid("admin_forumauth.$phpEx"),
+		'S_FORUMAUTH_ACTION' => append_sid("admin_forumauth.php"),
 		'S_COLUMN_SPAN' => $s_column_span,
 		'S_HIDDEN_FIELDS' => $s_hidden_fields)
 	);
 
 }
 
-include('./page_header_admin.'.$phpEx);
+include('./page_header_admin.php');
 
 $template->pparse('body');
 
-include('./page_footer_admin.'.$phpEx);
+include('./page_footer_admin.php');
 
 ?>

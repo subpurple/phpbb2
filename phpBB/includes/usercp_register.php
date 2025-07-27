@@ -49,7 +49,7 @@ $unhtml_specialchars_replace = array('>', '<', '"', '&');
 //
 function show_coppa()
 {
-	global $userdata, $template, $lang, $phpbb_root_path, $phpEx;
+	global $userdata, $template, $lang, $phpbb_root_path;
 
 	$template->set_filenames(array(
 		'body' => 'agreement.tpl')
@@ -62,8 +62,8 @@ function show_coppa()
 		"AGREE_UNDER_13" => $lang['Agree_under_13'],
 		'DO_NOT_AGREE' => $lang['Agree_not'],
 
-		"U_AGREE_OVER13" => append_sid("profile.$phpEx?mode=register&amp;agreed=true"),
-		"U_AGREE_UNDER13" => append_sid("profile.$phpEx?mode=register&amp;agreed=true&amp;coppa=true"))
+		"U_AGREE_OVER13" => append_sid("profile.php?mode=register&amp;agreed=true"),
+		"U_AGREE_UNDER13" => append_sid("profile.php?mode=register&amp;agreed=true&amp;coppa=true"))
 	);
 
 	$template->pparse('body');
@@ -78,11 +78,11 @@ $page_title = ( $mode == 'editprofile' ) ? $lang['Edit_profile'] : $lang['Regist
 
 if ( $mode == 'register' && !isset($HTTP_POST_VARS['agreed']) && !isset($HTTP_GET_VARS['agreed']) )
 {
-	include($phpbb_root_path . 'includes/page_header.'.$phpEx);
+	include($phpbb_root_path . 'includes/page_header.php');
 
 	show_coppa();
 
-	include($phpbb_root_path . 'includes/page_tail.'.$phpEx);
+	include($phpbb_root_path . 'includes/page_tail.php');
 }
 
 $coppa = ( empty($HTTP_POST_VARS['coppa']) && empty($HTTP_GET_VARS['coppa']) ) ? 0 : TRUE;
@@ -97,9 +97,9 @@ if (
 	isset($HTTP_POST_VARS['cancelavatar']) ||
 	$mode == 'register' )
 {
-	include($phpbb_root_path . 'includes/functions_validate.'.$phpEx);
-	include($phpbb_root_path . 'includes/bbcode.'.$phpEx);
-	include($phpbb_root_path . 'includes/functions_post.'.$phpEx);
+	include($phpbb_root_path . 'includes/functions_validate.php');
+	include($phpbb_root_path . 'includes/bbcode.php');
+	include($phpbb_root_path . 'includes/functions_post.php');
 
 	if ( $mode == 'editprofile' )
 	{
@@ -260,7 +260,7 @@ if ($mode == 'register' && ($userdata['session_logged_in'] || $username == $user
 //
 if ( isset($HTTP_POST_VARS['submit']) )
 {
-	include($phpbb_root_path . 'includes/usercp_avatar.'.$phpEx);
+	include($phpbb_root_path . 'includes/usercp_avatar.php');
 
 	// session id check
 	if ($sid == '' || $sid != $userdata['session_id'])
@@ -550,7 +550,7 @@ if ( isset($HTTP_POST_VARS['submit']) )
 				//
 				// The users account has been deactivated, send them an email with a new activation key
 				//
-				include($phpbb_root_path . 'includes/emailer.'.$phpEx);
+				include($phpbb_root_path . 'includes/emailer.php');
 				$emailer = new emailer($board_config['smtp_delivery']);
 
  				if ( $board_config['require_activation'] != USER_ACTIVATION_ADMIN )
@@ -604,15 +604,15 @@ if ( isset($HTTP_POST_VARS['submit']) )
  					$db->sql_freeresult($result);
  				}
 
-				$message = $lang['Profile_updated_inactive'] . '<br /><br />' . sprintf($lang['Click_return_index'],  '<a href="' . append_sid("index.$phpEx") . '">', '</a>');
+				$message = $lang['Profile_updated_inactive'] . '<br /><br />' . sprintf($lang['Click_return_index'],  '<a href="' . append_sid("index.php") . '">', '</a>');
 			}
 			else
 			{
-				$message = $lang['Profile_updated'] . '<br /><br />' . sprintf($lang['Click_return_index'],  '<a href="' . append_sid("index.$phpEx") . '">', '</a>');
+				$message = $lang['Profile_updated'] . '<br /><br />' . sprintf($lang['Click_return_index'],  '<a href="' . append_sid("index.php") . '">', '</a>');
 			}
 
 			$template->assign_vars(array(
-				"META" => '<meta http-equiv="refresh" content="5;url=' . append_sid("index.$phpEx") . '">')
+				"META" => '<meta http-equiv="refresh" content="5;url=' . append_sid("index.php") . '">')
 			);
 
 			message_die(GENERAL_MESSAGE, $message);
@@ -693,7 +693,7 @@ if ( isset($HTTP_POST_VARS['submit']) )
 				$email_template = 'user_welcome';
 			}
 
-			include($phpbb_root_path . 'includes/emailer.'.$phpEx);
+			include($phpbb_root_path . 'includes/emailer.php');
 			$emailer = new emailer($board_config['smtp_delivery']);
 
 			$emailer->from($board_config['board_email']);
@@ -773,7 +773,7 @@ if ( isset($HTTP_POST_VARS['submit']) )
 				$db->sql_freeresult($result);
 			}
 
-			$message = $message . '<br /><br />' . sprintf($lang['Click_return_index'],  '<a href="' . append_sid("index.$phpEx") . '">', '</a>');
+			$message = $message . '<br /><br />' . sprintf($lang['Click_return_index'],  '<a href="' . append_sid("index.php") . '">', '</a>');
 
 			message_die(GENERAL_MESSAGE, $message);
 		} // if mode == register
@@ -851,9 +851,9 @@ else if ( $mode == 'editprofile' && !isset($HTTP_POST_VARS['avatargallery']) && 
 //
 // Default pages
 //
-include($phpbb_root_path . 'includes/page_header.'.$phpEx);
+include($phpbb_root_path . 'includes/page_header.php');
 
-make_jumpbox('viewforum.'.$phpEx);
+make_jumpbox('viewforum.php');
 
 if ( $mode == 'editprofile' )
 {
@@ -866,7 +866,7 @@ if ( $mode == 'editprofile' )
 
 if( isset($HTTP_POST_VARS['avatargallery']) && !$error )
 {
-	include($phpbb_root_path . 'includes/usercp_avatar.'.$phpEx);
+	include($phpbb_root_path . 'includes/usercp_avatar.php');
 
 	$avatar_category = ( !empty($HTTP_POST_VARS['avatarcategory']) ) ? htmlspecialchars($HTTP_POST_VARS['avatarcategory']) : '';
 
@@ -880,7 +880,7 @@ if( isset($HTTP_POST_VARS['avatargallery']) && !$error )
 }
 else
 {
-	include($phpbb_root_path . 'includes/functions_selects.'.$phpEx);
+	include($phpbb_root_path . 'includes/functions_selects.php');
 
 	if ( !isset($coppa) )
 	{
@@ -1023,7 +1023,7 @@ else
 
 		unset($code);
 		
-		$confirm_image = '<img src="' . append_sid("profile.$phpEx?mode=confirm&amp;id=$confirm_id") . '" alt="" title="" />';
+		$confirm_image = '<img src="' . append_sid("profile.php?mode=confirm&amp;id=$confirm_id") . '" alt="" title="" />';
 		$s_hidden_fields .= '<input type="hidden" name="confirm_id" value="' . $confirm_id . '" />';
 
 		$template->assign_block_vars('switch_confirm', array());
@@ -1079,7 +1079,7 @@ else
 		'TIMEZONE_SELECT' => tz_select($user_timezone, 'timezone'),
 		'DATE_FORMAT' => $user_dateformat,
 		'HTML_STATUS' => $html_status,
-		'BBCODE_STATUS' => sprintf($bbcode_status, '<a href="' . append_sid("faq.$phpEx?mode=bbcode") . '" target="_phpbbcode">', '</a>'),
+		'BBCODE_STATUS' => sprintf($bbcode_status, '<a href="' . append_sid("faq.php?mode=bbcode") . '" target="_phpbbcode">', '</a>'),
 		'SMILIES_STATUS' => $smilies_status,
 
 		'L_CURRENT_PASSWORD' => $lang['Current_password'],
@@ -1147,7 +1147,7 @@ else
 		'S_ALLOW_AVATAR_REMOTE' => $board_config['allow_avatar_remote'],
 		'S_HIDDEN_FIELDS' => $s_hidden_fields,
 		'S_FORM_ENCTYPE' => $form_enctype,
-		'S_PROFILE_ACTION' => append_sid("profile.$phpEx"))
+		'S_PROFILE_ACTION' => append_sid("profile.php"))
 	);
 
 	//
@@ -1185,6 +1185,6 @@ else
 
 $template->pparse('body');
 
-include($phpbb_root_path . 'includes/page_tail.'.$phpEx);
+include($phpbb_root_path . 'includes/page_tail.php');
 
 ?>

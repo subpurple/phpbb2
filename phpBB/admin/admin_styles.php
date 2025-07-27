@@ -42,21 +42,21 @@ if( !empty($setmodules) )
 // Check if the user has cancled a confirmation message.
 //
 $phpbb_root_path = "./../";
-require($phpbb_root_path . 'extension.inc');
+
 
 $confirm = (isset($HTTP_POST_VARS['confirm']) || isset($_POST['confirm'])) ? TRUE : FALSE;
 $cancel = (isset($HTTP_POST_VARS['cancel']) || isset($_POST['cancel'])) ? TRUE : FALSE;
 
 $no_page_header = (!empty($HTTP_POST_VARS['send_file']) || !empty($_POST['send_file']) || $cancel) ? TRUE : FALSE;
 
-require('./pagestart.' . $phpEx);
+require('./pagestart.php');
 
 $confirm = ( isset($HTTP_POST_VARS['confirm']) ) ? TRUE : FALSE;
 $cancel = ( isset($HTTP_POST_VARS['cancel']) ) ? TRUE : FALSE;
 
 if ($cancel)
 {
-	redirect('admin/' . append_sid("admin_styles.$phpEx", true));
+	redirect('admin/' . append_sid("admin_styles.php", true));
 }
 
 if( isset($HTTP_GET_VARS['mode']) || isset($HTTP_POST_VARS['mode']) )
@@ -137,7 +137,7 @@ switch( $mode )
 				message_die(GENERAL_ERROR, "Could not insert theme data!", "", __LINE__, __FILE__, $sql);
 			}
 			
-			$message = $lang['Theme_installed'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . append_sid("admin_styles.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+			$message = $lang['Theme_installed'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . append_sid("admin_styles.php") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.php?pane=right") . "\">", "</a>");
 
 			message_die(GENERAL_MESSAGE, $message);
 		}
@@ -203,7 +203,7 @@ switch( $mode )
 						"STYLE_NAME" => $installable_themes[$i]['style_name'],
 						"TEMPLATE_NAME" => $installable_themes[$i]['template_name'],
 
-						"U_STYLES_INSTALL" => append_sid("admin_styles.$phpEx?mode=addnew&amp;style=" . urlencode($installable_themes[$i]['style_name']) . "&amp;install_to=" . urlencode($installable_themes[$i]['template_name'])))
+						"U_STYLES_INSTALL" => append_sid("admin_styles.php?mode=addnew&amp;style=" . urlencode($installable_themes[$i]['style_name']) . "&amp;install_to=" . urlencode($installable_themes[$i]['template_name'])))
 					);
 				
 				}
@@ -395,7 +395,7 @@ switch( $mode )
 					message_die(GENERAL_ERROR, "Could not update themes name table!", "", __LINE__, __FILE__, $sql);
 				}
 							
-				$message = $lang['Theme_updated'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . append_sid("admin_styles.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+				$message = $lang['Theme_updated'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . append_sid("admin_styles.php") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.php?pane=right") . "\">", "</a>");
 
 				message_die(GENERAL_MESSAGE, $message);
 			}
@@ -496,7 +496,7 @@ switch( $mode )
 					message_die(GENERAL_ERROR, "Could not insert themes name table!", "", __LINE__, __FILE__, $sql);
 				}
 				
-				$message = $lang['Theme_created'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . append_sid("admin_styles.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+				$message = $lang['Theme_created'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . append_sid("admin_styles.php") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.php?pane=right") . "\">", "</a>");
 
 				message_die(GENERAL_MESSAGE, $message);
 			}
@@ -724,7 +724,7 @@ switch( $mode )
 				"SPAN_CLASS2_NAME" => $selected['span_class2_name'],
 				"SPAN_CLASS3_NAME" => $selected['span_class3_name'],
 				
-				"S_THEME_ACTION" => append_sid("admin_styles.$phpEx"),
+				"S_THEME_ACTION" => append_sid("admin_styles.php"),
 				"S_TEMPLATE_SELECT" => $s_template_select,
 				"S_HIDDEN_FIELDS" => $s_hidden_fields)
 			);
@@ -783,7 +783,7 @@ switch( $mode )
 				$s_hidden_fields = '<input type="hidden" name="theme_info" value="' . htmlspecialchars($theme_data) . '" />';
 				$s_hidden_fields .= '<input type="hidden" name="send_file" value="1" /><input type="hidden" name="mode" value="export" />';
 				
-				$download_form = '<form action="' . append_sid("admin_styles.$phpEx") . '" method="post"><input class="mainoption" type="submit" name="submit" value="' . $lang['Download'] . '" />' . $s_hidden_fields;
+				$download_form = '<form action="' . append_sid("admin_styles.php") . '" method="post"><input class="mainoption" type="submit" name="submit" value="' . $lang['Download'] . '" />' . $s_hidden_fields;
 
 				$template->set_filenames(array(
 					"body" => "message_body.tpl")
@@ -801,7 +801,7 @@ switch( $mode )
 			$result = @fputs($fp, $theme_data, strlen($theme_data));
 			fclose($fp);
 			
-			$message = $lang['Theme_info_saved'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . append_sid("admin_styles.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+			$message = $lang['Theme_info_saved'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . append_sid("admin_styles.php") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.php?pane=right") . "\">", "</a>");
 
 			message_die(GENERAL_MESSAGE, $message);
 
@@ -843,7 +843,7 @@ switch( $mode )
 				"L_TEMPLATE_SELECT" => $lang['Select_template'],
 				"L_SUBMIT" => $lang['Submit'], 
 
-				"S_EXPORTER_ACTION" => append_sid("admin_styles.$phpEx?mode=export"),
+				"S_EXPORTER_ACTION" => append_sid("admin_styles.php?mode=export"),
 				"S_TEMPLATE_SELECT" => $s_template_select)
 			);
 			
@@ -878,7 +878,7 @@ switch( $mode )
 				"L_YES" => $lang['Yes'],
 				"L_NO" => $lang['No'],
 
-				"S_CONFIRM_ACTION" => append_sid("admin_styles.$phpEx"),
+				"S_CONFIRM_ACTION" => append_sid("admin_styles.php"),
 				"S_HIDDEN_FIELDS" => $hidden_fields)
 			);
 
@@ -914,7 +914,7 @@ switch( $mode )
 				message_die(GENERAL_ERROR, "Could not update user style information", "", __LINE__, __FILE__, $sql);
 			}
 			
-			$message = $lang['Style_removed'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . append_sid("admin_styles.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+			$message = $lang['Style_removed'] . "<br /><br />" . sprintf($lang['Click_return_styleadmin'], "<a href=\"" . append_sid("admin_styles.php") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.php?pane=right") . "\">", "</a>");
 
 			message_die(GENERAL_MESSAGE, $message);
 		}
@@ -956,8 +956,8 @@ switch( $mode )
 				"STYLE_NAME" => $style_rowset[$i]['style_name'],
 				"TEMPLATE_NAME" => $style_rowset[$i]['template_name'],
 
-				"U_STYLES_EDIT" => append_sid("admin_styles.$phpEx?mode=edit&amp;style_id=" . $style_rowset[$i]['themes_id']),
-				"U_STYLES_DELETE" => append_sid("admin_styles.$phpEx?mode=delete&amp;style_id=" . $style_rowset[$i]['themes_id']))
+				"U_STYLES_EDIT" => append_sid("admin_styles.php?mode=edit&amp;style_id=" . $style_rowset[$i]['themes_id']),
+				"U_STYLES_DELETE" => append_sid("admin_styles.php?mode=delete&amp;style_id=" . $style_rowset[$i]['themes_id']))
 			);
 		}
 		
@@ -967,7 +967,7 @@ switch( $mode )
 
 if (empty($HTTP_POST_VARS['send_file']))
 {
-	include('./page_footer_admin.'.$phpEx);
+	include('./page_footer_admin.php');
 }
 
 ?>

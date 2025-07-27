@@ -14,9 +14,8 @@
 set_time_limit(0);
 
 $phpbb_root_path = "../";
-include($phpbb_root_path . 'extension.inc');
-include($phpbb_root_path . 'common.'.$phpEx);
-include($phpbb_root_path . 'includes/search.'.$phpEx);
+include($phpbb_root_path . 'common.php');
+include($phpbb_root_path . 'includes/search.php');
 
 $common_percent = 0.4; // Percentage of posts in which a word has to appear to be marked as common
 

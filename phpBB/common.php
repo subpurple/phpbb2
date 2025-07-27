@@ -24,7 +24,8 @@ if ( !defined('IN_PHPBB') )
 	die("Hacking attempt");
 }
 
-//
+$starttime = 0;
+
 error_reporting  (E_ERROR | E_WARNING | E_PARSE); // This will NOT report uninitialized variables
 
 // The following code (unsetting globals)
@@ -140,20 +141,20 @@ $nav_links = array();
 $dss_seeded = false;
 $gen_simple_header = FALSE;
 
-include($phpbb_root_path . 'config.'.$phpEx);
+include($phpbb_root_path . 'config.php');
 
 if( !defined("PHPBB_INSTALLED") )
 {
-	header('Location: ' . $phpbb_root_path . 'install/install.' . $phpEx);
+	header('Location: ' . $phpbb_root_path . 'install/install.php');
 	exit;
 }
 
-include($phpbb_root_path . 'includes/constants.'.$phpEx);
-include($phpbb_root_path . 'includes/template.'.$phpEx);
-include($phpbb_root_path . 'includes/sessions.'.$phpEx);
-include($phpbb_root_path . 'includes/auth.'.$phpEx);
-include($phpbb_root_path . 'includes/functions.'.$phpEx);
-include($phpbb_root_path . 'includes/db.'.$phpEx);
+include($phpbb_root_path . 'includes/constants.php');
+include($phpbb_root_path . 'includes/template.php');
+include($phpbb_root_path . 'includes/sessions.php');
+include($phpbb_root_path . 'includes/auth.php');
+include($phpbb_root_path . 'includes/functions.php');
+include($phpbb_root_path . 'includes/db.php');
 
 // We do not need this any longer, unset for safety purposes
 unset($dbpasswd);
@@ -184,11 +185,6 @@ if( !($result = $db->sql_query($sql)) )
 while ( $row = $db->sql_fetchrow($result) )
 {
 	$board_config[$row['config_name']] = $row['config_value'];
-}
-
-if (file_exists('install') || file_exists('contrib'))
-{
-	message_die(GENERAL_MESSAGE, 'Please_remove_install_contrib');
 }
 
 //

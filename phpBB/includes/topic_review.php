@@ -23,10 +23,9 @@
 
 function topic_review($topic_id, $is_inline_review)
 {
-	global $db, $board_config, $template, $lang, $images, $theme, $phpEx, $phpbb_root_path;
+	global $db, $board_config, $template, $lang, $images, $theme, $phpbb_root_path;
 	global $userdata, $user_ip;
 	global $orig_word, $replacement_word;
-	global $starttime;
 
 	if ( !$is_inline_review )
 	{
@@ -93,7 +92,7 @@ function topic_review($topic_id, $is_inline_review)
 		$gen_simple_header = TRUE;
 
 		$page_title = $lang['Topic_review'] . ' - ' . $topic_title;
-		include($phpbb_root_path . 'includes/page_header.'.$phpEx);
+		include($phpbb_root_path . 'includes/page_header.php');
 
 		$template->set_filenames(array(
 			'reviewbody' => 'posting_topic_review.tpl')
@@ -221,7 +220,7 @@ function topic_review($topic_id, $is_inline_review)
 	if ( !$is_inline_review )
 	{
 		$template->pparse('reviewbody');
-		include($phpbb_root_path . 'includes/page_tail.'.$phpEx);
+		include($phpbb_root_path . 'includes/page_tail.php');
 	}
 }
 

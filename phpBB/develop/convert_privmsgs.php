@@ -16,10 +16,9 @@ die("Please read the first lines of this script for instructions on how to enabl
 
 $phpbb_root_path = "../";
 
-include($phpbb_root_path . 'extension.inc');
-include($phpbb_root_path . 'config.'.$phpEx);
-include($phpbb_root_path . 'includes/constants.'.$phpEx);
-include($phpbb_root_path . 'includes/db.'.$phpEx);
+include($phpbb_root_path . 'config.php');
+include($phpbb_root_path . 'includes/constants.php');
+include($phpbb_root_path . 'includes/db.php');
 
 //
 // Alter table ...

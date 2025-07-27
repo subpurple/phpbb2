@@ -34,12 +34,12 @@ if( !empty($setmodules) )
 }
 
 $phpbb_root_path = './../';
-require($phpbb_root_path . 'extension.inc');
-require('./pagestart.' . $phpEx);
-require($phpbb_root_path . 'includes/bbcode.'.$phpEx);
-require($phpbb_root_path . 'includes/functions_post.'.$phpEx);
-require($phpbb_root_path . 'includes/functions_selects.'.$phpEx);
-require($phpbb_root_path . 'includes/functions_validate.'.$phpEx);
+
+require('./pagestart.php');
+require($phpbb_root_path . 'includes/bbcode.php');
+require($phpbb_root_path . 'includes/functions_post.php');
+require($phpbb_root_path . 'includes/functions_selects.php');
+require($phpbb_root_path . 'includes/functions_validate.php');
 
 $html_entities_match = array('#<#', '#>#');
 $html_entities_replace = array('&lt;', '&gt;');
@@ -211,7 +211,7 @@ if ( $mode == 'edit' || $mode == 'save' && ( isset($HTTP_POST_VARS['username']) 
 				}
 			}
 
-			$message = $lang['User_deleted'] . '<br /><br />' . sprintf($lang['Click_return_useradmin'], '<a href="' . append_sid("admin_users.$phpEx") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.$phpEx?pane=right") . '">', '</a>');
+			$message = $lang['User_deleted'] . '<br /><br />' . sprintf($lang['Click_return_useradmin'], '<a href="' . append_sid("admin_users.php") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>');
 
 			message_die(GENERAL_MESSAGE, $message);
 		}
@@ -300,7 +300,7 @@ if ( $mode == 'edit' || $mode == 'save' && ( isset($HTTP_POST_VARS['username']) 
 
 	if( isset( $HTTP_POST_VARS['submit'] ) )
 	{
-		include($phpbb_root_path . 'includes/usercp_avatar.'.$phpEx);
+		include($phpbb_root_path . 'includes/usercp_avatar.php');
 
 		$error = FALSE;
 		
@@ -717,7 +717,7 @@ if ( $mode == 'edit' || $mode == 'save' && ( isset($HTTP_POST_VARS['username']) 
 				message_die(GENERAL_ERROR, 'Admin_user_fail', '', __LINE__, __FILE__, $sql);
 			}
 
-			$message .= '<br /><br />' . sprintf($lang['Click_return_useradmin'], '<a href="' . append_sid("admin_users.$phpEx") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.$phpEx?pane=right") . '">', '</a>');
+			$message .= '<br /><br />' . sprintf($lang['Click_return_useradmin'], '<a href="' . append_sid("admin_users.php") . '">', '</a>') . '<br /><br />' . sprintf($lang['Click_return_admin_index'], '<a href="' . append_sid("index.php?pane=right") . '">', '</a>');
 
 			message_die(GENERAL_MESSAGE, $message);
 		}
@@ -949,7 +949,7 @@ if ( $mode == 'edit' || $mode == 'save' && ( isset($HTTP_POST_VARS['username']) 
 
 				"S_OPTIONS_CATEGORIES" => $s_categories, 
 				"S_COLSPAN" => $s_colspan, 
-				"S_PROFILE_ACTION" => append_sid("admin_users.$phpEx?mode=$mode"), 
+				"S_PROFILE_ACTION" => append_sid("admin_users.php?mode=$mode"), 
 				"S_HIDDEN_FIELDS" => $s_hidden_fields)
 			);
 		}
@@ -1117,7 +1117,7 @@ if ( $mode == 'edit' || $mode == 'save' && ( isset($HTTP_POST_VARS['username']) 
 			'S_FORM_ENCTYPE' => $form_enctype,
 
 			'HTML_STATUS' => $html_status,
-			'BBCODE_STATUS' => sprintf($bbcode_status, '<a href="../' . append_sid("faq.$phpEx?mode=bbcode") . '" target="_phpbbcode">', '</a>'), 
+			'BBCODE_STATUS' => sprintf($bbcode_status, '<a href="../' . append_sid("faq.php?mode=bbcode") . '" target="_phpbbcode">', '</a>'), 
 			'SMILIES_STATUS' => $smilies_status,
 
 			'L_DELETE_USER' => $lang['User_delete'],
@@ -1125,7 +1125,7 @@ if ( $mode == 'edit' || $mode == 'save' && ( isset($HTTP_POST_VARS['username']) 
 			'L_SELECT_RANK' => $lang['Rank_title'],
 
 			'S_HIDDEN_FIELDS' => $s_hidden_fields,
-			'S_PROFILE_ACTION' => append_sid("admin_users.$phpEx"))
+			'S_PROFILE_ACTION' => append_sid("admin_users.php"))
 		);
 
 		if( file_exists(@phpbb_realpath('./../' . $board_config['avatar_path'])) && ($board_config['allow_avatar_upload'] == TRUE) )
@@ -1166,14 +1166,14 @@ else
 		'L_LOOK_UP' => $lang['Look_up_user'],
 		'L_FIND_USERNAME' => $lang['Find_username'],
 
-		'U_SEARCH_USER' => append_sid("./../search.$phpEx?mode=searchuser"), 
+		'U_SEARCH_USER' => append_sid("./../search.php?mode=searchuser"), 
 
-		'S_USER_ACTION' => append_sid("admin_users.$phpEx"))
+		'S_USER_ACTION' => append_sid("admin_users.php"))
 	);
 	$template->pparse('body');
 
 }
 
-include('./page_footer_admin.'.$phpEx);
+include('./page_footer_admin.php');
 
 ?>

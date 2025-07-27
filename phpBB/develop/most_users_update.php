@@ -17,8 +17,7 @@ die("Please read the first lines of this script for instructions on how to enabl
 
 	$phpbb_root_path = "../";
 
-	include($phpbb_root_path . 'extension.inc');
-	include($phpbb_root_path . 'common.'.$phpEx);
+		include($phpbb_root_path . 'common.php');
 
 	echo "\n<br >\n" . $sql = "INSERT INTO " . CONFIG_TABLE . "
 		(config_name, config_value) VALUES ('record_online_users', '1')";
