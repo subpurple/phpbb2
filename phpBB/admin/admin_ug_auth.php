@@ -47,9 +47,9 @@ $params = array('mode' => 'mode', 'user_id' => POST_USERS_URL, 'group_id' => POS
 
 foreach ($params as $var => $param)
 {
-	if ( !empty($HTTP_POST_VARS[$param]) || !empty($HTTP_GET_VARS[$param]) )
+	if ( !empty($_POST[$param]) || !empty($_GET[$param]) )
 	{
-		$$var = ( !empty($HTTP_POST_VARS[$param]) ) ? $HTTP_POST_VARS[$param] : $HTTP_GET_VARS[$param];
+		$$var = ( !empty($_POST[$param]) ) ? $_POST[$param] : $_GET[$param];
 	}
 	else
 	{
@@ -130,7 +130,7 @@ function check_auth($type, $key, $u_access, $is_admin)
 // End Functions
 // -------------
 
-if ( isset($HTTP_POST_VARS['submit']) && ( ( $mode == 'user' && $user_id ) || ( $mode == 'group' && $group_id ) ) )
+if ( isset($_POST['submit']) && ( ( $mode == 'user' && $user_id ) || ( $mode == 'group' && $group_id ) ) )
 {
 	$user_level = '';
 	if ( $mode == 'user' )
@@ -160,7 +160,7 @@ if ( isset($HTTP_POST_VARS['submit']) && ( ( $mode == 'user' && $user_id ) || ( 
 	//
 	// Carry out requests
 	//
-	if ( $mode == 'user' && $HTTP_POST_VARS['userlevel'] == 'admin' && $user_level != ADMIN )
+	if ( $mode == 'user' && $_POST['userlevel'] == 'admin' && $user_level != ADMIN )
 	{
 		//
 		// Make user an admin (if already user)
@@ -201,7 +201,7 @@ if ( isset($HTTP_POST_VARS['submit']) && ( ( $mode == 'user' && $user_id ) || ( 
 	}
 	else
 	{
-		if ( $mode == 'user' && $HTTP_POST_VARS['userlevel'] == 'user' && $user_level == ADMIN )
+		if ( $mode == 'user' && $_POST['userlevel'] == 'user' && $user_level == ADMIN )
 		{
 			//
 			// Make admin a user (if already admin) ... ignore if you're trying
@@ -234,7 +234,7 @@ if ( isset($HTTP_POST_VARS['submit']) && ( ( $mode == 'user' && $user_id ) || ( 
 		else
 		{
 	
-			$change_mod_list = ( isset($HTTP_POST_VARS['moderator']) ) ? $HTTP_POST_VARS['moderator'] : array();
+			$change_mod_list = ( isset($_POST['moderator']) ) ? $_POST['moderator'] : array();
 
 			if ( empty($adv) )
 			{
@@ -264,7 +264,7 @@ if ( isset($HTTP_POST_VARS['submit']) && ( ( $mode == 'user' && $user_id ) || ( 
 					}
 				}
 
-				foreach ($HTTP_POST_VARS['private'] as $forum_id => $value)
+				foreach ($_POST['private'] as $forum_id => $value)
 				{
 					foreach ($forum_auth_level_fields[$forum_id] as $auth_field => $exists)
 					{
@@ -282,7 +282,7 @@ if ( isset($HTTP_POST_VARS['submit']) && ( ( $mode == 'user' && $user_id ) || ( 
 				{
 					$auth_field = $forum_auth_fields[$j];
 
-					foreach ($HTTP_POST_VARS['private_' . $auth_field] as $forum_id => $value)
+					foreach ($_POST['private_' . $auth_field] as $forum_id => $value)
 					{
 						$change_acl_list[$forum_id][$auth_field] = $value;
 					}
@@ -593,11 +593,11 @@ if ( isset($HTTP_POST_VARS['submit']) && ( ( $mode == 'user' && $user_id ) || ( 
 		message_die(GENERAL_MESSAGE, $message);
 	}
 }
-else if ( ( $mode == 'user' && ( isset($HTTP_POST_VARS['username']) || $user_id ) ) || ( $mode == 'group' && $group_id ) )
+else if ( ( $mode == 'user' && ( isset($_POST['username']) || $user_id ) ) || ( $mode == 'group' && $group_id ) )
 {
-	if ( isset($HTTP_POST_VARS['username']) )
+	if ( isset($_POST['username']) )
 	{
-		$this_userdata = get_userdata($HTTP_POST_VARS['username'], true);
+		$this_userdata = get_userdata($_POST['username'], true);
 		if ( !is_array($this_userdata) )
 		{
 			message_die(GENERAL_MESSAGE, $lang['No_such_user']);

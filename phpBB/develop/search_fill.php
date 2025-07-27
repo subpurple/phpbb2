@@ -44,7 +44,7 @@ $max_post_id = $db->sql_fetchrow($result);
 $totalposts = $max_post_id['total'];
 $max_post_id = $max_post_id['max_post_id'];
 
-$postcounter = (!isset($HTTP_GET_VARS['batchstart'])) ? 0 : $HTTP_GET_VARS['batchstart'];
+$postcounter = (!isset($_GET['batchstart'])) ? 0 : $_GET['batchstart'];
 
 $batchsize = 200; // Process this many posts per loop
 $batchcount = 0;

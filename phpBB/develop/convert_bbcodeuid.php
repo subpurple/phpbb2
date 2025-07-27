@@ -39,7 +39,7 @@ function query($sql, $errormsg)
 	}
 }
 
-if($HTTP_GET_VARS['delete'] == 'true')
+if($_GET['delete'] == 'true')
 {
 	$sql = "ALTER TABLE ".POSTS_TABLE."
 		DROP bbcode_uid";

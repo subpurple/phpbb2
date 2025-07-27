@@ -50,9 +50,9 @@ And a quote!
 [/quote]
 ';
 
-$users = intval($HTTP_GET_VARS['users']);
-$posts = intval($HTTP_GET_VARS['posts']);
-$size = intval($HTTP_GET_VARS['size']);
+$users = intval($_GET['users']);
+$posts = intval($_GET['posts']);
+$size = intval($_GET['size']);
 
 // The script expects the ID's in the tables to sequential (1,2,3,4,5), 
 // so no holes please (1,4,5,8)...
@@ -90,7 +90,7 @@ if ($posts > 0)
 
 $endtime = microtime();
 
-$submit = (isset($HTTP_GET_VARS['submit'])) ? true : false;
+$submit = (isset($_GET['submit'])) ? true : false;
 
 if (!$submit)
 {
