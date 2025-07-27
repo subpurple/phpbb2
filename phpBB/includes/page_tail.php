@@ -38,7 +38,8 @@ $template->set_filenames(array(
 
 $template->assign_vars(array(
 	'TRANSLATION_INFO' => (isset($lang['TRANSLATION_INFO'])) ? $lang['TRANSLATION_INFO'] : ((isset($lang['TRANSLATION'])) ? $lang['TRANSLATION'] : ''),
-	'ADMIN_LINK' => $admin_link)
+	'ADMIN_LINK' => $admin_link,
+	'PHPBB_VERSION' => '2' . $board_config['version'])
 );
 
 $template->pparse('overall_footer');
