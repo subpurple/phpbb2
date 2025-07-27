@@ -475,8 +475,7 @@ function username_search($search_match)
 		'USERNAME' => (!empty($search_match)) ? phpbb_clean_username($search_match) : '', 
 
 		'L_CLOSE_WINDOW' => $lang['Close_window'], 
-		'L_SEARCH_USERNAME' => $lang['Find_username'], 
-		'L_UPDATE_USERNAME' => $lang['Select_username'], 
+		'L_SEARCH_USERNAME' => $lang['Find_username'],
 		'L_SELECT' => $lang['Select'], 
 		'L_SEARCH' => $lang['Search'], 
 		'L_SEARCH_EXPLAIN' => $lang['Search_author_explain'], 

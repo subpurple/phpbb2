@@ -68,7 +68,7 @@ else
 	$topic_id = '';
 }
 
-$confirm = ( $HTTP_POST_VARS['confirm'] ) ? TRUE : 0;
+$confirm = ( isset($HTTP_POST_VARS['confirm']) && $HTTP_POST_VARS['confirm'] ) ? TRUE : 0;
 
 //
 // Continue var definitions
@@ -915,7 +915,7 @@ switch( $mode )
 
 					$bbcode_uid = $postrow[$i]['bbcode_uid'];
 					$message = $postrow[$i]['post_text'];
-					$post_subject = ( $postrow[$i]['post_subject'] != '' ) ? $postrow[$i]['post_subject'] : $topic_title;
+					$post_subject = ( $postrow[$i]['post_subject'] != '' ) ? $postrow[$i]['post_subject'] : '';
 
 					//
 					// If the board has HTML off but the post has HTML

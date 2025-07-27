@@ -170,16 +170,16 @@ function validate_optional_fields(&$icq, &$aim, &$msnm, &$yim, &$website, &$loca
 {
 	$check_var_length = array('aim', 'msnm', 'yim', 'location', 'occupation', 'interests', 'sig');
 
-	for($i = 0; $i < count($check_var_length); $i++)
+	foreach($check_var_length as $var)
 	{
-		if (strlen($$check_var_length[$i]) < 2)
+		if(empty($$var) || strlen($$var) < 2)
 		{
-			$$check_var_length[$i] = '';
+			$$var = '';
 		}
 	}
 
 	// ICQ number has to be only numbers.
-	if (!preg_match('/^[0-9]+$/', $icq))
+	if (empty($icq) || !preg_match('/^[0-9]+$/', $icq))
 	{
 		$icq = '';
 	}

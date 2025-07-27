@@ -320,6 +320,8 @@ $userdata = array();
 $lang = array();
 $error = false;
 
+$table_prefix = '';
+
 // Include some required functions
 include($phpbb_root_path.'includes/constants.'.$phpEx);
 include($phpbb_root_path.'includes/functions.'.$phpEx);

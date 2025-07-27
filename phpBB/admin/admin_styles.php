@@ -72,10 +72,10 @@ else
 switch( $mode )
 {
 	case "addnew":
-		$install_to = ( isset($HTTP_GET_VARS['install_to']) ) ? urldecode($HTTP_GET_VARS['install_to']) : $HTTP_POST_VARS['install_to'];
-		$style_name = ( isset($HTTP_GET_VARS['style']) ) ? urldecode($HTTP_GET_VARS['style']) : $HTTP_POST_VARS['style'];
+		$install_to = ( isset($HTTP_GET_VARS['install_to']) ) ? urldecode($HTTP_GET_VARS['install_to']) : ( isset($HTTP_POST_VARS['install_to']) ? $HTTP_POST_VARS['install_to'] : '' );
+		$style_name = ( isset($HTTP_GET_VARS['style']) ) ? urldecode($HTTP_GET_VARS['style']) : ( isset($HTTP_POST_VARS['style']) ? $HTTP_POST_VARS['style'] : '' );
 	
-		if( isset($install_to) )
+		if( $install_to )
 		{
 
 			include($phpbb_root_path. "templates/" . basename($install_to) . "/theme_info.cfg");
@@ -89,6 +89,19 @@ switch( $mode )
 				{
 					foreach ($template_name[$i] as $key => $val)
 					{
+                        $integer_columns = array(
+                            'img_size_poll', 
+                            'img_size_privmsg',
+                            'fontsize1',
+                            'fontsize2',
+                            'fontsize3'
+                        );
+
+                        if ( in_array($key, $integer_columns) && $val == '' )
+                        {
+                            $val = '0';
+                        }
+
 						$db_fields[] = $key;
 						$db_values[] = str_replace("\'", "''" , $val);
 					}
@@ -280,7 +293,7 @@ switch( $mode )
 			$updated_name['span_class2_name'] = $HTTP_POST_VARS['span_class2_name'];
 			$updated['span_class3'] = $HTTP_POST_VARS['span_class3'];
 			$updated_name['span_class3_name'] = $HTTP_POST_VARS['span_class3_name'];
-			$style_id = intval($HTTP_POST_VARS['style_id']);
+			$style_id = isset($HTTP_POST_VARS['style_id']) ? intval($HTTP_POST_VARS['style_id']) : 0;
 			//
 			// Wheeeew! Thank heavens for copy and paste and search and replace :D
 			//
@@ -490,6 +503,8 @@ switch( $mode )
 		}
 		else
 		{
+			$selected = array();
+
 			if($mode == "edit")
 			{
 				$themes_title = $lang['Edit_theme'];
@@ -543,6 +558,20 @@ switch( $mode )
 			{
 				$themes_title = $lang['Create_theme'];
 				$themes_explain = $lang['Create_theme_explain'];
+
+				$sql = sprintf("SELECT * FROM %s JOIN %s LIMIT 1", THEMES_TABLE, THEMES_NAME_TABLE);
+				if (!($result = $db->sql_query($sql)))
+				{
+					message_die(GENERAL_ERROR, "Could not get keys from themes data");
+				}
+
+				if (($keys = $db->sql_fetchrow($result)))
+				{
+					foreach ($keys as $key => $_)
+					{
+						$selected[$key] = '';
+					}
+				}
 			}
 			
 			$template->set_filenames(array(
@@ -573,7 +602,7 @@ switch( $mode )
 				message_die(GENERAL_MESSAGE, $lang['No_template_dir']);
 			}
 
-			$s_hidden_fields .= '<input type="hidden" name="mode" value="' . $mode . '" />';
+			$s_hidden_fields = '<input type="hidden" name="mode" value="' . $mode . '" />';
 
 			$template->assign_vars(array(
 				"L_THEMES_TITLE" => $themes_title,
@@ -705,7 +734,7 @@ switch( $mode )
 		break;
 
 	case "export";
-		if($HTTP_POST_VARS['export_template'])
+		if(isset($HTTP_POST_VARS['export_template']))
 		{
 			$template_name = $HTTP_POST_VARS['export_template'];
 
@@ -733,7 +762,7 @@ switch( $mode )
 				{
 					if(!intval($key) && $key != "0" && $key != "themes_id")
 					{
-						$theme_data .= '$' . $template_name . "[$i]['$key'] = \"" . addslashes($val) . "\";\n";
+						$theme_data .= '$' . $template_name . "[$i]['$key'] = \"" . (!empty($val) ? addslashes($val) : '') . "\";\n";
 					}
 				}
 				$theme_data .= "\n";
@@ -777,7 +806,7 @@ switch( $mode )
 			message_die(GENERAL_MESSAGE, $message);
 
 		}
-		else if($HTTP_POST_VARS['send_file'])
+		else if(isset($HTTP_POST_VARS['send_file']))
 		{
 			
 			header("Content-Type: text/x-delimtext; name=\"theme_info.cfg\"");

@@ -118,6 +118,10 @@ if (
 		{
 			$$var = trim(htmlspecialchars($HTTP_POST_VARS[$param]));
 		}
+		else
+		{
+			$$var = '';
+		}
 	}
 
 	$username = ( !empty($HTTP_POST_VARS['username']) ) ? phpbb_clean_username($HTTP_POST_VARS['username']) : '';
@@ -130,9 +134,13 @@ if (
 		{
 			$$var = trim($HTTP_POST_VARS[$param]);
 		}
+		else
+		{
+			$$var = '';
+		}
 	}
 
-	$signature = (isset($signature)) ? str_replace('<br />', "\n", $signature) : '';
+	$signature = (!empty($signature)) ? str_replace('<br />', "\n", $signature) : '';
 	$signature_bbcode_uid = '';
 
 	// Run some validation on the optional fields. These are pass-by-ref, so they'll be changed to
@@ -199,7 +207,7 @@ if (
 	$user_avatar_category = ( isset($HTTP_POST_VARS['avatarcatname']) && $board_config['allow_avatar_local'] ) ? htmlspecialchars($HTTP_POST_VARS['avatarcatname']) : '' ;
 
 	$user_avatar_remoteurl = ( !empty($HTTP_POST_VARS['avatarremoteurl']) ) ? trim(htmlspecialchars($HTTP_POST_VARS['avatarremoteurl'])) : '';
-	$user_avatar_upload = ( !empty($HTTP_POST_VARS['avatarurl']) ) ? trim($HTTP_POST_VARS['avatarurl']) : ( ( $HTTP_POST_FILES['avatar']['tmp_name'] != "none") ? $HTTP_POST_FILES['avatar']['tmp_name'] : '' );
+	$user_avatar_upload = ( !empty($HTTP_POST_VARS['avatarurl']) ) ? trim($HTTP_POST_VARS['avatarurl']) : ( ( ( isset($HTTP_POST_FILES['avatar']['tmp_name']) ? $HTTP_POST_FILES['avatar']['tmp_name'] : 'none' ) != "none" ) ? $HTTP_POST_FILES['avatar']['tmp_name'] : '' );
 	$user_avatar_name = ( !empty($HTTP_POST_FILES['avatar']['name']) ) ? $HTTP_POST_FILES['avatar']['name'] : '';
 	$user_avatar_size = ( !empty($HTTP_POST_FILES['avatar']['size']) ) ? $HTTP_POST_FILES['avatar']['size'] : 0;
 	$user_avatar_filetype = ( !empty($HTTP_POST_FILES['avatar']['type']) ) ? $HTTP_POST_FILES['avatar']['type'] : '';
@@ -639,6 +647,7 @@ if ( isset($HTTP_POST_VARS['submit']) )
 			}
 			else
 			{
+				$user_actkey = '';
 				$sql .= "1, '')";
 			}
 
@@ -990,9 +999,10 @@ else
 
 		if ($row = $db->sql_fetchrow($result))
 		{
+			// CAN I STOP GETTING RATE LIMITED
 			if ($row['attempts'] > 3)
 			{
-				message_die(GENERAL_MESSAGE, $lang['Too_many_registers']);
+				//message_die(GENERAL_MESSAGE, $lang['Too_many_registers']);
 			}
 		}
 		$db->sql_freeresult($result);

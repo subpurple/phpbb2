@@ -79,6 +79,8 @@ $delimeter  = '=+:';
 // Read a listing of uploaded smilies for use in the add or edit smliey code...
 //
 $dir = @opendir($phpbb_root_path . $board_config['smilies_path']);
+$smiley_images = [];
+$smiley_paks = [];
 
 while($file = @readdir($dir))
 {
@@ -107,9 +109,9 @@ if( isset($HTTP_GET_VARS['import_pack']) || isset($HTTP_POST_VARS['import_pack']
 	//
 	// Import a list a "Smiley Pack"
 	//
-	$smile_pak = ( isset($HTTP_POST_VARS['smile_pak']) ) ? $HTTP_POST_VARS['smile_pak'] : $HTTP_GET_VARS['smile_pak'];
-	$clear_current = ( isset($HTTP_POST_VARS['clear_current']) ) ? $HTTP_POST_VARS['clear_current'] : $HTTP_GET_VARS['clear_current'];
-	$replace_existing = ( isset($HTTP_POST_VARS['replace']) ) ? $HTTP_POST_VARS['replace'] : $HTTP_GET_VARS['replace'];
+	$smile_pak = isset($HTTP_POST_VARS['smile_pak']) ? $HTTP_POST_VARS['smile_pak'] : (isset($HTTP_GET_VARS['smile_pak']) ? $HTTP_GET_VARS['smile_pak'] : '');
+	$clear_current = isset($HTTP_POST_VARS['clear_current']) ? $HTTP_POST_VARS['clear_current'] : (isset($HTTP_GET_VARS['clear_current']) ? $HTTP_GET_VARS['clear_current'] : '');
+	$replace_existing = isset($HTTP_POST_VARS['replace']) ? $HTTP_POST_VARS['replace'] : (isset($HTTP_GET_VARS['replace']) ? $HTTP_GET_VARS['replace'] : '');
 
 	if ( !empty($smile_pak) )
 	{
@@ -240,10 +242,12 @@ if( isset($HTTP_GET_VARS['import_pack']) || isset($HTTP_POST_VARS['import_pack']
 }
 else if( isset($HTTP_POST_VARS['export_pack']) || isset($HTTP_GET_VARS['export_pack']) )
 {
+	$export_pack = isset($HTTP_POST_VARS['export_pack']) ? $HTTP_POST_VARS['export_pack'] : $HTTP_GET_VARS['export_pack'];
+
 	//
 	// Export our smiley config as a smiley pak...
 	//
-	if ( $HTTP_GET_VARS['export_pack'] == "send" )
+	if ( $export_pack == "send" )
 	{	
 		$sql = "SELECT * 
 			FROM " . SMILIES_TABLE;
@@ -552,7 +556,7 @@ else
 		"L_IMPORT_PACK" => $lang['import_smile_pack'],
 		"L_EXPORT_PACK" => $lang['export_smile_pack'],
 		
-		"S_HIDDEN_FIELDS" => $s_hidden_fields, 
+		"S_HIDDEN_FIELDS" => '', 
 		"S_SMILEY_ACTION" => append_sid("admin_smilies.$phpEx"))
 	);
 

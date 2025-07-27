@@ -26,9 +26,12 @@
 //
 class emailer
 {
-	var $msg, $subject, $extra_headers;
+	var $vars, $msg, $subject, $extra_headers;
 	var $addresses, $reply_to, $from;
 	var $use_smtp;
+	var $encoding;
+
+	var $mimeOut, $emailAddress, $mailSubject;
 
 	var $tpl_msg = array();
 
@@ -188,8 +191,8 @@ class emailer
 
 		$to = $this->addresses['to'];
 
-		$cc = (count($this->addresses['cc'])) ? implode(', ', $this->addresses['cc']) : '';
-		$bcc = (count($this->addresses['bcc'])) ? implode(', ', $this->addresses['bcc']) : '';
+		$cc = (isset($this->addresses['cc']) && count($this->addresses['cc'])) ? implode(', ', $this->addresses['cc']) : '';
+		$bcc = (isset($this->addresses['bcc']) && count($this->addresses['bcc'])) ? implode(', ', $this->addresses['bcc']) : '';
 
 		// Build header
 		$this->extra_headers = (($this->reply_to != '') ? "Reply-to: $this->reply_to\n" : '') . (($this->from != '') ? "From: $this->from\n" : "From: " . $board_config['board_email'] . "\n") . "Return-Path: " . $board_config['board_email'] . "\nMessage-ID: <" . md5(uniqid(time())) . "@" . $board_config['server_name'] . ">\nMIME-Version: 1.0\nContent-type: text/plain; charset=" . $this->encoding . "\nContent-transfer-encoding: 8bit\nDate: " . date('r', time()) . "\nX-Priority: 3\nX-MSMail-Priority: Normal\nX-Mailer: PHP\nX-MimeOLE: Produced By phpBB2\n" . $this->extra_headers . (($cc != '') ? "Cc: $cc\n" : '')  . (($bcc != '') ? "Bcc: $bcc\n" : ''); 
@@ -276,12 +279,6 @@ class emailer
 
 		$this->msg = '--' . $mime_boundary . "\nContent-Type: text/plain;\n\tcharset=\"" . $lang['ENCODING'] . "\"\n\n" . $this->msg;
 
-		if ($mime_filename)
-		{
-			$filename = $mime_filename;
-			$encoded = $this->encode_file($filename);
-		}
-
 		$fd = fopen($filename, "r");
 		$contents = fread($fd, filesize($filename));
 
@@ -304,7 +301,7 @@ class emailer
 		$this->mimeOut .= $contents."\n";
 		$this->mimeOut .= "--" . $mime_boundary . "--" . "\n";
 
-		return $out;
+		return $this->mimeOut;
 		// added -- to notify email client attachment is done
 	}
 

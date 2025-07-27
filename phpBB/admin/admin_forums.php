@@ -153,7 +153,7 @@ function get_list($mode, $id, $select)
 		message_die(GENERAL_ERROR, "Couldn't get list of Categories/Forums", "", __LINE__, __FILE__, $sql);
 	}
 
-	$cat_list = "";
+	$catlist = "";
 
 	while( $row = $db->sql_fetchrow($result) )
 	{
@@ -246,6 +246,8 @@ if( isset($HTTP_POST_VARS['addforum']) || isset($HTTP_POST_VARS['addcategory']) 
 
 if( !empty($mode) ) 
 {
+	$show_index = FALSE;
+
 	switch($mode)
 	{
 		case 'addforum':
@@ -305,7 +307,16 @@ if( !empty($mode) )
 
 			$catlist = get_list('category', $cat_id, TRUE);
 
-			$forumstatus == ( FORUM_LOCKED ) ? $forumlocked = "selected=\"selected\"" : $forumunlocked = "selected=\"selected\"";
+			if ($forumstatus == FORUM_LOCKED)
+			{
+				$forumlocked = "selected=\"selected\"";
+				$forumunlocked = "";
+			}
+			else
+			{
+				$forumunlocked = "selected=\"selected\"";
+				$forumlocked = "";
+			}
 			
 			// These two options ($lang['Status_unlocked'] and $lang['Status_locked']) seem to be missing from
 			// the language files.
@@ -349,6 +360,21 @@ if( !empty($mode) )
 			);
 			$template->pparse("body");
 			break;
+
+		case 'modforum':
+		case 'createforum':
+
+			if( isset($HTTP_POST_VARS['prune_enable']))
+			{
+				if( $HTTP_POST_VARS['prune_enable'] != 1 )
+				{
+					$HTTP_POST_VARS['prune_enable'] = 0;
+				}
+			}
+			else
+			{
+				$HTTP_POST_VARS['prune_enable'] = 0;
+			}
 
 		case 'createforum':
 			//
@@ -426,14 +452,6 @@ if( !empty($mode) )
 
 		case 'modforum':
 			// Modify a forum in the DB
-			if( isset($HTTP_POST_VARS['prune_enable']))
-			{
-				if( $HTTP_POST_VARS['prune_enable'] != 1 )
-				{
-					$HTTP_POST_VARS['prune_enable'] = 0;
-				}
-			}
-
 			$sql = "UPDATE " . FORUMS_TABLE . "
 				SET forum_name = '" . str_replace("\'", "''", $HTTP_POST_VARS['forumname']) . "', cat_id = " . intval($HTTP_POST_VARS[POST_CAT_URL]) . ", forum_desc = '" . str_replace("\'", "''", $HTTP_POST_VARS['forumdesc']) . "', forum_status = " . intval($HTTP_POST_VARS['forumstatus']) . ", prune_enable = " . intval($HTTP_POST_VARS['prune_enable']) . "
 				WHERE forum_id = " . intval($HTTP_POST_VARS[POST_FORUM_URL]);
@@ -569,7 +587,7 @@ if( !empty($mode) )
 			$forum_id = intval($HTTP_GET_VARS[POST_FORUM_URL]);
 
 			$select_to = '<select name="to_id">';
-			$select_to .= "<option value=\"-1\"$s>" . $lang['Delete_all_posts'] . "</option>\n";
+			$select_to .= "<option value=\"-1\">" . $lang['Delete_all_posts'] . "</option>\n";
 			$select_to .= get_list('forum', $forum_id, 0);
 			$select_to .= '</select>';
 
@@ -609,7 +627,6 @@ if( !empty($mode) )
 			//
 			$from_id = intval($HTTP_POST_VARS['from_id']);
 			$to_id = intval($HTTP_POST_VARS['to_id']);
-			$delete_old = intval($HTTP_POST_VARS['delete_old']);
 
 			// Either delete or move all posts in a forum
 			if($to_id == -1)
@@ -728,9 +745,9 @@ if( !empty($mode) )
 					$db->sql_query($sql);
 				}
 				$db->sql_freeresult($result);
+				$db->sql_freeresult($result2);
 
 			}
-			$db->sql_freeresult($result2);
 
 			$sql = "DELETE FROM " . FORUMS_TABLE . "
 				WHERE forum_id = $from_id";
@@ -1004,7 +1021,6 @@ if( $total_categories = $db->sql_numrows($q_categories) )
 				$template->assign_block_vars("catrow.forumrow",	array(
 					'FORUM_NAME' => $forum_rows[$j]['forum_name'],
 					'FORUM_DESC' => $forum_rows[$j]['forum_desc'],
-					'ROW_COLOR' => $row_color,
 					'NUM_TOPICS' => $forum_rows[$j]['forum_topics'],
 					'NUM_POSTS' => $forum_rows[$j]['forum_posts'],
 

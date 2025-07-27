@@ -191,8 +191,8 @@ if ( isset($HTTP_POST_VARS['submit']) )
 		{
 			$kill_session_sql .= ( ( $kill_session_sql != '' ) ? ' OR ' : '' ) . "session_user_id = " . $user_list[$i];
 
-			$sql = "INSERT INTO " . BANLIST_TABLE . " (ban_userid)
-				VALUES (" . $user_list[$i] . ")";
+			$sql = "INSERT INTO " . BANLIST_TABLE . " (ban_ip, ban_userid)
+				VALUES ('', " . $user_list[$i] . ")";
 			if ( !$db->sql_query($sql) )
 			{
 				message_die(GENERAL_ERROR, "Couldn't insert ban_userid info into database", "", __LINE__, __FILE__, $sql);
@@ -224,8 +224,8 @@ if ( isset($HTTP_POST_VARS['submit']) )
 
 			$kill_session_sql .= ( ( $kill_session_sql != '' ) ? ' OR ' : '' ) . $kill_ip_sql;
 
-			$sql = "INSERT INTO " . BANLIST_TABLE . " (ban_ip)
-				VALUES ('" . $ip_list[$i] . "')";
+			$sql = "INSERT INTO " . BANLIST_TABLE . " (ban_ip, ban_userid)
+				VALUES ('" . $ip_list[$i] . "', 0)";
 			if ( !$db->sql_query($sql) )
 			{
 				message_die(GENERAL_ERROR, "Couldn't insert ban_ip info into database", "", __LINE__, __FILE__, $sql);
@@ -261,8 +261,8 @@ if ( isset($HTTP_POST_VARS['submit']) )
 
 		if ( !$in_banlist )
 		{
-			$sql = "INSERT INTO " . BANLIST_TABLE . " (ban_email)
-				VALUES ('" . str_replace("\'", "''", $email_list[$i]) . "')";
+			$sql = "INSERT INTO " . BANLIST_TABLE . " (ban_ip, ban_userid, ban_email)
+				VALUES ('', 0, '" . str_replace("\'", "''", $email_list[$i]) . "')";
 			if ( !$db->sql_query($sql) )
 			{
 				message_die(GENERAL_ERROR, "Couldn't insert ban_email info into database", "", __LINE__, __FILE__, $sql);
