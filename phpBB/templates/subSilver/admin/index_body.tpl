@@ -44,10 +44,6 @@
   </tr>
 </table>
 
-<h1>{L_VERSION_INFORMATION}</h1>
-
-{VERSION_INFO}
-
 <br />
 
 <h1>{L_WHO_IS_ONLINE}</h1>
