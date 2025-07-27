@@ -30,8 +30,7 @@ error_reporting  (E_ERROR | E_WARNING | E_PARSE); // This will NOT report uninit
 // The following code (unsetting globals)
 // Thanks to Matt Kavanagh and Stefan Esser for providing feedback as well as patch files
 
-// PHP5 with register_long_arrays off?
-if (@phpversion() >= '5.0.0' && (!@ini_get('register_long_arrays') || @ini_get('register_long_arrays') == '0' || strtolower(@ini_get('register_long_arrays')) == 'off'))
+if (true)
 {
 	$HTTP_POST_VARS = $_POST;
 	$HTTP_GET_VARS = $_GET;
@@ -57,38 +56,6 @@ if (isset($HTTP_POST_VARS['GLOBALS']) || isset($HTTP_POST_FILES['GLOBALS']) || i
 if (isset($HTTP_SESSION_VARS) && !is_array($HTTP_SESSION_VARS))
 {
 	die("Hacking attempt");
-}
-
-if (@ini_get('register_globals') == '1' || strtolower(@ini_get('register_globals')) == 'on')
-{
-	// PHP4+ path
-	$not_unset = array('HTTP_GET_VARS', 'HTTP_POST_VARS', 'HTTP_COOKIE_VARS', 'HTTP_SERVER_VARS', 'HTTP_SESSION_VARS', 'HTTP_ENV_VARS', 'HTTP_POST_FILES', 'phpEx', 'phpbb_root_path');
-
-	// Not only will array_merge give a warning if a parameter
-	// is not an array, it will actually fail. So we check if
-	// HTTP_SESSION_VARS has been initialised.
-	if (!isset($HTTP_SESSION_VARS) || !is_array($HTTP_SESSION_VARS))
-	{
-		$HTTP_SESSION_VARS = array();
-	}
-
-	// Merge all into one extremely huge array; unset
-	// this later
-	$input = array_merge($HTTP_GET_VARS, $HTTP_POST_VARS, $HTTP_COOKIE_VARS, $HTTP_SERVER_VARS, $HTTP_SESSION_VARS, $HTTP_ENV_VARS, $HTTP_POST_FILES);
-
-	unset($input['input']);
-	unset($input['not_unset']);
-
-	foreach ($input as $var => $_)
-	{
-		if (in_array($var, $not_unset))
-		{
-			die('Hacking attempt!');
-		}
-		unset($$var);
-	}
-
-	unset($input);
 }
 
 //
