@@ -295,7 +295,7 @@ else if ( $mode == 'read' )
 			message_die(GENERAL_ERROR, 'Could not obtain sent message info for sendee', '', __LINE__, __FILE__, $sql);
 		}
 
-		$sql_priority = ( SQL_LAYER == 'mysql' ) ? 'LOW_PRIORITY' : '';
+		$sql_priority = ( SQL_LAYER == 'mysqli' ) ? 'LOW_PRIORITY' : '';
 
 		if ( $sent_info = $db->sql_fetchrow($result) )
 		{
@@ -917,7 +917,7 @@ else if ( $save && $mark_list && $folder != 'savebox' && $folder != 'outbox' )
 			message_die(GENERAL_ERROR, 'Could not obtain sent message info for sendee', '', __LINE__, __FILE__, $sql);
 		}
 
-		$sql_priority = ( SQL_LAYER == 'mysql' ) ? 'LOW_PRIORITY' : '';
+		$sql_priority = ( SQL_LAYER == 'mysqli' ) ? 'LOW_PRIORITY' : '';
 
 		if ( $saved_info = $db->sql_fetchrow($result) )
 		{
@@ -1264,7 +1264,7 @@ else if ( $submit || $refresh || $mode != '' )
 				message_die(GENERAL_MESSAGE, $lang['No_such_user']);
 			}
 
-			$sql_priority = ( SQL_LAYER == 'mysql' ) ? 'LOW_PRIORITY' : '';
+			$sql_priority = ( SQL_LAYER == 'mysqli' ) ? 'LOW_PRIORITY' : '';
 
 			if ( $inbox_info = $db->sql_fetchrow($result) )
 			{

@@ -27,10 +27,6 @@ if ( !defined('IN_PHPBB') )
 
 switch($dbms)
 {
-	case 'mysql':
-		include($phpbb_root_path . 'db/mysql.'.$phpEx);
-		break;
-
 	case 'mysqli':
 		include($phpbb_root_path . 'db/mysqli.php');
 		break;

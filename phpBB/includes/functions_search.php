@@ -193,7 +193,6 @@ function add_search_words($mode, $post_id, $post_text, $post_title = '')
 			{
 				switch( SQL_LAYER )
 				{
-					case 'mysql':
 					case 'mysqli':
 						$value_sql .= ( ( $value_sql != '' ) ? ', ' : '' ) . '(\'' . $word[$i] . '\', 0)';
 						break;
@@ -217,7 +216,6 @@ function add_search_words($mode, $post_id, $post_text, $post_title = '')
 		{
 			switch ( SQL_LAYER )
 			{
-				case 'mysql':
 				case 'mysqli':
 					$sql = "INSERT IGNORE INTO " . SEARCH_WORD_TABLE . " (word_text, word_common) 
 						VALUES $value_sql"; 
@@ -346,7 +344,6 @@ function remove_search_post($post_id_sql)
 
 	switch ( SQL_LAYER )
 	{
-		case 'mysql':
 		case 'mysqli':
 			$sql = "SELECT word_id 
 				FROM " . SEARCH_MATCH_TABLE . " 

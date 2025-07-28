@@ -835,7 +835,6 @@ if( isset($_GET['perform']) || isset($_POST['perform']) )
 						$table_content_function = "get_table_content_postgresql";
 						break;
 
-					case 'mysql':
 					case 'mysqli':
 						$table_def_function = "get_table_def_mysql";
 						$table_content_function = "get_table_content_mysql";

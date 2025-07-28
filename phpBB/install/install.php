@@ -311,13 +311,6 @@ include($phpbb_root_path.'includes/sessions.php');
 
 // Define schema info
 $available_dbms = array(
-	'mysql'=> array(
-		'LABEL'			=> 'MySQL 3.x',
-		'SCHEMA'		=> 'mysql', 
-		'DELIM'			=> ';',
-		'DELIM_BASIC'	=> ';',
-		'COMMENTS'		=> 'remove_remarks'
-	),
 	'mysqli' => array(
 		'LABEL'			=> 'MySQLi',
 		'SCHEMA'		=> 'mysql',
@@ -770,7 +763,6 @@ else
 				$check_other = 'sybase';
 				break;
 
-			case 'mysql':
 			case 'mysqli':
 				$check_exts = 'mysqli';
 				$check_other = 'mysqli';
