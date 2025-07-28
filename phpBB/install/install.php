@@ -332,13 +332,6 @@ $available_dbms = array(
 		'DELIM_BASIC'	=> ';',
 		'COMMENTS'		=> 'remove_comments'
 	),
-	'msaccess' => array(
-		'LABEL'			=> 'MS Access [ ODBC ]',
-		'SCHEMA'		=> '', 
-		'DELIM'			=> '', 
-		'DELIM_BASIC'	=> ';',
-		'COMMENTS'		=> ''
-	),
 	'mssql-odbc' =>	array(
 		'LABEL'			=> 'MS SQL Server [ ODBC ]',
 		'SCHEMA'		=> 'mssql', 
@@ -752,7 +745,6 @@ else
 	{
 		switch($dbms)
 		{
-			case 'msaccess':
 			case 'mssql-odbc':
 				$check_exts = 'odbc';
 				$check_other = 'odbc';
@@ -796,57 +788,54 @@ else
 	{
 		if ($upgrade != 1)
 		{
-			if ($dbms != 'msaccess')
+			// Load in the sql parser
+			include($phpbb_root_path.'includes/sql_parse.php');
+
+			// Ok we have the db info go ahead and read in the relevant schema
+			// and work on building the table.. probably ought to provide some
+			// kind of feedback to the user as we are working here in order
+			// to let them know we are actually doing something.
+			$sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema));
+			$sql_query = preg_replace('/phpbb_/', $table_prefix, $sql_query);
+
+			$sql_query = $remove_remarks($sql_query);
+			$sql_query = split_sql_file($sql_query, $delimiter);
+
+			for ($i = 0; $i < sizeof($sql_query); $i++)
 			{
-				// Load in the sql parser
-				include($phpbb_root_path.'includes/sql_parse.php');
-
-				// Ok we have the db info go ahead and read in the relevant schema
-				// and work on building the table.. probably ought to provide some
-				// kind of feedback to the user as we are working here in order
-				// to let them know we are actually doing something.
-				$sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema));
-				$sql_query = preg_replace('/phpbb_/', $table_prefix, $sql_query);
-
-				$sql_query = $remove_remarks($sql_query);
-				$sql_query = split_sql_file($sql_query, $delimiter);
-
-				for ($i = 0; $i < sizeof($sql_query); $i++)
+				if (trim($sql_query[$i]) != '')
 				{
-					if (trim($sql_query[$i]) != '')
+					if (!($result = $db->sql_query($sql_query[$i])))
 					{
-						if (!($result = $db->sql_query($sql_query[$i])))
-						{
-							$error = $db->sql_error();
-			
-							page_header($lang['Install'], '');
-							page_error($lang['Installer_Error'], $lang['Install_db_error'] . '<br />' . $error['message']);
-							page_footer();
-							exit;
-						}
+						$error = $db->sql_error();
+		
+						page_header($lang['Install'], '');
+						page_error($lang['Installer_Error'], $lang['Install_db_error'] . '<br />' . $error['message']);
+						page_footer();
+						exit;
 					}
 				}
-		
-				// Ok tables have been built, let's fill in the basic information
-				$sql_query = @fread(@fopen($dbms_basic, 'r'), @filesize($dbms_basic));
-				$sql_query = preg_replace('/phpbb_/', $table_prefix, $sql_query);
+			}
+	
+			// Ok tables have been built, let's fill in the basic information
+			$sql_query = @fread(@fopen($dbms_basic, 'r'), @filesize($dbms_basic));
+			$sql_query = preg_replace('/phpbb_/', $table_prefix, $sql_query);
 
-				$sql_query = $remove_remarks($sql_query);
-				$sql_query = split_sql_file($sql_query, $delimiter_basic);
+			$sql_query = $remove_remarks($sql_query);
+			$sql_query = split_sql_file($sql_query, $delimiter_basic);
 
-				for($i = 0; $i < sizeof($sql_query); $i++)
+			for($i = 0; $i < sizeof($sql_query); $i++)
+			{
+				if (trim($sql_query[$i]) != '')
 				{
-					if (trim($sql_query[$i]) != '')
+					if (!($result = $db->sql_query($sql_query[$i])))
 					{
-						if (!($result = $db->sql_query($sql_query[$i])))
-						{
-							$error = $db->sql_error();
+						$error = $db->sql_error();
 
-							page_header($lang['Install'], '');
-							page_error($lang['Installer_Error'], $lang['Install_db_error'] . '<br />' . $error['message']);
-							page_footer();
-							exit;
-						}
+						page_header($lang['Install'], '');
+						page_error($lang['Installer_Error'], $lang['Install_db_error'] . '<br />' . $error['message']);
+						page_footer();
+						exit;
 					}
 				}
 			}

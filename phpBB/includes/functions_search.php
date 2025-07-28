@@ -160,7 +160,6 @@ function add_search_words($mode, $post_id, $post_text, $post_title = '')
 		switch( SQL_LAYER )
 		{
 			case 'postgresql':
-			case 'msaccess':
 			case 'mssql-odbc':
 			case 'oracle':
 				$sql = "SELECT word_id, word_text     
