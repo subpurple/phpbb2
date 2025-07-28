@@ -672,9 +672,6 @@ if( isset($_GET['perform']) || isset($_POST['perform']) )
 				case 'oracle':
 					$error = true;
 					break;
-				case 'db2':
-					$error = true;
-					break;
 				case 'msaccess':
 					$error = true;
 					break;

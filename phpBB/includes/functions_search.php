@@ -163,7 +163,6 @@ function add_search_words($mode, $post_id, $post_text, $post_title = '')
 			case 'msaccess':
 			case 'mssql-odbc':
 			case 'oracle':
-			case 'db2':
 				$sql = "SELECT word_id, word_text     
 					FROM " . SEARCH_WORD_TABLE . " 
 					WHERE word_text IN ($word_text_sql)";
