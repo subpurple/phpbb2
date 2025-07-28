@@ -836,7 +836,6 @@ if( isset($_GET['perform']) || isset($_POST['perform']) )
 						break;
 
 					case 'mysql':
-					case 'mysql4':
 					case 'mysqli':
 						$table_def_function = "get_table_def_mysql";
 						$table_content_function = "get_table_content_mysql";

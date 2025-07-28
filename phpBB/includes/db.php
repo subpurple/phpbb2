@@ -31,10 +31,6 @@ switch($dbms)
 		include($phpbb_root_path . 'db/mysql.'.$phpEx);
 		break;
 
-	case 'mysql4':
-		include($phpbb_root_path . 'db/mysql4.'.$phpEx);
-		break;
-
 	case 'mysqli':
 		include($phpbb_root_path . 'db/mysqli.php');
 		break;
