@@ -32,19 +32,15 @@ switch($dbms)
 		break;
 
 	case 'postgres':
-		include($phpbb_root_path . 'db/postgres7.'.$phpEx);
+		include($phpbb_root_path . 'db/postgres7.php');
 		break;
 
 	case 'mssql':
-		include($phpbb_root_path . 'db/mssql.'.$phpEx);
-		break;
-
-	case 'oracle':
-		include($phpbb_root_path . 'db/oracle.'.$phpEx);
+		include($phpbb_root_path . 'db/mssql.php');
 		break;
 
 	case 'mssql-odbc':
-		include($phpbb_root_path . 'db/mssql-odbc.'.$phpEx);
+		include($phpbb_root_path . 'db/mssql-odbc.php');
 		break;
 }
 
