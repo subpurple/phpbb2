@@ -489,4 +489,3 @@ function username_search($search_match)
 	return;
 }
 
-?>

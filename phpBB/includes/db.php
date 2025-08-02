@@ -55,4 +55,3 @@ if(!$db->db_connect_id)
 	message_die(CRITICAL_ERROR, "Could not connect to the database");
 }
 
-?>

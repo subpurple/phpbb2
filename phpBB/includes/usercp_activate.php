@@ -116,4 +116,3 @@ else
 	message_die(GENERAL_MESSAGE, $lang['No_such_user']);
 }
 
-?>

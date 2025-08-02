@@ -72,4 +72,3 @@ if( $do_gzip_compress )
 
 exit;
 
-?>

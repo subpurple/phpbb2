@@ -367,4 +367,3 @@ class emailer
 
 } // class emailer
 
-?>

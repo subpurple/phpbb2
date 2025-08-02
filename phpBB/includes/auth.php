@@ -325,4 +325,3 @@ function auth_check_user($type, $key, $u_access, $is_admin)
 	return $auth_user;
 }
 
-?>

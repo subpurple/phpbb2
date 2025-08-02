@@ -393,5 +393,3 @@ class sql_db
 } // class ... db_sql
 
 } // if ... defined
-
-?>

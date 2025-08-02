@@ -123,4 +123,3 @@ if ( isset($_GET['mode']) || isset($_POST['mode']) )
 
 redirect(append_sid("index.php", true));
 
-?>

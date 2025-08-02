@@ -64,4 +64,3 @@ if (empty($no_page_header))
 	include('./page_header_admin.php');
 }
 
-?>

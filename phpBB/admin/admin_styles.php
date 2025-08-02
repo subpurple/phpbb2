@@ -970,4 +970,3 @@ if (empty($_POST['send_file']))
 	include('./page_footer_admin.php');
 }
 
-?>

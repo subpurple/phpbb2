@@ -750,4 +750,3 @@ $lang['Login_reset_time_explain'] = 'Time in minutes the user have to wait until
 // That's all Folks!
 // -------------------------------------------------
 
-?>

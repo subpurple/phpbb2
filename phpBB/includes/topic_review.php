@@ -224,4 +224,3 @@ function topic_review($topic_id, $is_inline_review)
 	}
 }
 
-?>

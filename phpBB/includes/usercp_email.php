@@ -213,4 +213,3 @@ else
 	message_die(GENERAL_ERROR, 'Could not select user data', '', __LINE__, __FILE__, $sql);
 }
 
-?>

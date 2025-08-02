@@ -941,4 +941,3 @@ function redirect($url)
 	exit;
 }
 
-?>

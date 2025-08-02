@@ -792,4 +792,3 @@ function smiley_sort($a, $b)
 	return ( strlen($a['code']) > strlen($b['code']) ) ? -1 : 1;
 }
 
-?>

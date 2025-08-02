@@ -884,4 +884,3 @@ function clean_html($tag)
 		return htmlspecialchars('<' .   $tag[1] . '>');
 	}
 }
-?>

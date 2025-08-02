@@ -487,4 +487,3 @@ header ('Pragma: no-cache');
 
 $template->pparse('overall_header');
 
-?>

@@ -202,4 +202,3 @@ function validate_optional_fields(&$icq, &$aim, &$msnm, &$yim, &$website, &$loca
 	return;
 }
 
-?>

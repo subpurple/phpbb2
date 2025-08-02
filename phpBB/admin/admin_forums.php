@@ -1044,4 +1044,3 @@ $template->pparse("body");
 
 include('./page_footer_admin.php');
 
-?>

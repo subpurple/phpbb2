@@ -1024,4 +1024,3 @@ $lang['Session_invalid'] = 'Invalid Session. Please resubmit the form.';
 // That's all, Folks!
 // -------------------------------------------------
 
-?>

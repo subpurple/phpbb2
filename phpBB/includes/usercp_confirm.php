@@ -457,4 +457,3 @@ function define_raw_pngs()
 	return $_png;
 }
 
-?>

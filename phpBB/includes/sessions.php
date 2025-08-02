@@ -575,4 +575,3 @@ function append_sid($url, $non_html_amp = false)
 	return $url;
 }
 
-?>

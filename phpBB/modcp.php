@@ -1255,4 +1255,3 @@ switch( $mode )
 
 include($phpbb_root_path . 'includes/page_tail.php');
 
-?>

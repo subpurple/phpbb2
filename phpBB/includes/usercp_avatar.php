@@ -403,4 +403,3 @@ function display_avatar_gallery($mode, &$category, &$user_id, &$email, &$current
 	return;
 }
 
-?>

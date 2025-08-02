@@ -180,4 +180,3 @@ define('VOTE_DESC_TABLE', $table_prefix.'vote_desc');
 define('VOTE_RESULTS_TABLE', $table_prefix.'vote_results');
 define('VOTE_USERS_TABLE', $table_prefix.'vote_voters');
 
-?>
