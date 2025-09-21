@@ -216,7 +216,7 @@ else
 	$forum_name = $forum_rows[0]['forum_name'];
 
 	@reset($simple_auth_ary);
-	while( list($key, $auth_levels) = each($simple_auth_ary))
+	foreach ($simple_auth_ary as $key => $auth_levels)
 	{
 		$matched = 1;
 		for($k = 0; $k < count($auth_levels); $k++)

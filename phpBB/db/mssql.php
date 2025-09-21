@@ -287,7 +287,7 @@ class sql_db
 
 			$row = @mssql_fetch_array($query_id);
 
-			while( list($key, $value) = @each($row) )
+			foreach ($row as $key => $value)
 			{
 				$row[$key] = ($value === ' ') ? '' : stripslashes($value);
 			}
@@ -315,7 +315,7 @@ class sql_db
 
 			while( $row = @mssql_fetch_array($query_id))
 			{
-				while( list($key, $value) = @each($row) )
+				foreach ($row as $key => $value)
 				{
 					$rowset[$i][$key] = ($value === ' ') ? '' : stripslashes($value);
 				}

@@ -848,12 +848,12 @@ if ( $mode == 'edit' || $mode == 'save' && ( isset($HTTP_POST_VARS['username']) 
 			}
 			else
 			{
-				list($category, ) = each($avatar_images);
+				$category = key($avatar_images);
 			}
 			@reset($avatar_images);
 
 			$s_categories = "";
-			while( list($key) = each($avatar_images) )
+			foreach ($avatar_images as $key)
 			{
 				$selected = ( $key == $category ) ? "selected=\"selected\"" : "";
 				if( count($avatar_images[$key]) )

@@ -288,7 +288,7 @@ function get_table_def_postgresql($table, $crlf)
 
 	if (!empty($index_rows))
 	{
-		while(list($idx_name, $props) = each($index_rows))
+		foreach ($index_rows as $idx_name => $props)
 		{
 			$props['column_names'] = preg_replace("/, $/", "" , $props['column_names']);
 			$index_create .= 'CREATE ' . $props['unique'] . " INDEX $idx_name ON $table (" . $props['column_names'] . ");$crlf";
@@ -430,7 +430,7 @@ function get_table_def_mysql($table, $crlf)
 		$index[$kname][] = $row['Column_name'];
 	}
 
-	while(list($x, $columns) = @each($index))
+	foreach ($index as $x => $columns)
 	{
 		$schema_create .= ", $crlf";
 

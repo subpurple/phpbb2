@@ -459,7 +459,7 @@ if ( !empty($next) )
 				"words" => "words"
 			);
 
-			while( list($old, $new) = each($modtables) )
+			foreach ($modtables as $old => $new)
 			{
 				$result = query("SHOW INDEX FROM $old", "Couldn't get list of indices for table $old");
 
@@ -493,7 +493,7 @@ if ( !empty($next) )
 			}
 			
 			// Check what tables we need to CREATE
-			while( list($table, $definition) = each($table_def) )
+			foreach ($table_def as $table => $definition)
 			{
 				if ( !inarray($table, $currenttables) )
 				{
@@ -511,14 +511,14 @@ if ( !empty($next) )
 			print " * Inserting new values into new layout config table :: ";
 
 			@reset($inserts);
-			while( list($table, $inserts_table) = each($inserts) )
+			foreach ($inserts as $table => $inserts_table)
 			{
 				if ( $table == CONFIG_TABLE )
 				{
 					$per_pct = ceil( count($inserts_table) / 40 );
 					$inc = 0;
 
-					while( list($nr, $insert) = each($inserts_table) )
+					foreach ($inserts_table as $nr => $insert)
 					{
 						query($insert, "Couldn't insert value into config table");
 
@@ -556,7 +556,7 @@ if ( !empty($next) )
 				"email_sig" => "board_email_sig"
 			);
 
-			while( list($name, $value) = each($oldconfig) )
+			foreach ($oldconfig as $name => $value)
 			{
 				if ( is_int($name) )
 				{
@@ -602,7 +602,7 @@ if ( !empty($next) )
 			lock_tables(1, array(POSTS_TABLE, PRIVMSGS_TABLE, BANLIST_TABLE));
 
 			$batchsize = 2000;
-			while( list($table, $data_array) = each($names) )
+			foreach ($names as $table => $data_array)
 			{
 				$sql = "SELECT MAX(" . $data_array['id'] . ") AS max_id 
 					FROM $table";
@@ -665,7 +665,7 @@ if ( !empty($next) )
 
 			lock_tables(1, array(POSTS_TABLE, TOPICS_TABLE, PRIVMSGS_TABLE));
 
-			while( list($table, $fields) = each($names) )
+			foreach ($names as $table => $fields)
 			{
 				print " * Converting date format of $fields[$i] in $table :: ";
 				flush();
@@ -703,15 +703,15 @@ if ( !empty($next) )
 
 			lock_tables(1, array(TOPICS_TABLE, FORUMS_TABLE, CATEGORIES_TABLE, WORDS_TABLE, RANKS_TABLE, DISALLOW_TABLE, SMILIES_TABLE));
 
-			while( list($table, $fields) = each($slashfields) )
+			foreach ($slashfields as $table => $fields)
 			{
 				print " * Removing slashes from $table table :: ";
 				flush();
 
-				while( list($nr, $field) = each($fields) )
+				foreach ($fields as $nr => $field)
 				{
 					@reset($slashes);
-					while( list($search, $replace) = each($slashes) )
+					foreach ($slashes as $search => $replace)
 					{
 						$sql = "UPDATE $table 
 							SET $field = REPLACE($field, '" . addslashes($search) . "', '" . addslashes($replace) . "')";
@@ -850,7 +850,7 @@ if ( !empty($next) )
 
 					// Check for invalid info like '-' and '?' for a lot of fields
 					@reset($checklength);
-					while($field = each($checklength))
+					foreach ($checklength as $field)
 					{
 						$row[$field[1]] = strlen($row[$field[1]]) < 3 ? '' : $row[$field[1]];
 					}
@@ -872,7 +872,7 @@ if ( !empty($next) )
 					$row['user_icq'] = (ereg("^[0-9]+$", $row['user_icq'])) ? $row['user_icq'] : '';
 					@reset($checklength);
 
-					while($field = each($checklength))
+					foreach ($checklength as $field)
 					{
 						if ( strlen($row[$field[1]]) < 3 )
 						{
@@ -1432,7 +1432,7 @@ if ( !empty($next) )
 			$field_def = $schema['field_def'];
 
 			// Loop tables in schema
-			while (list($table, $table_def) = @each($field_def))
+			foreach ($field_def as $table => $table_def)
 			{
 				// Loop fields in table
 				print " * Updating table '$table' :: ";
@@ -1448,7 +1448,7 @@ if ( !empty($next) )
 				}
 				
 				$alter_sql = "ALTER TABLE $table ";
-				while (list($field, $definition) = each($table_def))
+				foreach ($table_def as $field => $definition)
 				{
 					if ( $field == '' )
 					{
@@ -1494,7 +1494,7 @@ if ( !empty($next) )
 					$indices[] = $row['Key_name'];
 				}
 				
-				while ( list($key_name, $key_field) = each($key_def[$table]) )
+				foreach ($key_def[$table] as $key_name => $key_field)
 				{
 					if ( !inarray($key_name, $indices) )
 					{
@@ -1610,14 +1610,14 @@ if ( !empty($next) )
 			print " * Inserting new values into themes table :: ";
 
 			@reset($inserts);
-			while( list($table, $inserts_table) = each($inserts) )
+			foreach ($inserts as $table => $inserts_table)
 			{
 				if ( $table == THEMES_TABLE )
 				{
 					$per_pct = ceil( count($inserts_table) / 40 );
 					$inc = 0;
 
-					while( list($nr, $insert) = each($inserts_table) )
+					foreach ($inserts_table as $nr => $insert)
 					{
 						query($insert, "Couldn't insert value into " . THEMES_TABLE);
 
@@ -1830,7 +1830,7 @@ if ( !empty($next) )
 				TOPICS_TABLE => array("topic_notify")
 			);
 
-			while( list($table, $field_data) = each($fields) )
+			foreach ($fields as $table => $field_data)
 			{
 				for($i = 0; $i < count($field_data); $i++)
 				{

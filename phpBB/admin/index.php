@@ -88,7 +88,7 @@ if( isset($HTTP_GET_VARS['pane']) && $HTTP_GET_VARS['pane'] == 'left' )
 
 	ksort($module);
 
-	while( list($cat, $action_array) = each($module) )
+	foreach ($module as $cat => $action_array)
 	{
 		$cat = ( !empty($lang[$cat]) ) ? $lang[$cat] : preg_replace("/_/", " ", $cat);
 
@@ -99,7 +99,7 @@ if( isset($HTTP_GET_VARS['pane']) && $HTTP_GET_VARS['pane'] == 'left' )
 		ksort($action_array);
 
 		$row_count = 0;
-		while( list($action, $file)	= each($action_array) )
+		foreach ($action_array as $action => $file)
 		{
 			$row_color = ( !($row_count%2) ) ? $theme['td_color1'] : $theme['td_color2'];
 			$row_class = ( !($row_count%2) ) ? $theme['td_class1'] : $theme['td_class2'];

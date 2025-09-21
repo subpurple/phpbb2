@@ -344,12 +344,12 @@ function display_avatar_gallery($mode, &$category, &$user_id, &$email, &$current
 
 	if( empty($category) )
 	{
-		list($category, ) = each($avatar_images);
+		$category = key($avatar_images);
 	}
 	@reset($avatar_images);
 
 	$s_categories = '<select name="avatarcategory">';
-	while( list($key) = each($avatar_images) )
+	foreach ($avatar_images as $key)
 	{
 		$selected = ( $key == $category ) ? ' selected="selected"' : '';
 		if( count($avatar_images[$key]) )

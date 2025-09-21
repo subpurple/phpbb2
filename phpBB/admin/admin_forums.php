@@ -235,7 +235,7 @@ if( isset($HTTP_POST_VARS['addforum']) || isset($HTTP_POST_VARS['addcategory']) 
 
 	if( $mode == "addforum" )
 	{
-		list($cat_id) = each($HTTP_POST_VARS['addforum']);
+		$cat_id = key($HTTP_POST_VARS['addforum']);
 		$cat_id = intval($cat_id);
 		// 
 		// stripslashes needs to be run on this because slashes are added when the forum name is posted
@@ -387,7 +387,7 @@ if( !empty($mode) )
 			//
 			$field_sql = "";
 			$value_sql = "";
-			while( list($field, $value) = each($forum_auth_ary) )
+			foreach ($forum_auth_ary as $field => $value)
 			{
 				$field_sql .= ", $field";
 				$value_sql .= ", $value";
