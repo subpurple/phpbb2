@@ -727,8 +727,12 @@ else if ( ( $mode == 'user' && ( isset($HTTP_POST_VARS['username']) || $user_id 
 		$auth_ug[$forum_id]['auth_mod'] = ( !empty($auth_access_count[$forum_id]) ) ? check_auth(AUTH_MOD, 'auth_mod', $auth_access[$forum_id], 0) : 0;
 	}
 	
+	$optionlist_acl = '';
+	$optionlist_acl_adv = [];
+			
 	$i = 0;
 	@reset($auth_ug);
+	
 	foreach ($auth_ug as $forum_id => $user_ary)
 	{
 		if ( empty($adv) )
@@ -779,6 +783,11 @@ else if ( ( $mode == 'user' && ( isset($HTTP_POST_VARS['username']) || $user_id 
 
 						if( $forum_access[$j][$field_name] == AUTH_ACL )
 						{
+							if ( !isset($optionlist_acl_adv[$forum_id]) )
+							{
+								$optionlist_acl_adv[$forum_id] = array();
+							}
+
 							$optionlist_acl_adv[$forum_id][$k] = '<select name="private_' . $field_name . '[' . $forum_id . ']">';
 
 							if( isset($auth_field_acl[$forum_id][$field_name]) && !($is_admin || $user_ary['auth_mod']) )
@@ -840,7 +849,7 @@ else if ( ( $mode == 'user' && ( isset($HTTP_POST_VARS['username']) || $user_id 
 			for($j = 0; $j < count($forum_auth_fields); $j++)
 			{
 				$template->assign_block_vars('forums.aclvalues', array(
-					'S_ACL_SELECT' => $optionlist_acl_adv[$forum_id][$j])
+					'S_ACL_SELECT' => isset($optionlist_acl_adv[$forum_id][$j]) ? $optionlist_acl_adv[$forum_id][$j] : '')
 				);
 			}
 		}

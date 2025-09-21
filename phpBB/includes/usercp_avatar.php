@@ -383,9 +383,9 @@ function display_avatar_gallery($mode, &$category, &$user_id, &$email, &$current
 
 	$s_hidden_vars = '<input type="hidden" name="sid" value="' . $session_id . '" /><input type="hidden" name="agreed" value="true" /><input type="hidden" name="avatarcatname" value="' . $category . '" />';
 
-	for($i = 0; $i < count($params); $i++)
+	foreach($params as $param)
 	{
-		$s_hidden_vars .= '<input type="hidden" name="' . $params[$i] . '" value="' . str_replace('"', '&quot;', $$params[$i]) . '" />';
+		$s_hidden_vars .= '<input type="hidden" name="' . $param . '" value="' . str_replace('"', '&quot;', $$param) . '" />';
 	}
 	
 	$template->assign_vars(array(

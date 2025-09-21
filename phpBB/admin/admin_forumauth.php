@@ -244,7 +244,7 @@ else
 		$adv = 1;
 	}
 
-	$s_column_span == 0;
+	$s_column_span = 0;
 
 	if ( empty($adv) )
 	{

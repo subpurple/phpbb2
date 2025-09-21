@@ -48,6 +48,8 @@ require('./pagestart.' . $phpEx);
 
 $message = '';
 $subject = '';
+$error = FALSE;
+$error_msg = '';
 
 //
 // Do the job ...
@@ -57,9 +59,6 @@ if ( isset($HTTP_POST_VARS['submit']) )
 	$subject = stripslashes(trim($HTTP_POST_VARS['subject']));
 	$message = stripslashes(trim($HTTP_POST_VARS['message']));
 	
-	$error = FALSE;
-	$error_msg = '';
-
 	if ( empty($subject) )
 	{
 		$error = true;
@@ -203,7 +202,6 @@ $template->assign_vars(array(
 	'L_EMAIL_SUBJECT' => $lang['Subject'],
 	'L_EMAIL_MSG' => $lang['Message'],
 	'L_EMAIL' => $lang['Email'],
-	'L_NOTICE' => $notice,
 
 	'S_USER_ACTION' => append_sid('admin_mass_email.'.$phpEx),
 	'S_GROUP_SELECT' => $select_list)
