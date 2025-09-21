@@ -224,6 +224,11 @@ function guess_lang()
 // Begin
 error_reporting  (E_ERROR | E_WARNING | E_PARSE); // This will NOT report uninitialized variables
 
+if (function_exists('set_magic_quotes_runtime'))
+{
+	set_magic_quotes_runtime(0); // Disable magic_quotes_runtime
+}
+
 // PHP5 with register_long_arrays off?
 if (!isset($HTTP_POST_VARS) && isset($_POST))
 {
@@ -242,7 +247,7 @@ if (!isset($HTTP_POST_VARS) && isset($_POST))
 }
 
 // Slash data if it isn't slashed
-if (true)
+if (!function_exists('get_magic_quotes_gpc') || !get_magic_quotes_gpc())
 {
 	if (is_array($HTTP_GET_VARS))
 	{

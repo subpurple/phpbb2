@@ -27,6 +27,11 @@ if ( !defined('IN_PHPBB') )
 //
 error_reporting  (E_ERROR | E_WARNING | E_PARSE); // This will NOT report uninitialized variables
 
+if (function_exists('set_magic_quotes_runtime'))
+{
+	@set_magic_quotes_runtime(0); // Disable magic_quotes_runtime
+}
+
 // The following code (unsetting globals)
 // Thanks to Matt Kavanagh and Stefan Esser for providing feedback as well as patch files
 
@@ -96,7 +101,7 @@ if (@ini_get('register_globals') == '1' || strtolower(@ini_get('register_globals
 // this is a security precaution to prevent someone
 // trying to break out of a SQL statement.
 //
-if( true )
+if( !function_exists('get_magic_quotes_gpc') || !get_magic_quotes_gpc() )
 {
 	if( is_array($HTTP_GET_VARS) )
 	{
@@ -108,14 +113,12 @@ if( true )
 				{
 					$HTTP_GET_VARS[$k][$k2] = addslashes($v2);
 				}
-				@reset($HTTP_GET_VARS[$k]);
 			}
 			else
 			{
 				$HTTP_GET_VARS[$k] = addslashes($v);
 			}
 		}
-		@reset($HTTP_GET_VARS);
 	}
 
 	if( is_array($HTTP_POST_VARS) )
@@ -128,14 +131,12 @@ if( true )
 				{
 					$HTTP_POST_VARS[$k][$k2] = addslashes($v2);
 				}
-				@reset($HTTP_POST_VARS[$k]);
 			}
 			else
 			{
 				$HTTP_POST_VARS[$k] = addslashes($v);
 			}
 		}
-		@reset($HTTP_POST_VARS);
 	}
 
 	if( is_array($HTTP_COOKIE_VARS) )
@@ -148,14 +149,12 @@ if( true )
 				{
 					$HTTP_COOKIE_VARS[$k][$k2] = addslashes($v2);
 				}
-				@reset($HTTP_COOKIE_VARS[$k]);
 			}
 			else
 			{
 				$HTTP_COOKIE_VARS[$k] = addslashes($v);
 			}
 		}
-		@reset($HTTP_COOKIE_VARS);
 	}
 }
 

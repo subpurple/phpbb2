@@ -456,14 +456,7 @@ function get_table_def_mysql($table, $crlf)
 
 	$schema_create .= "$crlf);";
 
-	if(false)
-	{
-		return(stripslashes($schema_create));
-	}
-	else
-	{
-		return($schema_create);
-	}
+	return($schema_create);
 
 } // End get_table_def_mysql
 
