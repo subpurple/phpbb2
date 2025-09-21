@@ -1,0 +1,48 @@
+# Disable directory listings in the root to prevent exposing file names
+# and sensitive information if someone navigates to the root URL without
+# an index file.
+Options -Indexes
+
+# If mod_rewrite is available, return a true HTTP 404 for sensitive root files.
+# This prevents disclosing the existence of these files and works on all
+# Apache versions from 2.0 upward.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Match the sensitive files common.php, config.php, and extension.inc
+    RewriteRule ^(common\.php|config\.php|extension\.inc)$ - [R=404,L]
+</IfModule>
+
+# If mod_rewrite is not available, fallback to standard access control.
+# Apache 2.4 uses "Require all denied", but older versions use "Order, Deny".
+<IfModule !mod_rewrite.c>
+    <IfModule mod_version.c>
+        <IfVersion < 2.4>
+            <FilesMatch "^(common\.php|config\.php|extension\.inc)$">
+                # Deny access using legacy syntax for Apache <2.4
+                Order Allow,Deny
+                Deny from All
+            </FilesMatch>
+        </IfVersion>
+        <IfVersion >= 2.4>
+            <FilesMatch "^(common\.php|config\.php|extension\.inc)$">
+                # Deny access using modern syntax for Apache 2.4+
+                Require all denied
+            </FilesMatch>
+        </IfVersion>
+    </IfModule>
+    <IfModule !mod_version.c>
+        <IfModule !mod_authz_core.c>
+            <FilesMatch "^(common\.php|config\.php|extension\.inc)$">
+                # Legacy fallback if mod_version is unavailable
+                Order Allow,Deny
+                Deny from All
+            </FilesMatch>
+        </IfModule>
+        <IfModule mod_authz_core.c>
+            <FilesMatch "^(common\.php|config\.php|extension\.inc)$">
+                # Modern fallback if mod_version is unavailable
+                Require all denied
+            </FilesMatch>
+        </IfModule>
+    </IfModule>
+</IfModule>

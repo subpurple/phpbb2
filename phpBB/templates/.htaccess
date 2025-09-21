@@ -1,0 +1,33 @@
+# Disable directory listings to prevent exposing templates.
+Options -Indexes
+
+# If mod_rewrite is available, return a true HTTP 404 for template files
+# except CSS files and image subfolders.
+#
+# This prevents disclosing the existence of those files and works on all
+# Apache versions from 2.0 upward.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Only block files that are not .css or inside an images subfolder
+    RewriteCond %{REQUEST_URI} !\.css$ [NC]
+    RewriteCond %{REQUEST_URI} !^/templates/[^/]+/images/ [NC]
+    RewriteRule ^.*$ - [R=404,L]
+</IfModule>
+
+# If mod_rewrite is not available, fallback to standard access control.
+# Apache 2.4 uses "Require all denied", but older versions use "Order, Deny".
+<IfModule !mod_rewrite.c>
+    <IfModule mod_authz_core.c>
+        <FilesMatch "^(?!.*\.css$)(?![^/]+/images/).*">
+            # Deny access using legacy syntax for Apache <2.4
+            Require all denied
+        </FilesMatch>
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        <FilesMatch "^(?!.*\.css$)(?![^/]+/images/).*">
+            # Legacy fallback if mod_version is unavailable
+            Order Allow,Deny
+            Deny from All
+        </FilesMatch>
+    </IfModule>
+</IfModule>

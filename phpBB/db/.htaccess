@@ -1,0 +1,29 @@
+# Disable directory listings to prevent exposing database include files.
+Options -Indexes
+
+# If mod_rewrite is available, return a true HTTP 404 for database include files.
+# This prevents disclosing the existence of these files and works on all
+# Apache versions from 2.0 upward.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Match any file or the folder itself
+    RewriteRule ^.*$ - [R=404,L]
+</IfModule>
+
+# If mod_rewrite is not available, fallback to standard access control.
+# Apache 2.4 uses "Require all denied", but older versions use "Order, Deny".
+<IfModule !mod_rewrite.c>
+    <IfModule mod_authz_core.c>
+        <FilesMatch ".*">
+            # Deny access using legacy syntax for Apache <2.4
+            Require all denied
+        </FilesMatch>
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        <FilesMatch ".*">
+            # Legacy fallback if mod_version is unavailable
+            Order Allow,Deny
+            Deny from All
+        </FilesMatch>
+    </IfModule>
+</IfModule>

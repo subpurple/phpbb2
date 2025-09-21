@@ -1,0 +1,47 @@
+# Disable directory listings in the admin folder to prevent exposing
+# internal administration files.
+Options -Indexes
+
+# If mod_rewrite is available, return a true HTTP 404 for internal admin PHP files.
+# This prevents disclosing the existence of these files and works on all
+# Apache versions from 2.0 upward.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Block access to page_footer_admin.php, page_header_admin.php, and pagestart.php
+    RewriteRule ^(page_footer_admin\.php|page_header_admin\.php|pagestart\.php)$ - [R=404,L]
+</IfModule>
+
+# If mod_rewrite is not available, fallback to standard access control.
+# Apache 2.4 uses "Require all denied", but older versions use "Order, Deny".
+<IfModule !mod_rewrite.c>
+    <IfModule mod_version.c>
+        <IfVersion < 2.4>
+            <FilesMatch "^(page_footer_admin\.php|page_header_admin\.php|pagestart\.php)$">
+                # Deny access using legacy syntax for Apache <2.4
+                Order Allow,Deny
+                Deny from All
+            </FilesMatch>
+        </IfVersion>
+        <IfVersion >= 2.4>
+            <FilesMatch "^(page_footer_admin\.php|page_header_admin\.php|pagestart\.php)$">
+                # Deny access using modern syntax for Apache 2.4+
+                Require all denied
+            </FilesMatch>
+        </IfVersion>
+    </IfModule>
+    <IfModule !mod_version.c>
+        <IfModule !mod_authz_core.c>
+            <FilesMatch "^(page_footer_admin\.php|page_header_admin\.php|pagestart\.php)$">
+                # Legacy fallback if mod_version is unavailable
+                Order Allow,Deny
+                Deny from All
+            </FilesMatch>
+        </IfModule>
+        <IfModule mod_authz_core.c>
+            <FilesMatch "^(page_footer_admin\.php|page_header_admin\.php|pagestart\.php)$">
+                # Modern fallback if mod_version is unavailable
+                Require all denied
+            </FilesMatch>
+        </IfModule>
+    </IfModule>
+</IfModule>
