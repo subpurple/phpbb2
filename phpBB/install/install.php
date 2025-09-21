@@ -607,7 +607,8 @@ else if (!empty($HTTP_POST_VARS['ftp_file']))
 
 		if ($upgrade == 1)	
 		{
-			require('upgrade.'.$phpEx);
+			echo 'Upgrades from phpBB 1.4.x are no longer supported.';
+			
 			exit;
 		}
 
@@ -1043,7 +1044,9 @@ else
 		if ($upgrade == 1 && $upgrade_now == $lang['upgrade_submit'])
 		{
 			define('INSTALLING', true);
-			require('upgrade.'.$phpEx);
+
+			echo 'Upgrades from phpBB 1.4.x are no longer supported.';
+			// require('upgrade.'.$phpEx);
 			exit;
 		}
 
