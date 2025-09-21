@@ -19,12 +19,12 @@
  *
  ***************************************************************************/
 
-if ( !defined('IN_PHPBB') )
+if (!defined('IN_PHPBB'))
 {
-	die("Hacking attempt");
+	die('Hacking attempt');
 }
 
-define("BBCODE_UID_LEN", 10);
+define('BBCODE_UID_LEN', 10);
 
 // global that holds loaded-and-prepared bbcode templates, so we only have to do
 // that stuff once.
@@ -48,10 +48,10 @@ function load_bbcode_template()
 
 	// replace \ with \\ and then ' with \'.
 	$tpl = str_replace('\\', '\\\\', $tpl);
-	$tpl  = str_replace('\'', '\\\'', $tpl);
+	$tpl = str_replace('\'', '\\\'', $tpl);
 
 	// strip newlines.
-	$tpl  = str_replace("\n", '', $tpl);
+	$tpl = str_replace("\n", '', $tpl);
 
 	// Turn template blocks into PHP assignment statements for the values of $bbcode_tpls..
 	$tpl = preg_replace('#<!-- BEGIN (.*?) -->(.*?)<!-- END (.*?) -->#', "\n" . '$bbcode_tpls[\'\\1\'] = \'\\2\';', $tpl);
@@ -109,7 +109,7 @@ function prepare_bbcode_template($bbcode_tpl)
 
 	$bbcode_tpl['email'] = str_replace('{EMAIL}', '\\1', $bbcode_tpl['email']);
 
-	define("BBCODE_TPL_READY", true);
+	define('BBCODE_TPL_READY', true);
 
 	return $bbcode_tpl;
 }
@@ -124,22 +124,23 @@ function bbencode_second_pass($text, $uid)
 {
 	global $lang, $bbcode_tpl;
 
-	$text = preg_replace('#(script|about|applet|activex|chrome):#is', "\\1&#058;", $text);
+	$text = preg_replace('#(script|about|applet|activex|chrome):#is', '\\1&#058;', $text);
 
 	// pad it with a space so we can distinguish between FALSE and matching the 1st char (index 0).
 	// This is important; bbencode_quote(), bbencode_list(), and bbencode_code() all depend on it.
-	$text = " " . $text;
+	$text = ' ' . $text;
 
 	// First: If there isn't a "[" and a "]" in the message, don't bother.
-	if (! (strpos($text, "[") && strpos($text, "]")) )
+	if (! (strpos($text, '[') && strpos($text, ']')))
 	{
 		// Remove padding, return.
 		$text = substr($text, 1);
+
 		return $text;
 	}
 
 	// Only load the templates ONCE..
-	if (!defined("BBCODE_TPL_READY"))
+	if (!defined('BBCODE_TPL_READY'))
 	{
 		// load templates from file into array.
 		$bbcode_tpl = load_bbcode_template();
@@ -225,11 +226,10 @@ function bbencode_second_pass($text, $uid)
 	$text = substr($text, 1);
 
 	return $text;
-
 } // bbencode_second_pass()
 
 // Need to initialize the random numbers only ONCE
-mt_srand( (double) microtime() * 1000000);
+mt_srand((double) microtime() * 1000000);
 
 function make_bbcode_uid()
 {
@@ -245,7 +245,7 @@ function bbencode_first_pass($text, $uid)
 {
 	// pad it with a space so we can distinguish between FALSE and matching the 1st char (index 0).
 	// This is important; bbencode_quote(), bbencode_list(), and bbencode_code() all depend on it.
-	$text = " " . $text;
+	$text = ' ' . $text;
 
 	// [CODE] and [/CODE] for posting code (HTML, PHP, C etc etc) in your posts.
 	$text = bbencode_first_pass_pda($text, $uid, '[code]', '[/code]', '', true, '');
@@ -256,16 +256,16 @@ function bbencode_first_pass($text, $uid)
 
 	// [list] and [list=x] for (un)ordered lists.
 	$open_tag = array();
-	$open_tag[0] = "[list]";
+	$open_tag[0] = '[list]';
 
 	// unordered..
-	$text = bbencode_first_pass_pda($text, $uid, $open_tag, "[/list]", "[/list:u]", false, 'replace_listitems');
+	$text = bbencode_first_pass_pda($text, $uid, $open_tag, '[/list]', '[/list:u]', false, 'replace_listitems');
 
-	$open_tag[0] = "[list=1]";
-	$open_tag[1] = "[list=a]";
+	$open_tag[0] = '[list=1]';
+	$open_tag[1] = '[list=a]';
 
 	// ordered.
-	$text = bbencode_first_pass_pda($text, $uid, $open_tag, "[/list]", "[/list:o]",  false, 'replace_listitems');
+	$text = bbencode_first_pass_pda($text, $uid, $open_tag, '[/list]', '[/list:o]',  false, 'replace_listitems');
 
 	// [color] and [/color] for setting text color
 	$text = preg_replace("#\[color=(\#[0-9A-F]{6}|[a-z\-]+)\](.*?)\[/color\]#si", "[color=\\1:$uid]\\2[/color:$uid]", $text);
@@ -287,14 +287,15 @@ function bbencode_first_pass($text, $uid)
 	function img_callback($matches)
 	{
 		global $uid;
-		return "[img:$uid]" . $matches[1] . str_replace(" ", "%20", $matches[3]) . "[/img:$uid]";
+
+		return "[img:$uid]" . $matches[1] . str_replace(' ', '%20', $matches[3]) . "[/img:$uid]";
 	}
 
 	$text = preg_replace_callback("#\[img\]((http|ftp|https|ftps)://)([^\?&=\#\"\n\r\t<]*?(\.(jpg|jpeg|gif|png)))\[/img\]#si", 'img_callback', $text);
 
 	// Remove our padding from the string..
-	return substr($text, 1);;
-
+	return substr($text, 1);
+	;
 } // bbencode_first_pass()
 
 /**
@@ -370,14 +371,14 @@ function bbencode_first_pass_pda($text, $uid, $open_tag, $close_tag, $close_tag_
 
 	if ($mark_lowest_level && $open_is_regexp)
 	{
-		message_die(GENERAL_ERROR, "Unsupported operation for bbcode_first_pass_pda().");
+		message_die(GENERAL_ERROR, 'Unsupported operation for bbcode_first_pass_pda().');
 	}
 
 	// Start at the 2nd char of the string, looking for opening tags.
 	$curr_pos = 1;
 	while ($curr_pos && ($curr_pos < strlen($text)))
 	{
-		$curr_pos = strpos($text, "[", $curr_pos);
+		$curr_pos = strpos($text, '[', $curr_pos);
 
 		// If not found, $curr_pos will be 0, and the loop will end.
 		if ($curr_pos)
@@ -385,7 +386,7 @@ function bbencode_first_pass_pda($text, $uid, $open_tag, $close_tag, $close_tag_
 			// We found a [. It starts at $curr_pos.
 			// check if it's a starting or ending tag.
 			$found_start = false;
-			$which_start_tag = "";
+			$which_start_tag = '';
 			$start_tag_index = -1;
 
 			for ($i = 0; $i < $open_tag_count; $i++)
@@ -396,7 +397,7 @@ function bbencode_first_pass_pda($text, $uid, $open_tag, $close_tag, $close_tag_
 				//
 				// We're going to try and catch usernames with "[' characters.
 				//
-				if( preg_match('#\[quote=\\\&quot;#si', $possible_start, $match) && !preg_match('#\[quote=\\\&quot;(.*?)\\\&quot;\]#si', $possible_start) )
+				if (preg_match('#\[quote=\\\&quot;#si', $possible_start, $match) && !preg_match('#\[quote=\\\&quot;(.*?)\\\&quot;\]#si', $possible_start))
 				{
 					// OK we are in a quote tag that probably contains a ] bracket.
 					// Grab a bit more of the string to hopefully get all of it..
@@ -418,6 +419,7 @@ function bbencode_first_pass_pda($text, $uid, $open_tag, $close_tag, $close_tag_
 						$found_start = true;
 						$which_start_tag = $match_result[0];
 						$start_tag_index = $i;
+
 						break;
 					}
 				}
@@ -429,6 +431,7 @@ function bbencode_first_pass_pda($text, $uid, $open_tag, $close_tag, $close_tag_
 						$found_start = true;
 						$which_start_tag = $open_tag[$i];
 						$start_tag_index = $i;
+
 						break;
 					}
 				}
@@ -438,7 +441,7 @@ function bbencode_first_pass_pda($text, $uid, $open_tag, $close_tag, $close_tag_
 			{
 				// We have an opening tag.
 				// Push its position, the text we matched, and its index in the open_tag array on to the stack, and then keep going to the right.
-				$match = array("pos" => $curr_pos, "tag" => $which_start_tag, "index" => $start_tag_index);
+				$match = array('pos' => $curr_pos, 'tag' => $which_start_tag, 'index' => $start_tag_index);
 				array_push($stack, $match);
 				//
 				// Rather than just increment $curr_pos
@@ -553,7 +556,6 @@ function bbencode_first_pass_pda($text, $uid, $open_tag, $close_tag, $close_tag_
 	} // while
 
 	return $text;
-
 } // bbencode_first_pass_pda()
 
 /**
@@ -569,7 +571,7 @@ function bbencode_second_pass_code($text, $uid, $bbcode_tpl)
 	global $lang;
 
 	$code_start_html = $bbcode_tpl['code_open'];
-	$code_end_html =  $bbcode_tpl['code_close'];
+	$code_end_html = $bbcode_tpl['code_close'];
 
 	// First, do all the 1st-level matches. These need an htmlspecialchars() run,
 	// so they have to be handled differently.
@@ -581,15 +583,15 @@ function bbencode_second_pass_code($text, $uid, $bbcode_tpl)
 		$after_replace = $matches[1][$i];
 
 		// Replace 2 spaces with "&nbsp; " so non-tabbed code indents without making huge long lines.
-		$after_replace = str_replace("  ", "&nbsp; ", $after_replace);
+		$after_replace = str_replace('  ', '&nbsp; ', $after_replace);
 		// now Replace 2 spaces with " &nbsp;" to catch odd #s of spaces.
-		$after_replace = str_replace("  ", " &nbsp;", $after_replace);
+		$after_replace = str_replace('  ', ' &nbsp;', $after_replace);
 
 		// Replace tabs with "&nbsp; &nbsp;" so tabbed code indents sorta right without making huge long lines.
-		$after_replace = str_replace("\t", "&nbsp; &nbsp;", $after_replace);
+		$after_replace = str_replace("\t", '&nbsp; &nbsp;', $after_replace);
 
 		// now Replace space occurring at the beginning of a line
-		$after_replace = preg_replace("/^ {1}/m", '&nbsp;', $after_replace);
+		$after_replace = preg_replace('/^ {1}/m', '&nbsp;', $after_replace);
 
 		$str_to_match = "[code:1:$uid]" . $before_replace . "[/code:1:$uid]";
 
@@ -605,7 +607,6 @@ function bbencode_second_pass_code($text, $uid, $bbcode_tpl)
 	$text = str_replace("[/code:$uid]", $code_end_html, $text);
 
 	return $text;
-
 } // bbencode_second_pass_code()
 
 /**
@@ -623,7 +624,7 @@ function bbencode_second_pass_code($text, $uid, $bbcode_tpl)
  */
 function make_clickable($text)
 {
-	$text = preg_replace('#(script|about|applet|activex|chrome):#is', "\\1&#058;", $text);
+	$text = preg_replace('#(script|about|applet|activex|chrome):#is', '\\1&#058;', $text);
 
 	// pad it with a space so we can match things at the start of the 1st line.
 	$ret = ' ' . $text;
@@ -631,17 +632,17 @@ function make_clickable($text)
 	// matches an "xxxx://yyyy" URL at the start of a line, or after a space.
 	// xxxx can only be alpha characters.
 	// yyyy is anything up to the first space, newline, comma, double quote or <
-	$ret = preg_replace("#(^|[\n ])([\w]+?://[\w\#$%&~/.\-;:=,?@\[\]+]*)#is", "\\1<a href=\"\\2\" target=\"_blank\">\\2</a>", $ret);
+	$ret = preg_replace("#(^|[\n ])([\w]+?://[\w\#$%&~/.\-;:=,?@\[\]+]*)#is", '\\1<a href="\\2" target="_blank">\\2</a>', $ret);
 
 	// matches a "www|ftp.xxxx.yyyy[/zzzz]" kinda lazy URL thing
 	// Must contain at least 2 dots. xxxx contains either alphanum, or "-"
-	// zzzz is optional.. will contain everything up to the first space, newline, 
+	// zzzz is optional.. will contain everything up to the first space, newline,
 	// comma, double quote or <.
-	$ret = preg_replace("#(^|[\n ])((www|ftp)\.[\w\#$%&~/.\-;:=,?@\[\]+]*)#is", "\\1<a href=\"http://\\2\" target=\"_blank\">\\2</a>", $ret);
+	$ret = preg_replace("#(^|[\n ])((www|ftp)\.[\w\#$%&~/.\-;:=,?@\[\]+]*)#is", '\\1<a href="http://\\2" target="_blank">\\2</a>', $ret);
 
 	// matches an email@domain type address at the start of a line, or after a space.
 	// Note: Only the followed chars are valid; alphanums, "-", "_" and or ".".
-	$ret = preg_replace("#(^|[\n ])([a-z0-9&\-_.]+?)@([\w\-]+\.([\w\-\.]+\.)*[\w]+)#i", "\\1<a href=\"mailto:\\2@\\3\">\\2@\\3</a>", $ret);
+	$ret = preg_replace("#(^|[\n ])([a-z0-9&\-_.]+?)@([\w\-]+\.([\w\-\.]+\.)*[\w]+)#i", '\\1<a href="mailto:\\2@\\3">\\2@\\3</a>', $ret);
 
 	// Remove our padding..
 	$ret = substr($ret, 1);
@@ -657,11 +658,10 @@ function make_clickable($text)
  */
 function undo_make_clickable($text)
 {
-	$text = preg_replace("#<!-- BBCode auto-link start --><a href=\"(.*?)\" target=\"_blank\">.*?</a><!-- BBCode auto-link end -->#i", "\\1", $text);
-	$text = preg_replace("#<!-- BBcode auto-mailto start --><a href=\"mailto:(.*?)\">.*?</a><!-- BBCode auto-mailto end -->#i", "\\1", $text);
+	$text = preg_replace('#<!-- BBCode auto-link start --><a href="(.*?)" target="_blank">.*?</a><!-- BBCode auto-link end -->#i', '\\1', $text);
+	$text = preg_replace('#<!-- BBcode auto-mailto start --><a href="mailto:(.*?)">.*?</a><!-- BBCode auto-mailto end -->#i', '\\1', $text);
 
 	return $text;
-
 }
 
 /**
@@ -671,10 +671,10 @@ function undo_make_clickable($text)
  */
 function undo_htmlspecialchars($input)
 {
-	$input = preg_replace("/&gt;/i", ">", $input);
-	$input = preg_replace("/&lt;/i", "<", $input);
-	$input = preg_replace("/&quot;/i", "\"", $input);
-	$input = preg_replace("/&amp;/i", "&", $input);
+	$input = preg_replace('/&gt;/i', '>', $input);
+	$input = preg_replace('/&lt;/i', '<', $input);
+	$input = preg_replace('/&quot;/i', '"', $input);
+	$input = preg_replace('/&amp;/i', '&', $input);
 
 	return $input;
 }
@@ -687,7 +687,7 @@ function undo_htmlspecialchars($input)
  */
 function replace_listitems($text, $uid)
 {
-	$text = str_replace("[*]", "[*:$uid]", $text);
+	$text = str_replace('[*]', "[*:$uid]", $text);
 
 	return $text;
 }
@@ -700,6 +700,7 @@ function replace_listitems($text, $uid)
 function escape_slashes($input)
 {
 	$output = str_replace('/', '\/', $input);
+
 	return $output;
 }
 
@@ -711,8 +712,9 @@ function escape_slashes($input)
  */
 function bbcode_array_push(&$stack, $value)
 {
-   $stack[] = $value;
-   return(sizeof($stack));
+	$stack[] = $value;
+
+	return(sizeof($stack));
 }
 
 /**
@@ -723,24 +725,24 @@ function bbcode_array_push(&$stack, $value)
  */
 function bbcode_array_pop(&$stack)
 {
-   $arrSize = count($stack);
-   $x = 1;
+	$arrSize = count($stack);
+	$x = 1;
 
-   foreach ($stack as $key => $val)
-   {
-      if($x < count($stack))
-      {
-	 		$tmpArr[] = $val;
-      }
-      else
-      {
-	 		$return_val = $val;
-      }
-      $x++;
-   }
-   $stack = $tmpArr;
+	foreach ($stack as $key => $val)
+	{
+		if ($x < count($stack))
+		{
+			$tmpArr[] = $val;
+		}
+		else
+		{
+			$return_val = $val;
+		}
+		$x++;
+	}
+	$stack = $tmpArr;
 
-   return($return_val);
+	return($return_val);
 }
 
 //
@@ -757,9 +759,9 @@ function smilies_pass($message)
 		$orig = $repl = array();
 
 		$sql = 'SELECT * FROM ' . SMILIES_TABLE;
-		if( !$result = $db->sql_query($sql) )
+		if (!$result = $db->sql_query($sql))
 		{
-			message_die(GENERAL_ERROR, "Couldn't obtain smilies data", "", __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, "Couldn't obtain smilies data", '', __LINE__, __FILE__, $sql);
 		}
 		$smilies = $db->sql_fetchrowset($result);
 
@@ -770,7 +772,7 @@ function smilies_pass($message)
 
 		for ($i = 0; $i < count($smilies); $i++)
 		{
-			$orig[] = "/(?<=.\W|\W.|^\W)" . preg_quote($smilies[$i]['code'], "/") . "(?=.\W|\W.|\W$)/";
+			$orig[] = "/(?<=.\W|\W.|^\W)" . preg_quote($smilies[$i]['code'], '/') . "(?=.\W|\W.|\W$)/";
 			$repl[] = '<img src="'. $board_config['smilies_path'] . '/' . $smilies[$i]['smile_url'] . '" alt="' . $smilies[$i]['emoticon'] . '" border="0" />';
 		}
 	}
@@ -780,18 +782,18 @@ function smilies_pass($message)
 		$message = preg_replace($orig, $repl, ' ' . $message . ' ');
 		$message = substr($message, 1, -1);
 	}
-	
+
 	return $message;
 }
 
 function smiley_sort($a, $b)
 {
-	if ( strlen($a['code']) == strlen($b['code']) )
+	if (strlen($a['code']) == strlen($b['code']))
 	{
 		return 0;
 	}
 
-	return ( strlen($a['code']) > strlen($b['code']) ) ? -1 : 1;
+	return (strlen($a['code']) > strlen($b['code'])) ? -1 : 1;
 }
 
 ?>

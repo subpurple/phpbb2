@@ -20,7 +20,7 @@
 */
 
 /* General page style. The scroll bar colours only visible in IE5.5+ */
-body { 
+body {
 	background-color: {T_BODY_BGCOLOR};
 	scrollbar-face-color: {T_TR_COLOR2};
 	scrollbar-highlight-color: {T_TD_COLOR2};
@@ -61,7 +61,7 @@ td.rowpic {
 
 /* Header cells - the blue and silver gradient backgrounds */
 th	{
-	color: {T_FONTCOLOR3}; font-size: {T_FONTSIZE2}px; font-weight : bold; 
+	color: {T_FONTCOLOR3}; font-size: {T_FONTSIZE2}px; font-weight : bold;
 	background-color: {T_BODY_LINK}; height: 25px;
 	background-image: url(templates/subSilver/images/{T_TH_CLASS2});
 }
@@ -149,7 +149,7 @@ a.postlink:visited { text-decoration: none; color : {T_BODY_VLINK}; }
 a.postlink:hover { text-decoration: underline; color : {T_BODY_HLINK}}
 
 /* Quote & Code blocks */
-.code { 
+.code {
 	font-family: {T_FONTFACE3}; font-size: {T_FONTSIZE2}px; color: {T_FONTCOLOR2};
 	background-color: {T_TD_COLOR1}; border: {T_TR_COLOR3}; border-style: solid;
 	border-left-width: 1px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px
@@ -206,7 +206,7 @@ input.liteoption {
 .helpline { background-color: {T_TR_COLOR2}; border-style: none; }
 
 /* Import the fancy styles for IE only (NS4.x doesn't use the @import function) */
-@import url("templates/subSilver/formIE.css"); 
+@import url("templates/subSilver/formIE.css");
 -->
 </style>
 <!-- BEGIN switch_enable_pm_popup -->
@@ -224,15 +224,15 @@ input.liteoption {
 
 <a name="top"></a>
 
-<table width="100%" cellspacing="0" cellpadding="10" border="0" align="center"> 
-	<tr> 
+<table width="100%" cellspacing="0" cellpadding="10" border="0" align="center">
+	<tr>
 		<td class="bodyline"><table width="100%" cellspacing="0" cellpadding="0" border="0">
-			<tr> 
+			<tr>
 				<td><a href="{U_INDEX}"><img src="templates/subSilver/images/logo_phpBB.gif" border="0" alt="{L_INDEX}" vspace="1" /></a></td>
-				<td align="center" width="100%" valign="middle"><span class="maintitle">{SITENAME}</span><br /><span class="gen">{SITE_DESCRIPTION}<br />&nbsp; </span> 
+				<td align="center" width="100%" valign="middle"><span class="maintitle">{SITENAME}</span><br /><span class="gen">{SITE_DESCRIPTION}<br />&nbsp; </span>
 				<table cellspacing="0" cellpadding="2" border="0">
-					<tr> 
-						<td align="center" valign="top" nowrap="nowrap"><span class="mainmenu">&nbsp;<a href="{U_FAQ}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_faq.gif" width="12" height="13" border="0" alt="{L_FAQ}" hspace="3" />{L_FAQ}</a>&nbsp; &nbsp;<a href="{U_SEARCH}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_search.gif" width="12" height="13" border="0" alt="{L_SEARCH}" hspace="3" />{L_SEARCH}</a>&nbsp; &nbsp;<a href="{U_MEMBERLIST}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_MEMBERLIST}" hspace="3" />{L_MEMBERLIST}</a>&nbsp; &nbsp;<a href="{U_GROUP_CP}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_groups.gif" width="12" height="13" border="0" alt="{L_USERGROUPS}" hspace="3" />{L_USERGROUPS}</a>&nbsp; 
+					<tr>
+						<td align="center" valign="top" nowrap="nowrap"><span class="mainmenu">&nbsp;<a href="{U_FAQ}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_faq.gif" width="12" height="13" border="0" alt="{L_FAQ}" hspace="3" />{L_FAQ}</a>&nbsp; &nbsp;<a href="{U_SEARCH}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_search.gif" width="12" height="13" border="0" alt="{L_SEARCH}" hspace="3" />{L_SEARCH}</a>&nbsp; &nbsp;<a href="{U_MEMBERLIST}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_MEMBERLIST}" hspace="3" />{L_MEMBERLIST}</a>&nbsp; &nbsp;<a href="{U_GROUP_CP}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_groups.gif" width="12" height="13" border="0" alt="{L_USERGROUPS}" hspace="3" />{L_USERGROUPS}</a>&nbsp;
 						<!-- BEGIN switch_user_logged_out -->
 						&nbsp;<a href="{U_REGISTER}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_register.gif" width="12" height="13" border="0" alt="{L_REGISTER}" hspace="3" />{L_REGISTER}</a>&nbsp;
 						<!-- END switch_user_logged_out -->

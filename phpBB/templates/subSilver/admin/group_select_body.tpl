@@ -5,7 +5,7 @@
 
 <form method="post" action="{S_GROUP_ACTION}"><table cellspacing="1" cellpadding="4" border="0" align="center" class="forumline">
 	<tr>
-		
+
 	<th class="thHead" align="center">{L_GROUP_SELECT}</th>
 	</tr>
 	<!-- BEGIN select_box -->

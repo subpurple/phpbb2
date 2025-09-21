@@ -20,9 +20,9 @@
  *
  ***************************************************************************/
 
-if ( !defined('IN_PHPBB') )
+if (!defined('IN_PHPBB'))
 {
-	die("Hacking attempt");
+	die('Hacking attempt');
 }
 
 global $do_gzip_compress;
@@ -35,7 +35,7 @@ $template->set_filenames(array(
 );
 
 $template->assign_vars(array(
-	'PHPBB_VERSION' => ($userdata['user_level'] == ADMIN && $userdata['user_id'] != ANONYMOUS) ? '2' . $board_config['version'] : '', 
+	'PHPBB_VERSION' => ($userdata['user_level'] == ADMIN && $userdata['user_id'] != ANONYMOUS) ? '2' . $board_config['version'] : '',
 	'TRANSLATION_INFO' => (isset($lang['TRANSLATION_INFO'])) ? $lang['TRANSLATION_INFO'] : ((isset($lang['TRANSLATION'])) ? $lang['TRANSLATION'] : ''))
 );
 
@@ -50,7 +50,7 @@ $db->sql_close();
 // Compress buffered output if required
 // and send to browser
 //
-if( $do_gzip_compress )
+if ($do_gzip_compress)
 {
 	//
 	// Borrowed from php.net!

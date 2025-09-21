@@ -29,11 +29,11 @@
 
 <!-- BEGIN faq_block -->
 <table class="forumline" width="100%" cellspacing="1" cellpadding="3" border="0" align="center">
-	<tr> 
+	<tr>
 		<td class="catHead" height="28" align="center"><span class="cattitle">{faq_block.BLOCK_TITLE}</span></td>
 	</tr>
-	<!-- BEGIN faq_row -->  
-	<tr> 
+	<!-- BEGIN faq_row -->
+	<tr>
 		<td class="{faq_block.faq_row.ROW_CLASS}" align="left" valign="top"><span class="postbody"><a name="{faq_block.faq_row.U_FAQ_ID}"></a><b>{faq_block.faq_row.FAQ_QUESTION}</b></span><br /><span class="postbody">{faq_block.faq_row.FAQ_ANSWER}<br /><a class="postlink" href="#top">{L_BACK_TO_TOP}</a></span></td>
 	</tr>
 	<tr>
@@ -47,6 +47,6 @@
 
 <table width="100%" cellspacing="2" border="0" align="center">
 	<tr>
-		<td align="right" valign="middle" nowrap="nowrap"><span class="gensmall">{S_TIMEZONE}</span><br /><br />{JUMPBOX}</td> 
+		<td align="right" valign="middle" nowrap="nowrap"><span class="gensmall">{S_TIMEZONE}</span><br /><br />{JUMPBOX}</td>
 	</tr>
 </table>

@@ -20,7 +20,7 @@
  *
  ***************************************************************************/
 
-if ( !defined('IN_PHPBB') )
+if (!defined('IN_PHPBB'))
 {
 	die('Hacking attempt');
 }
@@ -30,10 +30,10 @@ global $do_gzip_compress;
 //
 // Show the overall footer.
 //
-$admin_link = ( isset($userdata['user_level']) && $userdata['user_level'] == ADMIN ) ? '<a href="admin/index.' . $phpEx . '?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a><br /><br />' : '';
+$admin_link = (isset($userdata['user_level']) && $userdata['user_level'] == ADMIN) ? '<a href="admin/index.' . $phpEx . '?sid=' . $userdata['session_id'] . '">' . $lang['Admin_panel'] . '</a><br /><br />' : '';
 
 $template->set_filenames(array(
-	'overall_footer' => ( empty($gen_simple_header) ) ? 'overall_footer.tpl' : 'simple_footer.tpl')
+	'overall_footer' => (empty($gen_simple_header)) ? 'overall_footer.tpl' : 'simple_footer.tpl')
 );
 
 $template->assign_vars(array(
@@ -51,7 +51,7 @@ $db->sql_close();
 //
 // Compress buffered output if required and send to browser
 //
-if ( $do_gzip_compress )
+if ($do_gzip_compress)
 {
 	//
 	// Borrowed from php.net!

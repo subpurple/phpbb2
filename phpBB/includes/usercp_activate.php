@@ -21,23 +21,23 @@
  *
  ***************************************************************************/
 
-if ( !defined('IN_PHPBB') )
+if (!defined('IN_PHPBB'))
 {
 	die('Hacking attempt');
 	exit;
 }
 
-$sql = "SELECT user_active, user_id, username, user_email, user_newpasswd, user_lang, user_actkey 
-	FROM " . USERS_TABLE . "
-	WHERE user_id = " . intval($HTTP_GET_VARS[POST_USERS_URL]);
-if ( !($result = $db->sql_query($sql)) )
+$sql = 'SELECT user_active, user_id, username, user_email, user_newpasswd, user_lang, user_actkey
+	FROM ' . USERS_TABLE . '
+	WHERE user_id = ' . intval($HTTP_GET_VARS[POST_USERS_URL]);
+if (!($result = $db->sql_query($sql)))
 {
 	message_die(GENERAL_ERROR, 'Could not obtain user information', '', __LINE__, __FILE__, $sql);
 }
 
-if ( $row = $db->sql_fetchrow($result) )
+if ($row = $db->sql_fetchrow($result))
 {
-	if ( $row['user_active'] && trim($row['user_actkey']) == '' )
+	if ($row['user_active'] && trim($row['user_actkey']) == '')
 	{
 		$template->assign_vars(array(
 			'META' => '<meta http-equiv="refresh" content="10;url=' . append_sid("index.$phpEx") . '">')
@@ -59,17 +59,17 @@ if ( $row = $db->sql_fetchrow($result) )
 			}
 		}
 
-		$sql_update_pass = ( $row['user_newpasswd'] != '' ) ? ", user_password = '" . str_replace("\'", "''", $row['user_newpasswd']) . "', user_newpasswd = ''" : '';
+		$sql_update_pass = ($row['user_newpasswd'] != '') ? ", user_password = '" . str_replace("\'", "''", $row['user_newpasswd']) . "', user_newpasswd = ''" : '';
 
-		$sql = "UPDATE " . USERS_TABLE . "
-			SET user_active = 1, user_actkey = ''" . $sql_update_pass . " 
-			WHERE user_id = " . $row['user_id']; 
-		if ( !($result = $db->sql_query($sql)) )
+		$sql = 'UPDATE ' . USERS_TABLE . "
+			SET user_active = 1, user_actkey = ''" . $sql_update_pass . '
+			WHERE user_id = ' . $row['user_id'];
+		if (!($result = $db->sql_query($sql)))
 		{
 			message_die(GENERAL_ERROR, 'Could not update users table', '', __LINE__, __FILE__, $sql_update);
 		}
 
-		if ( intval($board_config['require_activation']) == USER_ACTIVATION_ADMIN && $sql_update_pass == '' )
+		if (intval($board_config['require_activation']) == USER_ACTIVATION_ADMIN && $sql_update_pass == '')
 		{
 			include($phpbb_root_path . 'includes/emailer.'.$phpEx);
 			$emailer = new emailer($board_config['smtp_delivery']);
@@ -82,7 +82,7 @@ if ( $row = $db->sql_fetchrow($result) )
 			$emailer->set_subject($lang['Account_activated_subject']);
 
 			$emailer->assign_vars(array(
-				'SITENAME' => $board_config['sitename'], 
+				'SITENAME' => $board_config['sitename'],
 				'USERNAME' => $row['username'],
 				'PASSWORD' => $password_confirm,
 				'EMAIL_SIG' => (!empty($board_config['board_email_sig'])) ? str_replace('<br />', "\n", "-- \n" . $board_config['board_email_sig']) : '')
@@ -102,7 +102,7 @@ if ( $row = $db->sql_fetchrow($result) )
 				'META' => '<meta http-equiv="refresh" content="10;url=' . append_sid("index.$phpEx") . '">')
 			);
 
-			$message = ( $sql_update_pass == '' ) ? $lang['Account_active'] : $lang['Password_activated']; 
+			$message = ($sql_update_pass == '') ? $lang['Account_active'] : $lang['Password_activated'];
 			message_die(GENERAL_MESSAGE, $message);
 		}
 	}

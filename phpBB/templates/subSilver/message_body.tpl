@@ -1,4 +1,4 @@
- 
+
 <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
 	<tr>
 		<td align="left" class="nav"><a href="{U_INDEX}" class="nav">{L_INDEX}</a></td>
@@ -9,15 +9,15 @@
 	<tr>
 		<th class="thHead" height="25"><b>{MESSAGE_TITLE}</b></th>
 	</tr>
-	<tr> 
+	<tr>
 		<td class="row1"><table width="100%" cellspacing="0" cellpadding="1" border="0">
-			<tr> 
+			<tr>
 				<td>&nbsp;</td>
 			</tr>
-			<tr> 
+			<tr>
 				<td align="center"><span class="gen">{MESSAGE_TEXT}</span></td>
 			</tr>
-			<tr> 
+			<tr>
 				<td>&nbsp;</td>
 			</tr>
 		</table></td>

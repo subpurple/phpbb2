@@ -19,13 +19,13 @@
  *
  ***************************************************************************/
 
-if ( !defined('IN_PHPBB') )
+if (!defined('IN_PHPBB'))
 {
-	die("Hacking attempt");
+	die('Hacking attempt');
 }
 
 //
-error_reporting  (E_ERROR | E_WARNING | E_PARSE); // This will NOT report uninitialized variables
+error_reporting(E_ERROR | E_WARNING | E_PARSE); // This will NOT report uninitialized variables
 
 if (function_exists('set_magic_quotes_runtime'))
 {
@@ -55,13 +55,13 @@ if (@phpversion() >= '5.0.0' && (!@ini_get('register_long_arrays') || @ini_get('
 // Protect against GLOBALS tricks
 if (isset($HTTP_POST_VARS['GLOBALS']) || isset($HTTP_POST_FILES['GLOBALS']) || isset($HTTP_GET_VARS['GLOBALS']) || isset($HTTP_COOKIE_VARS['GLOBALS']))
 {
-	die("Hacking attempt");
+	die('Hacking attempt');
 }
 
 // Protect against HTTP_SESSION_VARS tricks
 if (isset($HTTP_SESSION_VARS) && !is_array($HTTP_SESSION_VARS))
 {
-	die("Hacking attempt");
+	die('Hacking attempt');
 }
 
 if (@ini_get('register_globals') == '1' || strtolower(@ini_get('register_globals')) == 'on')
@@ -101,13 +101,13 @@ if (@ini_get('register_globals') == '1' || strtolower(@ini_get('register_globals
 // this is a security precaution to prevent someone
 // trying to break out of a SQL statement.
 //
-if( !function_exists('get_magic_quotes_gpc') || !get_magic_quotes_gpc() )
+if (!function_exists('get_magic_quotes_gpc') || !get_magic_quotes_gpc())
 {
-	if( is_array($HTTP_GET_VARS) )
+	if (is_array($HTTP_GET_VARS))
 	{
 		foreach ($HTTP_GET_VARS as $k => $v)
 		{
-			if( is_array($HTTP_GET_VARS[$k]) )
+			if (is_array($HTTP_GET_VARS[$k]))
 			{
 				foreach ($HTTP_GET_VARS[$k] as $k2 => $v2)
 				{
@@ -121,11 +121,11 @@ if( !function_exists('get_magic_quotes_gpc') || !get_magic_quotes_gpc() )
 		}
 	}
 
-	if( is_array($HTTP_POST_VARS) )
+	if (is_array($HTTP_POST_VARS))
 	{
 		foreach ($HTTP_POST_VARS as $k => $v)
 		{
-			if( is_array($HTTP_POST_VARS[$k]) )
+			if (is_array($HTTP_POST_VARS[$k]))
 			{
 				foreach ($HTTP_POST_VARS[$k] as $k2 => $v2)
 				{
@@ -139,11 +139,11 @@ if( !function_exists('get_magic_quotes_gpc') || !get_magic_quotes_gpc() )
 		}
 	}
 
-	if( is_array($HTTP_COOKIE_VARS) )
+	if (is_array($HTTP_COOKIE_VARS))
 	{
 		foreach ($HTTP_COOKIE_VARS as $k => $v)
 		{
-			if( is_array($HTTP_COOKIE_VARS[$k]) )
+			if (is_array($HTTP_COOKIE_VARS[$k]))
 			{
 				foreach ($HTTP_COOKIE_VARS[$k] as $k2 => $v2)
 				{
@@ -170,11 +170,11 @@ $images = array();
 $lang = array();
 $nav_links = array();
 $dss_seeded = false;
-$gen_simple_header = FALSE;
+$gen_simple_header = false;
 
 include($phpbb_root_path . 'config.'.$phpEx);
 
-if( !defined("PHPBB_INSTALLED") )
+if (!defined('PHPBB_INSTALLED'))
 {
 	header('Location: ' . $phpbb_root_path . 'install/install.' . $phpEx);
 	exit;
@@ -198,7 +198,7 @@ unset($dbpasswd);
 // even bother complaining ... go scream and shout at the idiots out there who feel
 // "clever" is doing harm rather than good ... karma is a great thing ... :)
 //
-$client_ip = ( !empty($HTTP_SERVER_VARS['REMOTE_ADDR']) ) ? $HTTP_SERVER_VARS['REMOTE_ADDR'] : ( ( !empty($HTTP_ENV_VARS['REMOTE_ADDR']) ) ? $HTTP_ENV_VARS['REMOTE_ADDR'] : getenv('REMOTE_ADDR') );
+$client_ip = (!empty($HTTP_SERVER_VARS['REMOTE_ADDR'])) ? $HTTP_SERVER_VARS['REMOTE_ADDR'] : ((!empty($HTTP_ENV_VARS['REMOTE_ADDR'])) ? $HTTP_ENV_VARS['REMOTE_ADDR'] : getenv('REMOTE_ADDR'));
 $user_ip = encode_ip($client_ip);
 
 //
@@ -206,27 +206,27 @@ $user_ip = encode_ip($client_ip);
 // then we output a CRITICAL_ERROR since
 // basic forum information is not available
 //
-$sql = "SELECT *
-	FROM " . CONFIG_TABLE;
-if( !($result = $db->sql_query($sql)) )
+$sql = 'SELECT *
+	FROM ' . CONFIG_TABLE;
+if (!($result = $db->sql_query($sql)))
 {
-	message_die(CRITICAL_ERROR, "Could not query config information", "", __LINE__, __FILE__, $sql);
+	message_die(CRITICAL_ERROR, 'Could not query config information', '', __LINE__, __FILE__, $sql);
 }
 
-while ( $row = $db->sql_fetchrow($result) )
+while ($row = $db->sql_fetchrow($result))
 {
 	$board_config[$row['config_name']] = $row['config_value'];
 }
 
 if (file_exists('install') || file_exists('contrib'))
 {
-	message_die(GENERAL_MESSAGE, 'Please_remove_install_contrib');
+//	message_die(GENERAL_MESSAGE, 'Please_remove_install_contrib');
 }
 
 //
 // Show 'Board is disabled' message if needed.
 //
-if( $board_config['board_disable'] && !defined("IN_ADMIN") && !defined("IN_LOGIN") )
+if ($board_config['board_disable'] && !defined('IN_ADMIN') && !defined('IN_LOGIN'))
 {
 	message_die(GENERAL_MESSAGE, 'Board_disable', 'Information');
 }

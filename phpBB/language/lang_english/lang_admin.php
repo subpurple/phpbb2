@@ -81,11 +81,11 @@ $lang['Users_per_day'] = 'Users per day';
 $lang['Board_started'] = 'Board started';
 $lang['Avatar_dir_size'] = 'Avatar directory size';
 $lang['Database_size'] = 'Database size';
-$lang['Gzip_compression'] ='Gzip compression';
+$lang['Gzip_compression'] = 'Gzip compression';
 $lang['Not_available'] = 'Not available';
 
 $lang['ON'] = 'ON'; // This is for GZip compression
-$lang['OFF'] = 'OFF'; 
+$lang['OFF'] = 'OFF';
 
 
 //
@@ -124,12 +124,12 @@ $lang['Restore_Error_no_file'] = 'No file was uploaded';
 $lang['Select_a_User'] = 'Select a User';
 $lang['Select_a_Group'] = 'Select a Group';
 $lang['Select_a_Forum'] = 'Select a Forum';
-$lang['Auth_Control_User'] = 'User Permissions Control'; 
-$lang['Auth_Control_Group'] = 'Group Permissions Control'; 
-$lang['Auth_Control_Forum'] = 'Forum Permissions Control'; 
-$lang['Look_up_User'] = 'Look up User'; 
-$lang['Look_up_Group'] = 'Look up Group'; 
-$lang['Look_up_Forum'] = 'Look up Forum'; 
+$lang['Auth_Control_User'] = 'User Permissions Control';
+$lang['Auth_Control_Group'] = 'Group Permissions Control';
+$lang['Auth_Control_Forum'] = 'Forum Permissions Control';
+$lang['Look_up_User'] = 'Look up User';
+$lang['Look_up_Group'] = 'Look up Group';
+$lang['Look_up_Forum'] = 'Look up Forum';
 
 $lang['Group_auth_explain'] = 'Here you can alter the permissions and moderator status assigned to each user group. Do not forget when changing group permissions that individual user permissions may still allow the user entry to forums, etc. You will be warned if this is the case.';
 $lang['User_auth_explain'] = 'Here you can alter the permissions and moderator status assigned to each individual user. Do not forget when changing user permissions that group permissions may still allow the user entry to forums, etc. You will be warned if this is the case.';
@@ -172,14 +172,14 @@ $lang['Reply'] = 'Reply';
 $lang['Edit'] = 'Edit';
 $lang['Delete'] = 'Delete';
 $lang['Sticky'] = 'Sticky';
-$lang['Announce'] = 'Announce'; 
+$lang['Announce'] = 'Announce';
 $lang['Vote'] = 'Vote';
 $lang['Pollcreate'] = 'Poll create';
 
 $lang['Permissions'] = 'Permissions';
 $lang['Simple_Permission'] = 'Simple Permissions';
 
-$lang['User_Level'] = 'User Level'; 
+$lang['User_Level'] = 'User Level';
 $lang['Auth_User'] = 'User';
 $lang['Auth_Admin'] = 'Administrator';
 $lang['Group_memberships'] = 'Usergroup memberships';
@@ -259,7 +259,7 @@ $lang['Acc_Admin'] = 'Admin';
 $lang['Abilities_settings'] = 'User and Forum Basic Settings';
 $lang['Max_poll_options'] = 'Max number of poll options';
 $lang['Flood_Interval'] = 'Flood Interval';
-$lang['Flood_Interval_explain'] = 'Number of seconds a user must wait between posts'; 
+$lang['Flood_Interval_explain'] = 'Number of seconds a user must wait between posts';
 $lang['Board_email_form'] = 'User email via board';
 $lang['Board_email_form_explain'] = 'Users send email to each other via this board';
 $lang['Topics_per_page'] = 'Topics Per Page';
@@ -321,7 +321,7 @@ $lang['Inbox_limits'] = 'Max posts in Inbox';
 $lang['Sentbox_limits'] = 'Max posts in Sentbox';
 $lang['Savebox_limits'] = 'Max posts in Savebox';
 
-$lang['Cookie_settings'] = 'Cookie settings'; 
+$lang['Cookie_settings'] = 'Cookie settings';
 $lang['Cookie_settings_explain'] = 'These details define how cookies are sent to your users\' browsers. In most cases the default values for the cookie settings should be sufficient, but if you need to change them do so with care -- incorrect settings can prevent users from logging in';
 $lang['Cookie_domain'] = 'Cookie domain';
 $lang['Cookie_name'] = 'Cookie name';
@@ -342,7 +342,7 @@ $lang['Autologin_time_explain'] = 'How long a autologin key is valid for in days
 
 // Search Flood Control - added 2.0.20
 $lang['Search_Flood_Interval'] = 'Search Flood Interval';
-$lang['Search_Flood_Interval_explain'] = 'Number of seconds a user must wait between search requests'; 
+$lang['Search_Flood_Interval_explain'] = 'Number of seconds a user must wait between search requests';
 
 //
 // Forum Management
@@ -529,9 +529,9 @@ $lang['Confirm_delete_word'] = 'Are you sure you want to delete this word censor
 // Mass Email
 //
 $lang['Mass_email_explain'] = 'Here you can email a message to either all of your users or all users of a specific group.  To do this, an email will be sent out to the administrative email address supplied, with a blind carbon copy sent to all recipients. If you are emailing a large group of people please be patient after submitting and do not stop the page halfway through. It is normal for a mass emailing to take a long time and you will be notified when the script has completed';
-$lang['Compose'] = 'Compose'; 
+$lang['Compose'] = 'Compose';
 
-$lang['Recipients'] = 'Recipients'; 
+$lang['Recipients'] = 'Recipients';
 $lang['All_users'] = 'All Users';
 
 $lang['Email_successfull'] = 'Your message has been sent';

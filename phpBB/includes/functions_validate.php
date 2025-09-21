@@ -30,11 +30,11 @@ function validate_username($username)
 	global $db, $lang, $userdata;
 
 	// Remove doubled up spaces
-	$username = preg_replace('#\s+#', ' ', trim($username)); 
+	$username = preg_replace('#\s+#', ' ', trim($username));
 	$username = phpbb_clean_username($username);
 
-	$sql = "SELECT username 
-		FROM " . USERS_TABLE . "
+	$sql = 'SELECT username
+		FROM ' . USERS_TABLE . "
 		WHERE LOWER(username) = '" . strtolower($username) . "'";
 	if ($result = $db->sql_query($sql))
 	{
@@ -43,55 +43,59 @@ function validate_username($username)
 			if (($userdata['session_logged_in'] && $row['username'] != $userdata['username']) || !$userdata['session_logged_in'])
 			{
 				$db->sql_freeresult($result);
+
 				return array('error' => true, 'error_msg' => $lang['Username_taken']);
 			}
 		}
 	}
 	$db->sql_freeresult($result);
 
-	$sql = "SELECT group_name
-		FROM " . GROUPS_TABLE . " 
+	$sql = 'SELECT group_name
+		FROM ' . GROUPS_TABLE . "
 		WHERE LOWER(group_name) = '" . strtolower($username) . "'";
 	if ($result = $db->sql_query($sql))
 	{
 		if ($row = $db->sql_fetchrow($result))
 		{
 			$db->sql_freeresult($result);
+
 			return array('error' => true, 'error_msg' => $lang['Username_taken']);
 		}
 	}
 	$db->sql_freeresult($result);
 
-	$sql = "SELECT disallow_username
-		FROM " . DISALLOW_TABLE;
+	$sql = 'SELECT disallow_username
+		FROM ' . DISALLOW_TABLE;
 	if ($result = $db->sql_query($sql))
 	{
 		if ($row = $db->sql_fetchrow($result))
 		{
 			do
 			{
-				if (preg_match("#\b(" . str_replace("\*", ".*?", preg_quote($row['disallow_username'], '#')) . ")\b#i", $username))
+				if (preg_match("#\b(" . str_replace("\*", '.*?', preg_quote($row['disallow_username'], '#')) . ")\b#i", $username))
 				{
 					$db->sql_freeresult($result);
+
 					return array('error' => true, 'error_msg' => $lang['Username_disallowed']);
 				}
 			}
-			while($row = $db->sql_fetchrow($result));
+			while ($row = $db->sql_fetchrow($result));
 		}
 	}
 	$db->sql_freeresult($result);
 
-	$sql = "SELECT word 
-		FROM  " . WORDS_TABLE;
+	$sql = 'SELECT word
+		FROM  ' . WORDS_TABLE;
 	if ($result = $db->sql_query($sql))
 	{
 		if ($row = $db->sql_fetchrow($result))
 		{
 			do
 			{
-				if (preg_match("#\b(" . str_replace("\*", ".*?", preg_quote($row['word'], '#')) . ")\b#i", $username))
+				if (preg_match("#\b(" . str_replace("\*", '.*?', preg_quote($row['word'], '#')) . ")\b#i", $username))
 				{
 					$db->sql_freeresult($result);
+
 					return array('error' => true, 'error_msg' => $lang['Username_disallowed']);
 				}
 			}
@@ -121,8 +125,8 @@ function validate_email($email)
 	{
 		if (preg_match('/^[a-z0-9&\'\.\-_\+]+@[a-z0-9\-]+\.([a-z0-9\-]+\.)*?[a-z]+$/is', $email))
 		{
-			$sql = "SELECT ban_email
-				FROM " . BANLIST_TABLE;
+			$sql = 'SELECT ban_email
+				FROM ' . BANLIST_TABLE;
 			if ($result = $db->sql_query($sql))
 			{
 				if ($row = $db->sql_fetchrow($result))
@@ -133,22 +137,23 @@ function validate_email($email)
 						if (preg_match('/^' . $match_email . '$/is', $email))
 						{
 							$db->sql_freeresult($result);
+
 							return array('error' => true, 'error_msg' => $lang['Email_banned']);
 						}
 					}
-					while($row = $db->sql_fetchrow($result));
+					while ($row = $db->sql_fetchrow($result));
 				}
 			}
 			$db->sql_freeresult($result);
 
-			$sql = "SELECT user_email
-				FROM " . USERS_TABLE . "
+			$sql = 'SELECT user_email
+				FROM ' . USERS_TABLE . "
 				WHERE user_email = '" . str_replace("\'", "''", $email) . "'";
 			if (!($result = $db->sql_query($sql)))
 			{
-				message_die(GENERAL_ERROR, "Couldn't obtain user email information.", "", __LINE__, __FILE__, $sql);
+				message_die(GENERAL_ERROR, "Couldn't obtain user email information.", '', __LINE__, __FILE__, $sql);
 			}
-		
+
 			if ($row = $db->sql_fetchrow($result))
 			{
 				return array('error' => true, 'error_msg' => $lang['Email_taken']);
@@ -170,9 +175,9 @@ function validate_optional_fields(&$icq, &$aim, &$msnm, &$yim, &$website, &$loca
 {
 	$check_var_length = array('aim', 'msnm', 'yim', 'location', 'occupation', 'interests', 'sig');
 
-	foreach($check_var_length as $var)
+	foreach ($check_var_length as $var)
 	{
-		if(empty($$var) || strlen($$var) < 2)
+		if (empty($$var) || strlen($$var) < 2)
 		{
 			$$var = '';
 		}
@@ -183,10 +188,10 @@ function validate_optional_fields(&$icq, &$aim, &$msnm, &$yim, &$website, &$loca
 	{
 		$icq = '';
 	}
-	
+
 	// website has to start with http://, followed by something with length at least 3 that
 	// contains at least one dot.
-	if ($website != "")
+	if ($website != '')
 	{
 		if (!preg_match('#^http[s]?:\/\/#i', $website))
 		{

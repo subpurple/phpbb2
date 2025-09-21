@@ -27,8 +27,9 @@
  *
  */
 
-class Template {
-	var $classname = "Template";
+class Template
+{
+	var $classname = 'Template';
 
 	// variable that holds all the data we'll be substituting into
 	// the compiled templates.
@@ -43,7 +44,7 @@ class Template {
 	var $files = array();
 
 	// Root template directory.
-	var $root = "";
+	var $root = '';
 
 	// this will hash handle names to the compiled code for that handle.
 	var $compiled_code = array();
@@ -55,7 +56,7 @@ class Template {
 	 * Constructor. Simply sets the root dir.
 	 *
 	 */
-	function __construct($root = ".")
+	function __construct($root = '.')
 	{
 		$this->set_rootdir($root);
 	}
@@ -80,6 +81,7 @@ class Template {
 		}
 
 		$this->root = $dir;
+
 		return true;
 	}
 
@@ -125,6 +127,7 @@ class Template {
 
 		// Run the compiled code.
 		eval($this->compiled_code[$handle]);
+
 		return true;
 	}
 
@@ -144,7 +147,7 @@ class Template {
 		}
 
 		// Compile it, with the "no echo statements" option on.
-		$_str = "";
+		$_str = '';
 		$code = $this->compile($this->uncompiled_code[$handle], true, '_str');
 
 		// evaluate the variable assignment.
@@ -199,7 +202,7 @@ class Template {
 	 */
 	function assign_vars($vararray)
 	{
-		reset ($vararray);
+		reset($vararray);
 		foreach ($vararray as $key => $val)
 		{
 			$this->_tpldata['.'][0][$key] = $val;
@@ -230,7 +233,7 @@ class Template {
 		// Check if it's an absolute or relative path.
 		if (substr($filename, 0, 1) != '/')
 		{
-       		$filename = ($rp_filename = phpbb_realpath($this->root . '/' . $filename)) ? $rp_filename : $filename;
+			$filename = ($rp_filename = phpbb_realpath($this->root . '/' . $filename)) ? $rp_filename : $filename;
 		}
 
 		if (!file_exists($filename))
@@ -262,7 +265,7 @@ class Template {
 
 		$filename = $this->files[$handle];
 
-		$str = implode("", @file($filename));
+		$str = implode('', @file($filename));
 		if (empty($str))
 		{
 			die("Template->loadfile(): File $filename for handle $handle is empty");
@@ -311,7 +314,7 @@ class Template {
 
 		$block_nesting_level = 0;
 		$block_names = array();
-		$block_names[0] = ".";
+		$block_names[0] = '.';
 
 		// Second: prepend echo ', append ' . "\n"; to each line.
 		$line_count = sizeof($code_lines);
@@ -324,7 +327,7 @@ class Template {
 				$n[1] = $m[1];
 
 				// Added: dougk_ff7-Keeps templates from bombing if begin is on the same line as end.. I think. :)
-				if ( preg_match('#<!-- END (.*?) -->#', $code_lines[$i], $n) )
+				if (preg_match('#<!-- END (.*?) -->#', $code_lines[$i], $n))
 				{
 					$block_nesting_level++;
 					$block_names[$block_nesting_level] = $m[1];
@@ -405,15 +408,15 @@ class Template {
 				}
 				else
 				{
-					$code_lines[$i] = '$' . $retvar . '.= \'' . $code_lines[$i] . '\' . "\\n";'; 
+					$code_lines[$i] = '$' . $retvar . '.= \'' . $code_lines[$i] . '\' . "\\n";';
 				}
 			}
 		}
 
 		// Bring it back into a single string of lines of code.
 		$code = implode("\n", $code_lines);
-		return $code	;
 
+		return $code	;
 	}
 
 
@@ -439,7 +442,6 @@ class Template {
 		$varref = '\' . ( ( isset(' . $varref . ') ) ? ' . $varref . ' : \'\' ) . \'';
 
 		return $varref;
-
 	}
 
 
@@ -454,7 +456,7 @@ class Template {
 	function generate_block_data_ref($blockname, $include_last_iterator)
 	{
 		// Get an array of the blocks involved.
-		$blocks = explode(".", $blockname);
+		$blocks = explode('.', $blockname);
 		$blockcount = sizeof($blocks) - 1;
 		$varref = '$this->_tpldata';
 		// Build up the string with everything but the last child.
@@ -472,7 +474,6 @@ class Template {
 
 		return $varref;
 	}
-
 }
 
 ?>

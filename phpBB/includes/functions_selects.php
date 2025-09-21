@@ -24,20 +24,20 @@
 //
 // Pick a language, any language ...
 //
-function language_select($default, $select_name = "language", $dirname="language")
+function language_select($default, $select_name = 'language', $dirname = 'language')
 {
 	global $phpEx, $phpbb_root_path;
 
 	$dir = opendir($phpbb_root_path . $dirname);
 
 	$lang = array();
-	while ( $file = readdir($dir) )
+	while ($file = readdir($dir))
 	{
 		if (preg_match('#^lang_#i', $file) && !is_file(@phpbb_realpath($phpbb_root_path . $dirname . '/' . $file)) && !is_link(@phpbb_realpath($phpbb_root_path . $dirname . '/' . $file)))
 		{
-			$filename = trim(str_replace("lang_", "", $file));
-			$displayname = preg_replace("/^(.*?)_(.*)$/", "\\1 [ \\2 ]", $filename);
-			$displayname = preg_replace("/\[(.*?)_(.*)\]/", "[ \\1 - \\2 ]", $displayname);
+			$filename = trim(str_replace('lang_', '', $file));
+			$displayname = preg_replace('/^(.*?)_(.*)$/', '\\1 [ \\2 ]', $filename);
+			$displayname = preg_replace("/\[(.*?)_(.*)\]/", '[ \\1 - \\2 ]', $displayname);
 			$lang[$displayname] = $filename;
 		}
 	}
@@ -50,7 +50,7 @@ function language_select($default, $select_name = "language", $dirname="language
 	$lang_select = '<select name="' . $select_name . '">';
 	foreach ($lang as $displayname => $filename)
 	{
-		$selected = ( strtolower($default) == strtolower($filename) ) ? ' selected="selected"' : '';
+		$selected = (strtolower($default) == strtolower($filename)) ? ' selected="selected"' : '';
 		$lang_select .= '<option value="' . $filename . '"' . $selected . '>' . ucwords($displayname) . '</option>';
 	}
 	$lang_select .= '</select>';
@@ -59,28 +59,28 @@ function language_select($default, $select_name = "language", $dirname="language
 }
 
 //
-// Pick a template/theme combo, 
+// Pick a template/theme combo,
 //
-function style_select($default_style, $select_name = "style", $dirname = "templates")
+function style_select($default_style, $select_name = 'style', $dirname = 'templates')
 {
 	global $db;
 
-	$sql = "SELECT themes_id, style_name
-		FROM " . THEMES_TABLE . "
-		ORDER BY template_name, themes_id";
-	if ( !($result = $db->sql_query($sql)) )
+	$sql = 'SELECT themes_id, style_name
+		FROM ' . THEMES_TABLE . '
+		ORDER BY template_name, themes_id';
+	if (!($result = $db->sql_query($sql)))
 	{
-		message_die(GENERAL_ERROR, "Couldn't query themes table", "", __LINE__, __FILE__, $sql);
+		message_die(GENERAL_ERROR, "Couldn't query themes table", '', __LINE__, __FILE__, $sql);
 	}
 
 	$style_select = '<select name="' . $select_name . '">';
-	while ( $row = $db->sql_fetchrow($result) )
+	while ($row = $db->sql_fetchrow($result))
 	{
-		$selected = ( $row['themes_id'] == $default_style ) ? ' selected="selected"' : '';
+		$selected = ($row['themes_id'] == $default_style) ? ' selected="selected"' : '';
 
 		$style_select .= '<option value="' . $row['themes_id'] . '"' . $selected . '>' . $row['style_name'] . '</option>';
 	}
-	$style_select .= "</select>";
+	$style_select .= '</select>';
 
 	return $style_select;
 }
@@ -92,7 +92,7 @@ function tz_select($default, $select_name = 'timezone')
 {
 	global $sys_timezone, $lang;
 
-	if ( !isset($default) )
+	if (!isset($default))
 	{
 		$default == $sys_timezone;
 	}
@@ -100,7 +100,7 @@ function tz_select($default, $select_name = 'timezone')
 
 	foreach ($lang['tz'] as $offset => $zone)
 	{
-		$selected = ( $offset == $default ) ? ' selected="selected"' : '';
+		$selected = ($offset == $default) ? ' selected="selected"' : '';
 		$tz_select .= '<option value="' . $offset . '"' . $selected . '>' . $zone . '</option>';
 	}
 	$tz_select .= '</select>';

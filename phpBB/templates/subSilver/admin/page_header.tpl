@@ -16,10 +16,10 @@
   theme administration centre. When you have finalised your style you could cut the final CSS code
   and place it in an external file, deleting this section to save bandwidth.
 */
- 
- 
+
+
  /* General page style. The scroll bar colours only visible in IE5.5+ */
-body { 
+body {
 	background-color: {T_BODY_BGCOLOR};
 	scrollbar-face-color: {T_TR_COLOR2};
 	scrollbar-highlight-color: {T_TD_COLOR2};
@@ -65,7 +65,7 @@ td.rowpic {
 
 /* Header cells - the blue and silver gradient backgrounds */
 th	{
-	color: {T_FONTCOLOR3}; font-size: {T_FONTSIZE2}px; font-weight : bold; 
+	color: {T_FONTCOLOR3}; font-size: {T_FONTSIZE2}px; font-weight : bold;
 	background-color: {T_BODY_LINK}; height: 25px;
 	background-image: url(../templates/subSilver/images/{T_TH_CLASS2});
 }
@@ -156,7 +156,7 @@ a.postlink:hover { text-decoration: underline; color : {T_BODY_HLINK}}
 
 
 /* Quote & Code blocks */
-.code { 
+.code {
 	font-family: {T_FONTFACE3}; font-size: {T_FONTSIZE2}px; color: {T_FONTCOLOR2};
 	background-color: {T_TD_COLOR1}; border: {T_TR_COLOR3}; border-style: solid;
 	border-left-width: 1px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px
@@ -216,7 +216,7 @@ input.liteoption {
 
 
 /* Import the fancy styles for IE only (NS4.x doesn't use the @import function) */
-@import url("../templates/subSilver/formIE.css"); 
+@import url("../templates/subSilver/formIE.css");
 -->
 </style>
 <title>{SITENAME} - {L_PHPBB_ADMIN}</title>

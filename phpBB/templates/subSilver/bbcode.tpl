@@ -8,14 +8,14 @@
 
 <!-- BEGIN quote_username_open --></span>
 <table width="90%" cellspacing="1" cellpadding="3" border="0" align="center">
-<tr> 
+<tr>
 	  <td><span class="genmed"><b>{USERNAME} {L_WROTE}:</b></span></td>
 	</tr>
 	<tr>
 	  <td class="quote"><!-- END quote_username_open -->
 <!-- BEGIN quote_open --></span>
 <table width="90%" cellspacing="1" cellpadding="3" border="0" align="center">
-<tr> 
+<tr>
 	  <td><span class="genmed"><b>{L_QUOTE}:</b></span></td>
 	</tr>
 	<tr>
@@ -27,7 +27,7 @@
 
 <!-- BEGIN code_open --></span>
 <table width="90%" cellspacing="1" cellpadding="3" border="0" align="center">
-<tr> 
+<tr>
 	  <td><span class="genmed"><b>{L_CODE}:</b></span></td>
 	</tr>
 	<tr>

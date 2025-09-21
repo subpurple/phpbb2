@@ -22,7 +22,7 @@
 
 if (!defined('IN_PHPBB'))
 {
-	die("Hacking attempt");
+	die('Hacking attempt');
 }
 
 define('IN_ADMIN', true);

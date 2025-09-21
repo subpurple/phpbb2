@@ -21,21 +21,21 @@
 
 if (!defined('IN_PHPBB'))
 {
-    define( 'IN_PHPBB', 1);
+	define('IN_PHPBB', 1);
 }
 
-if( !empty($setmodules) )
+if (!empty($setmodules))
 {
 	$filename = basename(__FILE__);
 	$module['General']['Mass_Email'] = $filename;
-	
+
 	return;
 }
 
 //
 // Load default header
 //
-$no_page_header = TRUE;
+$no_page_header = true;
 $phpbb_root_path = './../';
 require($phpbb_root_path . 'extension.inc');
 require('./pagestart.' . $phpEx);
@@ -48,57 +48,57 @@ require('./pagestart.' . $phpEx);
 
 $message = '';
 $subject = '';
-$error = FALSE;
+$error = false;
 $error_msg = '';
 
 //
 // Do the job ...
 //
-if ( isset($HTTP_POST_VARS['submit']) )
+if (isset($HTTP_POST_VARS['submit']))
 {
 	$subject = stripslashes(trim($HTTP_POST_VARS['subject']));
 	$message = stripslashes(trim($HTTP_POST_VARS['message']));
-	
-	if ( empty($subject) )
+
+	if (empty($subject))
 	{
 		$error = true;
-		$error_msg .= ( !empty($error_msg) ) ? '<br />' . $lang['Empty_subject'] : $lang['Empty_subject'];
+		$error_msg .= (!empty($error_msg)) ? '<br />' . $lang['Empty_subject'] : $lang['Empty_subject'];
 	}
 
-	if ( empty($message) )
+	if (empty($message))
 	{
 		$error = true;
-		$error_msg .= ( !empty($error_msg) ) ? '<br />' . $lang['Empty_message'] : $lang['Empty_message'];
+		$error_msg .= (!empty($error_msg)) ? '<br />' . $lang['Empty_message'] : $lang['Empty_message'];
 	}
 
 	$group_id = intval($HTTP_POST_VARS[POST_GROUPS_URL]);
 
-	$sql = ( $group_id != -1 ) ? "SELECT u.user_email FROM " . USERS_TABLE . " u, " . USER_GROUP_TABLE . " ug WHERE ug.group_id = $group_id AND ug.user_pending <> " . TRUE . " AND u.user_id = ug.user_id" : "SELECT user_email FROM " . USERS_TABLE;
-	if ( !($result = $db->sql_query($sql)) )
+	$sql = ($group_id != -1) ? 'SELECT u.user_email FROM ' . USERS_TABLE . ' u, ' . USER_GROUP_TABLE . " ug WHERE ug.group_id = $group_id AND ug.user_pending <> " . true . ' AND u.user_id = ug.user_id' : 'SELECT user_email FROM ' . USERS_TABLE;
+	if (!($result = $db->sql_query($sql)))
 	{
 		message_die(GENERAL_ERROR, 'Could not select group members', '', __LINE__, __FILE__, $sql);
 	}
 
-	if ( $row = $db->sql_fetchrow($result) )
+	if ($row = $db->sql_fetchrow($result))
 	{
 		$bcc_list = array();
 		do
 		{
 			$bcc_list[] = $row['user_email'];
 		}
-		while ( $row = $db->sql_fetchrow($result) );
+		while ($row = $db->sql_fetchrow($result));
 
 		$db->sql_freeresult($result);
 	}
 	else
 	{
-		$message = ( $group_id != -1 ) ? $lang['Group_not_exist'] : $lang['No_such_user'];
+		$message = ($group_id != -1) ? $lang['Group_not_exist'] : $lang['No_such_user'];
 
 		$error = true;
-		$error_msg .= ( !empty($error_msg) ) ? '<br />' . $message : $message;
+		$error_msg .= (!empty($error_msg)) ? '<br />' . $message : $message;
 	}
 
-	if ( !$error )
+	if (!$error)
 	{
 		include($phpbb_root_path . 'includes/emailer.'.$phpEx);
 
@@ -106,9 +106,9 @@ if ( isset($HTTP_POST_VARS['submit']) )
 		// Let's do some checking to make sure that mass mail functions
 		// are working in win32 versions of php.
 		//
-		if ( preg_match('/[c-z]:\\\.*/i', getenv('PATH')) && !$board_config['smtp_delivery'])
+		if (preg_match('/[c-z]:\\\.*/i', getenv('PATH')) && !$board_config['smtp_delivery'])
 		{
-			$ini_val = ( @phpversion() >= '4.0.0' ) ? 'ini_get' : 'get_cfg_var';
+			$ini_val = (@phpversion() >= '4.0.0') ? 'ini_get' : 'get_cfg_var';
 
 			// We are running on windows, force delivery to use our smtp functions
 			// since php's are broken by default
@@ -117,7 +117,7 @@ if ( isset($HTTP_POST_VARS['submit']) )
 		}
 
 		$emailer = new emailer($board_config['smtp_delivery']);
-	
+
 		$emailer->from($board_config['board_email']);
 		$emailer->replyto($board_config['board_email']);
 
@@ -137,8 +137,8 @@ if ( isset($HTTP_POST_VARS['submit']) )
 		$emailer->extra_headers($email_headers);
 
 		$emailer->assign_vars(array(
-			'SITENAME' => $board_config['sitename'], 
-			'BOARD_EMAIL' => $board_config['board_email'], 
+			'SITENAME' => $board_config['sitename'],
+			'BOARD_EMAIL' => $board_config['board_email'],
 			'MESSAGE' => $message)
 		);
 		$emailer->send();
@@ -146,9 +146,9 @@ if ( isset($HTTP_POST_VARS['submit']) )
 
 		message_die(GENERAL_MESSAGE, $lang['Email_sent'] . '<br /><br />' . sprintf($lang['Click_return_admin_index'],  '<a href="' . append_sid("index.$phpEx?pane=right") . '">', '</a>'));
 	}
-}	
+}
 
-if ( $error )
+if ($error)
 {
 	$template->set_filenames(array(
 		'reg_header' => 'error_body.tpl')
@@ -163,22 +163,22 @@ if ( $error )
 // Initial selection
 //
 
-$sql = "SELECT group_id, group_name 
-	FROM ".GROUPS_TABLE . "  
-	WHERE group_single_user <> 1";
-if ( !($result = $db->sql_query($sql)) ) 
+$sql = 'SELECT group_id, group_name
+	FROM '.GROUPS_TABLE . '
+	WHERE group_single_user <> 1';
+if (!($result = $db->sql_query($sql)))
 {
 	message_die(GENERAL_ERROR, 'Could not obtain list of groups', '', __LINE__, __FILE__, $sql);
 }
 
 $select_list = '<select name = "' . POST_GROUPS_URL . '"><option value = "-1">' . $lang['All_users'] . '</option>';
-if ( $row = $db->sql_fetchrow($result) )
+if ($row = $db->sql_fetchrow($result))
 {
 	do
 	{
 		$select_list .= '<option value = "' . $row['group_id'] . '">' . $row['group_name'] . '</option>';
 	}
-	while ( $row = $db->sql_fetchrow($result) );
+	while ($row = $db->sql_fetchrow($result));
 }
 $select_list .= '</select>';
 
@@ -193,7 +193,7 @@ $template->set_filenames(array(
 
 $template->assign_vars(array(
 	'MESSAGE' => $message,
-	'SUBJECT' => $subject, 
+	'SUBJECT' => $subject,
 
 	'L_EMAIL_TITLE' => $lang['Email'],
 	'L_EMAIL_EXPLAIN' => $lang['Mass_email_explain'],

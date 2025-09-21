@@ -23,12 +23,12 @@
 	<tr>
 		<td class="row1">{L_STYLESHEET}:<br /><span class="gensmall">{L_STYLESHEET_EXPLAIN}</span></td>
 		<td class="row2"><input class="post" type="text" size="25" maxlength="100" name="head_stylesheet" value="{HEAD_STYLESHEET}"></td>
-		<td class="row2">&nbsp;</td>		
+		<td class="row2">&nbsp;</td>
 	</tr>
 	<tr>
 		<td class="row1">{L_BACKGROUND_IMAGE}:</td>
 		<td class="row2" ><input class="post" type="text" size="25" maxlength="100" name="body_background" value="{BODY_BACKGROUND}"></td>
-		<td class="row2">&nbsp;</td>		
+		<td class="row2">&nbsp;</td>
 	</tr>
 	<tr>
 		<td class="row1">{L_BACKGROUND_COLOR}:</td>
@@ -48,17 +48,17 @@
 	<tr>
 		<td class="row1">{L_BODY_VLINK_COLOR}:</td>
 		<td class="row2" ><input class="post" type="text" size="6" maxlength="6" name="body_vlink" value="{BODY_VLINK_COLOR}"></td>
-		<td class="row2">&nbsp;</td>		
+		<td class="row2">&nbsp;</td>
 	</tr>
 	<tr>
 		<td class="row1">{L_BODY_ALINK_COLOR}:</td>
 		<td class="row2" ><input class="post" type="text" size="6" maxlength="6" name="body_alink" value="{BODY_ALINK_COLOR}"></td>
-		<td class="row2">&nbsp;</td>		
+		<td class="row2">&nbsp;</td>
 	</tr>
 	<tr>
 		<td class="row1">{L_BODY_HLINK_COLOR}:</td>
 		<td class="row2" ><input class="post" type="text" size="6" maxlength="6" name="body_hlink" value="{BODY_HLINK_COLOR}"></td>
-		<td class="row2">&nbsp;</td>		
+		<td class="row2">&nbsp;</td>
 	</tr>
 
 	<tr>
@@ -185,7 +185,7 @@
 	<tr>
 		<td class="row1">{L_FONTSIZE_1}:</td>
 		<td class="row2"><input class="post" type="text" size="4" maxlength="4" name="fontsize1" value="{FONTSIZE1}"></td>
-		<td class="row2"><input class="post" type="text" size="25" maxlength="50" name="fontsize1_name" value="{FONTSIZE1_NAME}">	
+		<td class="row2"><input class="post" type="text" size="25" maxlength="50" name="fontsize1_name" value="{FONTSIZE1_NAME}">
 	</tr>
 
 	<tr>
@@ -203,7 +203,7 @@
 	<tr>
 		<td class="row1">{L_FONTCOLOR_1}:</td>
 		<td class="row2"><input class="post" type="text" size="6" maxlength="6" name="fontcolor1" value="{FONTCOLOR1}"></td>
-		<td class="row2"><input class="post" type="text" size="25" maxlength="50" name="fontcolor1_name" value="{FONTCOLOR1_NAME}">	
+		<td class="row2"><input class="post" type="text" size="25" maxlength="50" name="fontcolor1_name" value="{FONTCOLOR1_NAME}">
 	</tr>
 
 	<tr>
@@ -221,7 +221,7 @@
 	<tr>
 		<td class="row1">{L_SPAN_CLASS_1}:</td>
 		<td class="row2"><input class="post" type="text" size="25" maxlength="25" name="span_class1" value="{SPAN_CLASS1}"></td>
-		<td class="row2"><input class="post" type="text" size="25" maxlength="50" name="span_class1_name" value="{SPAN_CLASS1_NAME}">	
+		<td class="row2"><input class="post" type="text" size="25" maxlength="50" name="span_class1_name" value="{SPAN_CLASS1_NAME}">
 	</tr>
 
 	<tr>

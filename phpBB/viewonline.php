@@ -22,7 +22,7 @@
 
 if (!defined('IN_PHPBB'))
 {
-    define( 'IN_PHPBB', true);
+	define('IN_PHPBB', true);
 }
 $phpbb_root_path = './';
 include($phpbb_root_path . 'extension.inc');
@@ -59,11 +59,11 @@ $template->assign_vars(array(
 //
 // Forum info
 //
-$sql = "SELECT forum_name, forum_id
-	FROM " . FORUMS_TABLE;
-if ( $result = $db->sql_query($sql) )
+$sql = 'SELECT forum_name, forum_id
+	FROM ' . FORUMS_TABLE;
+if ($result = $db->sql_query($sql))
 {
-	while( $row = $db->sql_fetchrow($result) )
+	while ($row = $db->sql_fetchrow($result))
 	{
 		$forum_data[$row['forum_id']] = $row['forum_name'];
 	}
@@ -82,12 +82,12 @@ $is_auth_ary = auth(AUTH_VIEW, AUTH_LIST_ALL, $userdata);
 //
 // Get user list
 //
-$sql = "SELECT u.user_id, u.username, u.user_allow_viewonline, u.user_level, s.session_logged_in, s.session_time, s.session_page, s.session_ip
-	FROM ".USERS_TABLE." u, ".SESSIONS_TABLE." s
+$sql = 'SELECT u.user_id, u.username, u.user_allow_viewonline, u.user_level, s.session_logged_in, s.session_time, s.session_page, s.session_ip
+	FROM '.USERS_TABLE.' u, '.SESSIONS_TABLE.' s
 	WHERE u.user_id = s.session_user_id
-		AND s.session_time >= ".( time() - 300 ) . "
-	ORDER BY u.username ASC, s.session_ip ASC";
-if ( !($result = $db->sql_query($sql)) )
+		AND s.session_time >= '.(time() - 300) . '
+	ORDER BY u.username ASC, s.session_ip ASC';
+if (!($result = $db->sql_query($sql)))
 {
 	message_die(GENERAL_ERROR, 'Could not obtain regd user/online information', '', __LINE__, __FILE__, $sql);
 }
@@ -101,31 +101,31 @@ $guest_counter = 0;
 $prev_user = 0;
 $prev_ip = '';
 
-while ( $row = $db->sql_fetchrow($result) )
+while ($row = $db->sql_fetchrow($result))
 {
 	$view_online = false;
 
-	if ( $row['session_logged_in'] ) 
+	if ($row['session_logged_in'])
 	{
 		$user_id = $row['user_id'];
 
-		if ( $user_id != $prev_user )
+		if ($user_id != $prev_user)
 		{
 			$username = $row['username'];
 
 			$style_color = '';
-			if ( $row['user_level'] == ADMIN )
+			if ($row['user_level'] == ADMIN)
 			{
 				$username = '<b style="color:#' . $theme['fontcolor3'] . '">' . $username . '</b>';
 			}
-			else if ( $row['user_level'] == MOD )
+			else if ($row['user_level'] == MOD)
 			{
 				$username = '<b style="color:#' . $theme['fontcolor2'] . '">' . $username . '</b>';
 			}
 
-			if ( !$row['user_allow_viewonline'] )
+			if (!$row['user_allow_viewonline'])
 			{
-				$view_online = ( $userdata['user_level'] == ADMIN ) ? true : false;
+				$view_online = ($userdata['user_level'] == ADMIN) ? true : false;
 				$hidden_users++;
 
 				$username = '<i>' . $username . '</i>';
@@ -143,12 +143,12 @@ while ( $row = $db->sql_fetchrow($result) )
 	}
 	else
 	{
-		if ( $row['session_ip'] != $prev_ip )
+		if ($row['session_ip'] != $prev_ip)
 		{
 			$username = $lang['Guest'];
 			$view_online = true;
 			$guest_users++;
-	
+
 			$which_counter = 'guest_counter';
 			$which_row = 'guest_user_row';
 		}
@@ -156,47 +156,56 @@ while ( $row = $db->sql_fetchrow($result) )
 
 	$prev_ip = $row['session_ip'];
 
-	if ( $view_online )
+	if ($view_online)
 	{
-		if ( $row['session_page'] < 1 || !$is_auth_ary[$row['session_page']]['auth_view'] )
+		if ($row['session_page'] < 1 || !$is_auth_ary[$row['session_page']]['auth_view'])
 		{
-			switch( $row['session_page'] )
+			switch($row['session_page'])
 			{
 				case PAGE_INDEX:
 					$location = $lang['Forum_index'];
 					$location_url = "index.$phpEx";
+
 					break;
 				case PAGE_POSTING:
 					$location = $lang['Posting_message'];
 					$location_url = "index.$phpEx";
+
 					break;
 				case PAGE_LOGIN:
 					$location = $lang['Logging_on'];
 					$location_url = "index.$phpEx";
+
 					break;
 				case PAGE_SEARCH:
 					$location = $lang['Searching_forums'];
 					$location_url = "search.$phpEx";
+
 					break;
 				case PAGE_PROFILE:
 					$location = $lang['Viewing_profile'];
 					$location_url = "index.$phpEx";
+
 					break;
 				case PAGE_VIEWONLINE:
 					$location = $lang['Viewing_online'];
 					$location_url = "viewonline.$phpEx";
+
 					break;
 				case PAGE_VIEWMEMBERS:
 					$location = $lang['Viewing_member_list'];
 					$location_url = "memberlist.$phpEx";
+
 					break;
 				case PAGE_PRIVMSGS:
 					$location = $lang['Viewing_priv_msgs'];
 					$location_url = "privmsg.$phpEx";
+
 					break;
 				case PAGE_FAQ:
 					$location = $lang['Viewing_FAQ'];
 					$location_url = "faq.$phpEx";
+
 					break;
 				default:
 					$location = $lang['Forum_index'];
@@ -209,8 +218,8 @@ while ( $row = $db->sql_fetchrow($result) )
 			$location = $forum_data[$row['session_page']];
 		}
 
-		$row_color = ( $$which_counter % 2 ) ? $theme['td_color1'] : $theme['td_color2'];
-		$row_class = ( $$which_counter % 2 ) ? $theme['td_class1'] : $theme['td_class2'];
+		$row_color = ($$which_counter % 2) ? $theme['td_color1'] : $theme['td_color2'];
+		$row_class = ($$which_counter % 2) ? $theme['td_class1'] : $theme['td_class2'];
 
 		$template->assign_block_vars("$which_row", array(
 			'ROW_COLOR' => '#' . $row_color,
@@ -227,11 +236,11 @@ while ( $row = $db->sql_fetchrow($result) )
 	}
 }
 
-if( $registered_users == 0 )
+if ($registered_users == 0)
 {
 	$l_r_user_s = $lang['Reg_users_zero_online'];
 }
-else if( $registered_users == 1 )
+else if ($registered_users == 1)
 {
 	$l_r_user_s = $lang['Reg_user_online'];
 }
@@ -240,11 +249,11 @@ else
 	$l_r_user_s = $lang['Reg_users_online'];
 }
 
-if( $hidden_users == 0 )
+if ($hidden_users == 0)
 {
 	$l_h_user_s = $lang['Hidden_users_zero_online'];
 }
-else if( $hidden_users == 1 )
+else if ($hidden_users == 1)
 {
 	$l_h_user_s = $lang['Hidden_user_online'];
 }
@@ -253,11 +262,11 @@ else
 	$l_h_user_s = $lang['Hidden_users_online'];
 }
 
-if( $guest_users == 0 )
+if ($guest_users == 0)
 {
 	$l_g_user_s = $lang['Guest_users_zero_online'];
 }
-else if( $guest_users == 1 )
+else if ($guest_users == 1)
 {
 	$l_g_user_s = $lang['Guest_user_online'];
 }
@@ -267,18 +276,18 @@ else
 }
 
 $template->assign_vars(array(
-	'TOTAL_REGISTERED_USERS_ONLINE' => sprintf($l_r_user_s, $registered_users) . sprintf($l_h_user_s, $hidden_users), 
+	'TOTAL_REGISTERED_USERS_ONLINE' => sprintf($l_r_user_s, $registered_users) . sprintf($l_h_user_s, $hidden_users),
 	'TOTAL_GUEST_USERS_ONLINE' => sprintf($l_g_user_s, $guest_users))
 );
 
-if ( $registered_users + $hidden_users == 0 )
+if ($registered_users + $hidden_users == 0)
 {
 	$template->assign_vars(array(
 		'L_NO_REGISTERED_USERS_BROWSING' => $lang['No_users_browsing'])
 	);
 }
 
-if ( $guest_users == 0 )
+if ($guest_users == 0)
 {
 	$template->assign_vars(array(
 		'L_NO_GUESTS_BROWSING' => $lang['No_users_browsing'])

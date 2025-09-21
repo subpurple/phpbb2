@@ -1,4 +1,4 @@
- 
+
 <form action="{S_GROUPCP_ACTION}" method="post">
 
 <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
@@ -8,18 +8,18 @@
 </table>
 
 <table class="forumline" width="100%" cellspacing="1" cellpadding="4" border="0">
-	<tr> 
+	<tr>
 		<th class="thHead" colspan="7" height="25">{L_GROUP_INFORMATION}</th>
 	</tr>
-	<tr> 
+	<tr>
 		<td class="row1" width="20%"><span class="gen">{L_GROUP_NAME}:</span></td>
 		<td class="row2"><span class="gen"><b>{GROUP_NAME}</b></span></td>
 	</tr>
-	<tr> 
+	<tr>
 		<td class="row1" width="20%"><span class="gen">{L_GROUP_DESC}:</span></td>
 		<td class="row2"><span class="gen">{GROUP_DESC}</span></td>
 	</tr>
-	<tr> 
+	<tr>
 		<td class="row1" width="20%"><span class="gen">{L_GROUP_MEMBERSHIP}:</span></td>
 		<td class="row2"><span class="gen">{GROUP_DETAILS} &nbsp;&nbsp;
 		<!-- BEGIN switch_subscribe_group_input -->
@@ -31,7 +31,7 @@
 		</span></td>
 	</tr>
 	<!-- BEGIN switch_mod_option -->
-	<tr> 
+	<tr>
 		<td class="row1" width="20%"><span class="gen">{L_GROUP_TYPE}:</span></td>
 		<td class="row2"><span class="gen"><input type="radio" name="group_type" value="{S_GROUP_OPEN_TYPE}" {S_GROUP_OPEN_CHECKED} /> {L_GROUP_OPEN} &nbsp;&nbsp;<input type="radio" name="group_type" value="{S_GROUP_CLOSED_TYPE}" {S_GROUP_CLOSED_CHECKED} />	{L_GROUP_CLOSED} &nbsp;&nbsp;<input type="radio" name="group_type" value="{S_GROUP_HIDDEN_TYPE}" {S_GROUP_HIDDEN_CHECKED} />	{L_GROUP_HIDDEN} &nbsp;&nbsp; <input class="mainoption" type="submit" name="groupstatus" value="{L_UPDATE}" /></span></td>
 	</tr>
@@ -44,7 +44,7 @@
 
 <form action="{S_GROUPCP_ACTION}" method="post" name="post">
 <table width="100%" cellpadding="4" cellspacing="1" border="0" class="forumline">
-	<tr> 
+	<tr>
 	  <th class="thCornerL" height="25">{L_PM}</th>
 	  <th class="thTop">{L_USERNAME}</th>
 	  <th class="thTop">{L_POSTS}</th>
@@ -53,10 +53,10 @@
 	  <th class="thTop">{L_WEBSITE}</th>
 	  <th class="thCornerR">{L_SELECT}</th>
 	</tr>
-	<tr> 
+	<tr>
 	  <td class="catSides" colspan="8" height="28"><span class="cattitle">{L_GROUP_MODERATOR}</span></td>
 	</tr>
-	<tr> 
+	<tr>
 	  <td class="row1" align="center"> {MOD_PM_IMG} </td>
 	  <td class="row1" align="center"><span class="gen"><a href="{U_MOD_VIEWPROFILE}" class="gen">{MOD_USERNAME}</a></span></td>
 	  <td class="row1" align="center" valign="middle"><span class="gen">{MOD_POSTS}</span></td>
@@ -65,34 +65,34 @@
 	  <td class="row1" align="center">{MOD_WWW_IMG}</td>
 	  <td class="row1" align="center"> &nbsp; </td>
 	</tr>
-	<tr> 
+	<tr>
 	  <td class="catSides" colspan="8" height="28"><span class="cattitle">{L_GROUP_MEMBERS}</span></td>
 	</tr>
 	<!-- BEGIN member_row -->
-	<tr> 
+	<tr>
 	  <td class="{member_row.ROW_CLASS}" align="center"> {member_row.PM_IMG} </td>
 	  <td class="{member_row.ROW_CLASS}" align="center"><span class="gen"><a href="{member_row.U_VIEWPROFILE}" class="gen">{member_row.USERNAME}</a></span></td>
 	  <td class="{member_row.ROW_CLASS}" align="center"><span class="gen">{member_row.POSTS}</span></td>
-	  <td class="{member_row.ROW_CLASS}" align="center"><span class="gen"> {member_row.FROM} 
+	  <td class="{member_row.ROW_CLASS}" align="center"><span class="gen"> {member_row.FROM}
 		</span></td>
 	  <td class="{member_row.ROW_CLASS}" align="center" valign="middle"><span class="gen">{member_row.EMAIL_IMG}</span></td>
 	  <td class="{member_row.ROW_CLASS}" align="center"> {member_row.WWW_IMG}</td>
-	  <td class="{member_row.ROW_CLASS}" align="center"> 
+	  <td class="{member_row.ROW_CLASS}" align="center">
 	  <!-- BEGIN switch_mod_option -->
-	  <input type="checkbox" name="members[]" value="{member_row.USER_ID}" /> 
+	  <input type="checkbox" name="members[]" value="{member_row.USER_ID}" />
 	  <!-- END switch_mod_option -->
 	  </td>
 	</tr>
 	<!-- END member_row -->
 
 	<!-- BEGIN switch_no_members -->
-	<tr> 
+	<tr>
 	  <td class="row1" colspan="7" align="center"><span class="gen">{L_NO_MEMBERS}</span></td>
 	</tr>
 	<!-- END switch_no_members -->
 
 	<!-- BEGIN switch_hidden_group -->
-	<tr> 
+	<tr>
 	  <td class="row1" colspan="7" align="center"><span class="gen">{L_HIDDEN_MEMBERS}</span></td>
 	</tr>
 	<!-- END switch_hidden_group -->
@@ -122,7 +122,7 @@
 {S_HIDDEN_FIELDS}</form>
 
 <table width="100%" cellspacing="2" border="0" align="center">
-  <tr> 
+  <tr>
 	<td valign="top" align="right">{JUMPBOX}</td>
   </tr>
 </table>
