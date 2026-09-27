@@ -219,10 +219,10 @@ while ( $row = $db->sql_fetchrow($result) )
 	$board_config[$row['config_name']] = $row['config_value'];
 }
 
-if (file_exists('install') || file_exists('contrib'))
-{
-	message_die(GENERAL_MESSAGE, 'Please_remove_install_contrib');
-}
+// if (file_exists('install') || file_exists('contrib'))
+// {
+// 	message_die(GENERAL_MESSAGE, 'Please_remove_install_contrib');
+// }
 
 //
 // Show 'Board is disabled' message if needed.
