@@ -105,6 +105,9 @@ if( $mode != "" )
 		}
 		else
 		{
+			$rank_info['rank_title'] = '';
+			$rank_info['rank_min'] = 0;
+			$rank_info['rank_image'] = '';
 			$rank_info['rank_special'] = 0;
 		}
 

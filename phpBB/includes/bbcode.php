@@ -229,7 +229,7 @@ function bbencode_second_pass($text, $uid)
 } // bbencode_second_pass()
 
 // Need to initialize the random numbers only ONCE
-mt_srand( (double) microtime() * 1000000);
+mt_srand( (float) microtime() * 1000000);
 
 function make_bbcode_uid()
 {
@@ -724,7 +724,7 @@ function bbcode_array_pop(&$stack)
    $arrSize = count($stack);
    $x = 1;
 
-   while(list($key, $val) = each($stack))
+   foreach ($stack as $key => $val)
    {
       if($x < count($stack))
       {

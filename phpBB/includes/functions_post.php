@@ -151,7 +151,7 @@ function prepare_post(&$mode, &$post_data, &$bbcode_on, &$html_on, &$smilies_on,
 		if(!empty($poll_options))
 		{
 			$temp_option_text = array();
-			while(list($option_id, $option_text) = @each($poll_options))
+			foreach ($poll_options as $option_id => $option_text)
 			{
 				$option_text = trim($option_text);
 				if (!empty($option_text))
@@ -221,7 +221,7 @@ function submit_post($mode, &$post_data, &$message, &$meta, &$forum_id, &$topic_
 	{
 		$topic_vote = (!empty($poll_title) && count($poll_options) >= 2) ? 1 : 0;
 
-		$sql  = ($mode != "editpost") ? "INSERT INTO " . TOPICS_TABLE . " (topic_title, topic_poster, topic_time, forum_id, topic_status, topic_type, topic_vote) VALUES ('$post_subject', " . $userdata['user_id'] . ", $current_time, $forum_id, " . TOPIC_UNLOCKED . ", $topic_type, $topic_vote)" : "UPDATE " . TOPICS_TABLE . " SET topic_title = '$post_subject', topic_type = $topic_type " . (($post_data['edit_vote'] || !empty($poll_title)) ? ", topic_vote = " . $topic_vote : "") . " WHERE topic_id = $topic_id";
+		$sql  = ($mode != "editpost") ? "INSERT INTO " . TOPICS_TABLE . " (topic_title, topic_poster, topic_time, forum_id, topic_status, topic_type, topic_vote) VALUES ('$post_subject', " . $userdata['user_id'] . ", $current_time, $forum_id, " . TOPIC_UNLOCKED . ", $topic_type, $topic_vote)" : "UPDATE " . TOPICS_TABLE . " SET topic_title = '$post_subject', topic_type = $topic_type WHERE topic_id = $topic_id";
 		if (!$db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Error in posting', '', __LINE__, __FILE__, $sql);
@@ -295,7 +295,7 @@ function submit_post($mode, &$post_data, &$message, &$meta, &$forum_id, &$topic_
 		@reset($poll_options);
 
 		$poll_option_id = 1;
-		while (list($option_id, $option_text) = each($poll_options))
+		foreach ($poll_options as $option_id => $option_text)
 		{
 			if (!empty($option_text))
 			{
@@ -634,7 +634,7 @@ function user_notification($mode, &$post_data, &$topic_title, &$forum_id, &$topi
 					$topic_title = (count($orig_word)) ? preg_replace($orig_word, $replacement_word, unprepare_message($topic_title)) : unprepare_message($topic_title);
 
 					@reset($bcc_list_ary);
-					while (list($user_lang, $bcc_list) = each($bcc_list_ary))
+					foreach ($bcc_list_ary as $user_lang => $bcc_list)
 					{
 						$emailer->use_template('topic_notify', $user_lang);
 		
@@ -766,7 +766,7 @@ function generate_smilies($mode, $page_id)
 			$row = 0;
 			$col = 0;
 
-			while (list($smile_url, $data) = @each($rowset))
+			foreach ($rowset as $smile_url => $data)
 			{
 				if (!$col)
 				{

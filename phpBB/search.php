@@ -153,6 +153,7 @@ else if ( $search_keywords != '' || $search_author != '' || $search_id )
 {
 	$store_vars = array('search_results', 'total_match_count', 'split_search', 'sort_by', 'sort_dir', 'show_results', 'return_chars');
 	$search_results = '';
+	$split_search = array();
 
 	//
 	// Search ID Limiter, decrease this value if you experience further timeout problems with searching forums
@@ -279,7 +280,6 @@ else if ( $search_keywords != '' || $search_author != '' || $search_id )
 			$stopword_array = @file($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/search_stopwords.txt'); 
 			$synonym_array = @file($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/search_synonyms.txt'); 
 
-			$split_search = array();
 			$stripped_keywords = stripslashes($search_keywords);
 			$split_search = ( !strstr($multibyte_charset, $lang['ENCODING']) ) ?  split_words(clean_words('search', $stripped_keywords, $stopword_array, $synonym_array), 'search') : explode(' ', $search_keywords);
 			unset($stripped_keywords);
@@ -366,7 +366,7 @@ else if ( $search_keywords != '' || $search_author != '' || $search_id )
 						if ( $current_match_type == 'and' && $word_count )
 						{
 							@reset($result_list);
-							while( list($post_id, $match_count) = @each($result_list) )
+							foreach ($result_list as $post_id => $match_count)
 							{
 								if ( !$row[$post_id] )
 								{
@@ -384,7 +384,7 @@ else if ( $search_keywords != '' || $search_author != '' || $search_id )
 			@reset($result_list);
 
 			$search_ids = array();
-			while( list($post_id, $matches) = each($result_list) )
+			foreach ($result_list as $post_id => $matches)
 			{
 				if ( $matches )
 				{
@@ -424,7 +424,7 @@ else if ( $search_keywords != '' || $search_author != '' || $search_id )
 			}
 
 			$ignore_forum_sql = '';
-			while( list($key, $value) = each($is_auth_ary) )
+			foreach ($is_auth_ary as $key => $value)
 			{
 				if ( !$value['auth_read'] )
 				{
@@ -687,15 +687,15 @@ else if ( $search_keywords != '' || $search_author != '' || $search_id )
 		}
 		*/
 
-		for($i = 0; $i < count($store_vars); $i++)
+		foreach($store_vars as $store_var)
 		{
-			$store_search_data[$store_vars[$i]] = $$store_vars[$i];
+			$store_search_data[$store_var] = $$store_var;
 		}
 
 		$result_array = serialize($store_search_data);
 		unset($store_search_data);
 
-		mt_srand ((double) microtime() * 1000000);
+		mt_srand ((float) microtime() * 1000000);
 		$search_id = mt_rand();
 
 		$sql = "UPDATE " . SEARCH_TABLE . " 
@@ -728,9 +728,9 @@ else if ( $search_keywords != '' || $search_author != '' || $search_id )
 			if ( $row = $db->sql_fetchrow($result) )
 			{
 				$search_data = unserialize($row['search_array']);
-				for($i = 0; $i < count($store_vars); $i++)
+				foreach($store_vars as $store_var)
 				{
-					$$store_vars[$i] = $search_data[$store_vars[$i]];
+					$$store_var = $search_data[$store_var];
 				}
 			}
 		}
@@ -864,17 +864,19 @@ else if ( $search_keywords != '' || $search_author != '' || $search_id )
 
 		for($i = 0; $i < count($searchset); $i++)
 		{
-			$forum_url = append_sid("viewforum.$phpEx?" . POST_FORUM_URL . '=' . $searchset[$i]['forum_id']);
-			$topic_url = append_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . '=' . $searchset[$i]['topic_id'] . "&amp;highlight=$highlight_active");
-			$post_url = append_sid("viewtopic.$phpEx?" . POST_POST_URL . '=' . $searchset[$i]['post_id'] . "&amp;highlight=$highlight_active") . '#' . $searchset[$i]['post_id'];
+			$message = isset($searchset[$i]['post_text']) ? $searchset[$i]['post_text'] : '';
+			$post_id = isset($searchset[$i]['post_id']) ? $searchset[$i]['post_id'] : 0;
 
-			$post_date = create_date($board_config['default_dateformat'], $searchset[$i]['post_time'], $board_config['board_timezone']);
-
-			$message = $searchset[$i]['post_text'];
 			$topic_title = $searchset[$i]['topic_title'];
 
 			$forum_id = $searchset[$i]['forum_id'];
 			$topic_id = $searchset[$i]['topic_id'];
+
+			$forum_url = append_sid("viewforum.$phpEx?" . POST_FORUM_URL . '=' . $forum_id);
+			$topic_url = append_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . '=' . $topic_id . "&amp;highlight=$highlight_active");
+			$post_url = append_sid("viewtopic.$phpEx?" . POST_POST_URL . '=' . $post_id . "&amp;highlight=$highlight_active") . '#' . $post_id;
+
+			$post_date = create_date($board_config['default_dateformat'], $searchset[$i]['post_time'], $board_config['board_timezone']);
 
 			if ( $show_results == 'posts' )
 			{
@@ -1341,7 +1343,7 @@ if ( $s_forums != '' )
 	// Category to search
 	//
 	$s_categories = '<option value="-1">' . $lang['All_available'] . '</option>';
-	while( list($cat_id, $cat_title) = @each($list_cat))
+	foreach ($list_cat as $cat_id => $cat_title)
 	{
 		$s_categories .= '<option value="' . $cat_id . '">' . $cat_title . '</option>';
 	}

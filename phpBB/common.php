@@ -79,7 +79,7 @@ if (@ini_get('register_globals') == '1' || strtolower(@ini_get('register_globals
 	unset($input['input']);
 	unset($input['not_unset']);
 
-	while (list($var,) = @each($input))
+	foreach ($input as $var => $_)
 	{
 		if (in_array($var, $not_unset))
 		{
@@ -100,11 +100,11 @@ if( true )
 {
 	if( is_array($HTTP_GET_VARS) )
 	{
-		while( list($k, $v) = each($HTTP_GET_VARS) )
+		foreach ($HTTP_GET_VARS as $k => $v)
 		{
 			if( is_array($HTTP_GET_VARS[$k]) )
 			{
-				while( list($k2, $v2) = each($HTTP_GET_VARS[$k]) )
+				foreach ($HTTP_GET_VARS[$k] as $k2 => $v2)
 				{
 					$HTTP_GET_VARS[$k][$k2] = addslashes($v2);
 				}
@@ -120,11 +120,11 @@ if( true )
 
 	if( is_array($HTTP_POST_VARS) )
 	{
-		while( list($k, $v) = each($HTTP_POST_VARS) )
+		foreach ($HTTP_POST_VARS as $k => $v)
 		{
 			if( is_array($HTTP_POST_VARS[$k]) )
 			{
-				while( list($k2, $v2) = each($HTTP_POST_VARS[$k]) )
+				foreach ($HTTP_POST_VARS[$k] as $k2 => $v2)
 				{
 					$HTTP_POST_VARS[$k][$k2] = addslashes($v2);
 				}
@@ -140,11 +140,11 @@ if( true )
 
 	if( is_array($HTTP_COOKIE_VARS) )
 	{
-		while( list($k, $v) = each($HTTP_COOKIE_VARS) )
+		foreach ($HTTP_COOKIE_VARS as $k => $v)
 		{
 			if( is_array($HTTP_COOKIE_VARS[$k]) )
 			{
-				while( list($k2, $v2) = each($HTTP_COOKIE_VARS[$k]) )
+				foreach ($HTTP_COOKIE_VARS[$k] as $k2 => $v2)
 				{
 					$HTTP_COOKIE_VARS[$k][$k2] = addslashes($v2);
 				}

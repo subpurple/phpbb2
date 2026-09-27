@@ -361,7 +361,7 @@ if( ( $total_categories = count($category_rows) ) )
 									{
 										$forum_last_post_time = 0;
 
-										while( list($check_topic_id, $check_post_time) = @each($new_topic_data[$forum_id]) )
+										foreach ($new_topic_data[$forum_id] as $check_topic_id => $check_post_time)
 										{
 											if ( empty($tracking_topics[$check_topic_id]) )
 											{
@@ -420,7 +420,7 @@ if( ( $total_categories = count($category_rows) ) )
 								$last_post = $lang['No_Posts'];
 							}
 
-							if ( count($forum_moderators[$forum_id]) > 0 )
+							if ( isset($forum_moderators[$forum_id]) && count($forum_moderators[$forum_id]) > 0 )
 							{
 								$l_moderators = ( count($forum_moderators[$forum_id]) == 1 ) ? $lang['Moderator'] : $lang['Moderators'];
 								$moderator_list = implode(', ', $forum_moderators[$forum_id]);

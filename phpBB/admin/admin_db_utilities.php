@@ -73,6 +73,7 @@ define("VERBOSE", 0);
 //
 function gzip_PrintFourChars($Val)
 {
+	$return = '';
 	for ($i = 0; $i < 4; $i ++)
 	{
 		$return .= chr($Val % 256);
@@ -139,7 +140,7 @@ function pg_get_sequences($crlf, $backup_type)
 
 	} // End else...
 
-	return $returnval;
+	return $return_val;
 
 } // End function...
 
@@ -154,6 +155,8 @@ function get_table_def_postgresql($table, $crlf)
 	global $drop, $db;
 
 	$schema_create = "";
+	$index_create = "";
+	
 	//
 	// Get a listing of the fields, with their associated types, etc.
 	//
@@ -286,9 +289,10 @@ function get_table_def_postgresql($table, $crlf)
 		}
 	}
 
+
 	if (!empty($index_rows))
 	{
-		while(list($idx_name, $props) = each($index_rows))
+		foreach ($index_rows as $idx_name => $props)
 		{
 			$props['column_names'] = preg_replace("/, $/", "" , $props['column_names']);
 			$index_create .= 'CREATE ' . $props['unique'] . " INDEX $idx_name ON $table (" . $props['column_names'] . ");$crlf";
@@ -402,7 +406,7 @@ function get_table_def_mysql($table, $crlf)
 	//
 	// Drop the last ',$crlf' off ;)
 	//
-	$schema_create = preg_replace('/,/' . $crlf . '$', "", $schema_create);
+	$schema_create = preg_replace('/,' . preg_quote($crlf, '/') . '$/', "", $schema_create);
 
 	//
 	// Get any Indexed fields from the database...
@@ -413,6 +417,8 @@ function get_table_def_mysql($table, $crlf)
 		message_die(GENERAL_ERROR, "FAILED IN get_table_def (show keys)", "", __LINE__, __FILE__, $key_query);
 	}
 
+	$index = [];
+	
 	while($row = $db->sql_fetchrow($result))
 	{
 		$kname = $row['Key_name'];
@@ -422,7 +428,7 @@ function get_table_def_mysql($table, $crlf)
 			$kname = "UNIQUE|$kname";
 		}
 
-		if(!is_array($index[$kname]))
+		if(!isset($index[$kname]))
 		{
 			$index[$kname] = array();
 		}
@@ -430,21 +436,21 @@ function get_table_def_mysql($table, $crlf)
 		$index[$kname][] = $row['Column_name'];
 	}
 
-	while(list($x, $columns) = @each($index))
+	foreach ($index as $x => $columns)
 	{
 		$schema_create .= ", $crlf";
 
 		if($x == 'PRIMARY')
 		{
-			$schema_create .= '	PRIMARY KEY (' . implode($columns, ', ') . ')';
+			$schema_create .= '	PRIMARY KEY (' . implode(', ', $columns) . ')';
 		}
 		elseif (substr($x,0,6) == 'UNIQUE')
 		{
-			$schema_create .= '	UNIQUE ' . substr($x,7) . ' (' . implode($columns, ', ') . ')';
+			$schema_create .= '	UNIQUE ' . substr($x,7) . ' (' . implode(', ', $columns) . ')';
 		}
 		else
 		{
-			$schema_create .= "	KEY $x (" . implode($columns, ', ') . ')';
+			$schema_create .= "	KEY $x (" . implode(', ', $columns) . ')';
 		}
 	}
 

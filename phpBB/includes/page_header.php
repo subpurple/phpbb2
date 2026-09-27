@@ -70,18 +70,18 @@ $template->set_filenames(array(
 //
 // Generate logged in/logged out status
 //
-if ( $userdata['session_logged_in'] )
+if ( isset($userdata['session_logged_in']) && $userdata['session_logged_in'] )
 {
 	$u_login_logout = 'login.'.$phpEx.'?logout=true&amp;sid=' . $userdata['session_id'];
 	$l_login_logout = $lang['Logout'] . ' [ ' . $userdata['username'] . ' ]';
+	$s_last_visit = create_date($board_config['default_dateformat'], $userdata['user_lastvisit'], $board_config['board_timezone']);
 }
 else
 {
 	$u_login_logout = 'login.'.$phpEx;
 	$l_login_logout = $lang['Login'];
+	$s_last_visit = '';
 }
-
-$s_last_visit = ( $userdata['session_logged_in'] ) ? create_date($board_config['default_dateformat'], $userdata['user_lastvisit'], $board_config['board_timezone']) : '';
 
 //
 // Get basic (usernames + totals) online
@@ -258,7 +258,7 @@ if (defined('SHOW_ONLINE'))
 // Obtain number of new private messages
 // if user is logged in
 //
-if ( ($userdata['session_logged_in']) && (empty($gen_simple_header)) )
+if ( (isset($userdata['session_logged_in']) && $userdata['session_logged_in']) && (empty($gen_simple_header)) )
 {
 	if ( $userdata['user_new_privmsg'] )
 	{
@@ -320,7 +320,7 @@ if (!isset($nav_links))
 
 $nav_links_html = '';
 $nav_link_proto = '<link rel="%s" href="%s" title="%s" />' . "\n";
-while( list($nav_item, $nav_array) = @each($nav_links) )
+foreach ($nav_links as $nav_item => $nav_array)
 {
 	if ( !empty($nav_array['url']) )
 	{
@@ -329,7 +329,7 @@ while( list($nav_item, $nav_array) = @each($nav_links) )
 	else
 	{
 		// We have a nested array, used for items like <link rel='chapter'> that can occur more than once.
-		while( list(,$nested_array) = each($nav_array) )
+		foreach ($nav_array as $nested_array)
 		{
 			$nav_links_html .= sprintf($nav_link_proto, $nav_item, $nested_array['url'], $nested_array['title']);
 		}
@@ -346,7 +346,7 @@ $l_timezone = (count($l_timezone) > 1 && $l_timezone[count($l_timezone)-1] != 0)
 $template->assign_vars(array(
 	'SITENAME' => $board_config['sitename'],
 	'SITE_DESCRIPTION' => $board_config['site_desc'],
-	'PAGE_TITLE' => $page_title,
+	'PAGE_TITLE' => isset($page_title) ? $page_title : '',
 	'LAST_VISIT_DATE' => sprintf($lang['You_last_visit'], $s_last_visit),
 	'CURRENT_TIME' => sprintf($lang['Current_time'], create_date($board_config['default_dateformat'], time(), $board_config['board_timezone'])),
 	'TOTAL_USERS_ONLINE' => $l_online_users,
@@ -447,7 +447,7 @@ $template->assign_vars(array(
 //
 // Login box?
 //
-if ( !$userdata['session_logged_in'] )
+if ( isset($userdata['session_logged_in']) && !$userdata['session_logged_in'] )
 {
 	$template->assign_block_vars('switch_user_logged_out', array());
 	//

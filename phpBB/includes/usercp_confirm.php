@@ -82,7 +82,7 @@ mt_srand($sec * $usec);
 $char_widths = array();
 for ($i = 0; $i < strlen($code); $i++)
 {
-	$char = $code{$i};
+	$char = $code[$i];
 
 	$width = mt_rand(0, 4);
 	$char_widths[] = $width;
@@ -109,7 +109,7 @@ for ($i = 0; $i < $total_height; $i++)
 
 		for ($k = 0; $k < strlen($code); $k++)
 		{
-			$char = $code{$k};
+			$char = $code[$k];
 
 			if (empty($hold_chars[$char]))
 			{
@@ -154,29 +154,29 @@ exit;
 // width a little
 function randomise($scanline, $width)
 {
-	$new_line = '';
-	$start = floor($width/2);
-	$end = strlen($scanline) - ceil($width/2);
+    $new_line = '';
+    $start = (int) ($width / 2);
+    $end = (int) (strlen($scanline) - ($width / 2));
 
-	for ($i = $start; $i < $end; $i++)
-	{
-		$pixel = ord($scanline{$i});
+    for ($i = $start; $i < $end; $i++)
+    {
+        $pixel = ord($scanline[$i]);
 
-		if ($pixel < 190)
-		{
-			$new_line .= chr(mt_rand(0, 205));
-		}
-		else if ($pixel > 190)
-		{
-			$new_line .= chr(mt_rand(145, 255));
-		}
-		else
-		{
-			$new_line .= $scanline{$i};
-		}
-	}
+        if ($pixel < 190)
+        {
+            $new_line .= chr(mt_rand(0, 205));
+        }
+        else if ($pixel > 190)
+        {
+            $new_line .= chr(mt_rand(145, 255));
+        }
+        else
+        {
+            $new_line .= $scanline[$i];
+        }
+    }
 
-	return $new_line;
+    return $new_line;
 }
 
 // This creates a chunk of the given type, with the given data

@@ -34,7 +34,7 @@ include($phpbb_root_path . 'includes/functions_post.'.$phpEx);
 // Check and set various parameters
 //
 $params = array('submit' => 'post', 'preview' => 'preview', 'delete' => 'delete', 'poll_delete' => 'poll_delete', 'poll_add' => 'add_poll_option', 'poll_edit' => 'edit_poll_option', 'mode' => 'mode');
-while( list($var, $param) = @each($params) )
+foreach ($params as $var => $param)
 {
 	if ( !empty($HTTP_POST_VARS[$param]) || !empty($HTTP_GET_VARS[$param]) )
 	{
@@ -50,7 +50,7 @@ $confirm = isset($HTTP_POST_VARS['confirm']) ? true : false;
 $sid = (isset($HTTP_POST_VARS['sid'])) ? $HTTP_POST_VARS['sid'] : 0;
 
 $params = array('forum_id' => POST_FORUM_URL, 'topic_id' => POST_TOPIC_URL, 'post_id' => POST_POST_URL);
-while( list($var, $param) = @each($params) )
+foreach ($params as $var => $param)
 {
 	if ( !empty($HTTP_POST_VARS[$param]) || !empty($HTTP_GET_VARS[$param]) )
 	{
@@ -569,7 +569,7 @@ else if ( $submit || $confirm )
 
 			if ( $error_msg == '' )
 			{
-				$topic_type = ( $topic_type != $post_data['topic_type'] && !$is_auth['auth_sticky'] && !$is_auth['auth_announce'] ) ? $post_data['topic_type'] : $topic_type;
+				$topic_type = ( isset($post_data['topic_type']) && $topic_type != $post_data['topic_type'] && !$is_auth['auth_sticky'] && !$is_auth['auth_announce'] ) ? $post_data['topic_type'] : $topic_type;
 
 				submit_post($mode, $post_data, $return_message, $return_meta, $forum_id, $topic_id, $post_id, $poll_id, $topic_type, $bbcode_on, $html_on, $smilies_on, $attach_sig, $bbcode_uid, str_replace("\'", "''", $username), str_replace("\'", "''", $subject), str_replace("\'", "''", $message), str_replace("\'", "''", $poll_title), $poll_options, $poll_length);
 			}
@@ -634,7 +634,7 @@ if( $refresh || isset($HTTP_POST_VARS['del_poll_option']) || $error_msg != '' )
 	$poll_options = array();
 	if ( !empty($HTTP_POST_VARS['poll_option_text']) )
 	{
-		while( list($option_id, $option_text) = @each($HTTP_POST_VARS['poll_option_text']) )
+		foreach ($HTTP_POST_VARS['poll_option_text'] as $option_id => $option_text)
 		{
 			if( isset($HTTP_POST_VARS['del_poll_option'][$option_id]) )
 			{
@@ -1079,6 +1079,9 @@ $template->assign_vars(array(
 //
 if( ( $mode == 'newtopic' || ( $mode == 'editpost' && $post_data['edit_poll']) ) && $is_auth['auth_pollcreate'] )
 {
+	$poll_title = isset($poll_title) ? $poll_title : '';
+	$poll_length = isset($poll_length) ? $poll_length : '';
+
 	$template->assign_vars(array(
 		'L_ADD_A_POLL' => $lang['Add_poll'],  
 		'L_ADD_POLL_EXPLAIN' => $lang['Add_poll_explain'],   
@@ -1103,7 +1106,7 @@ if( ( $mode == 'newtopic' || ( $mode == 'editpost' && $post_data['edit_poll']) )
 
 	if( !empty($poll_options) )
 	{
-		while( list($option_id, $option_text) = each($poll_options) )
+		foreach ($poll_options as $option_id => $option_text)
 		{
 			$template->assign_block_vars('poll_option_rows', array(
 				'POLL_OPTION' => str_replace('"', '&quot;', $option_text), 

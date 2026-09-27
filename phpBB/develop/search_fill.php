@@ -90,7 +90,7 @@ for(;$postcounter <= $max_post_id; $postcounter += $batchsize)
 			$matches['text'] = split_words(clean_words("post", $rowset[$post_nr]['post_text'], $stopword_array, $synonym_array));
 			$matches['title'] = split_words(clean_words("post", $rowset[$post_nr]['post_subject'], $stopword_array, $synonym_array));
 
-			while( list($match_type, $match_ary) = @each($matches) )
+			foreach ($matches as $match_type => $match_ary)
 			{
 				$title_match = ( $match_type == 'title' ) ? 1 : 0;
 

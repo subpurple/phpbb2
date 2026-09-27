@@ -43,7 +43,7 @@ class sql_db
 	//
 	// Constructor
 	//
-	function sql_db($sqlserver, $sqluser, $sqlpassword, $database, $persistency = true)
+	function __construct($sqlserver, $sqluser, $sqlpassword, $database, $persistency = true)
 	{
 		$this->persistency = $persistency;
 		$this->user = $sqluser;
@@ -287,7 +287,7 @@ class sql_db
 
 			$row = @mssql_fetch_array($query_id);
 
-			while( list($key, $value) = @each($row) )
+			foreach ($row as $key => $value)
 			{
 				$row[$key] = ($value === ' ') ? '' : stripslashes($value);
 			}
@@ -315,7 +315,7 @@ class sql_db
 
 			while( $row = @mssql_fetch_array($query_id))
 			{
-				while( list($key, $value) = @each($row) )
+				foreach ($row as $key => $value)
 				{
 					$rowset[$i][$key] = ($value === ' ') ? '' : stripslashes($value);
 				}
