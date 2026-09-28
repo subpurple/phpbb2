@@ -34,14 +34,13 @@ if ( !defined('INSTALLING') )
 	// If we are being called from the install script then we don't need these
 	// as they are already included.
 	//
-	include($phpbb_root_path . 'extension.inc');
-	include($phpbb_root_path . 'config.'.$phpEx);
-	include($phpbb_root_path . 'includes/constants.'.$phpEx);
-	include($phpbb_root_path . 'includes/functions.'.$phpEx);
+		include($phpbb_root_path . 'config.php');
+	include($phpbb_root_path . 'includes/constants.php');
+	include($phpbb_root_path . 'includes/functions.php');
 
 	if( defined("PHPBB_INSTALLED") )
 	{
-		redirect("../index.$phpEx");
+		redirect("../index.php");
 	}
 }
 
@@ -50,9 +49,9 @@ if ( !defined('INSTALLING') )
 //
 $dbms = 'mysqli';
 
-include($phpbb_root_path . 'includes/db.'.$phpEx);
-include($phpbb_root_path . 'includes/bbcode.'.$phpEx);
-include($phpbb_root_path . 'includes/functions_search.'.$phpEx);
+include($phpbb_root_path . 'includes/db.php');
+include($phpbb_root_path . 'includes/bbcode.php');
+include($phpbb_root_path . 'includes/functions_search.php');
 
 set_time_limit(0); // Unlimited execution time
 
@@ -124,7 +123,7 @@ hr	{ height: 0px; border: solid #D1D7DC 0px; border-top-width: 1px;}
 
 <br clear="all" />
 
-<?
+<?php
 	return;
 }
 
@@ -136,7 +135,7 @@ function common_footer()
 
 </body>
 </html>
-<?
+<?php
 	return;
 }
 
@@ -968,7 +967,7 @@ if ( !empty($next) )
 				if ( $group_id <= 0 )
 				{
 					print "<font color=\"red\">Group creation failed. Aborting creation of groups...<br></font>\n";
-					continue 2;
+					break;
 				}
 
 				print "<span class=\"ok\"><b>OK</b></span><br />\n";
@@ -1275,7 +1274,7 @@ if ( !empty($next) )
 			lock_tables(0);
 			end_step('convert_moderators');
 
-		case 'convert_moderators';
+		case 'convert_moderators':
 			$sql = "SELECT * 
 				FROM forum_mods";
 			$result = query($sql, "Couldn't get list with all forum moderators");
@@ -1373,7 +1372,7 @@ if ( !empty($next) )
 					if ( $group_id <= 0 )
 					{
 						print "<font color=\"red\">Group creation failed. Aborting creation of groups...<br></font>\n";
-						continue 2;
+						break 2;
 					}
 
 					print "<span class=\"ok\"><b>OK</b></span><br />\n";
@@ -1388,7 +1387,7 @@ if ( !empty($next) )
 					if ( $db->sql_affectedrows($result) <= 0 )
 					{
 						print "<font color=\"red\">Group creation failed. Aborting creation of groups...</font><br>\n";
-						continue 2;
+						break 2;
 					}
 
 					print "<span class=\"ok\"><b>OK</b></span><br />\n";
@@ -1937,7 +1936,7 @@ if ( !empty($next) )
 	}
 }
 
-print "<br />If the upgrade completed without error you may click <a href=\"./../index.$phpEx\">Here</a> to proceed to the index<br />";
+print "<br />If the upgrade completed without error you may click <a href=\"./../index.php\">Here</a> to proceed to the index<br />";
 
 common_footer();
 

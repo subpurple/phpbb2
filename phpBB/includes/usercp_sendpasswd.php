@@ -62,7 +62,7 @@ if ( isset($HTTP_POST_VARS['submit']) )
 				message_die(GENERAL_ERROR, 'Could not update new password information', '', __LINE__, __FILE__, $sql);
 			}
 
-			include($phpbb_root_path . 'includes/emailer.'.$phpEx);
+			include($phpbb_root_path . 'includes/emailer.php');
 			$emailer = new emailer($board_config['smtp_delivery']);
 
 			$emailer->from($board_config['board_email']);
@@ -84,10 +84,10 @@ if ( isset($HTTP_POST_VARS['submit']) )
 			$emailer->reset();
 
 			$template->assign_vars(array(
-				'META' => '<meta http-equiv="refresh" content="15;url=' . append_sid("index.$phpEx") . '">')
+				'META' => '<meta http-equiv="refresh" content="15;url=' . append_sid("index.php") . '">')
 			);
 
-			$message = $lang['Password_updated'] . '<br /><br />' . sprintf($lang['Click_return_index'],  '<a href="' . append_sid("index.$phpEx") . '">', '</a>');
+			$message = $lang['Password_updated'] . '<br /><br />' . sprintf($lang['Click_return_index'],  '<a href="' . append_sid("index.php") . '">', '</a>');
 
 			message_die(GENERAL_MESSAGE, $message);
 		}
@@ -110,12 +110,12 @@ else
 //
 // Output basic page
 //
-include($phpbb_root_path . 'includes/page_header.'.$phpEx);
+include($phpbb_root_path . 'includes/page_header.php');
 
 $template->set_filenames(array(
 	'body' => 'profile_send_pass.tpl')
 );
-make_jumpbox('viewforum.'.$phpEx);
+make_jumpbox('viewforum.php');
 
 $template->assign_vars(array(
 	'USERNAME' => $username,
@@ -128,11 +128,11 @@ $template->assign_vars(array(
 	'L_RESET' => $lang['Reset'],
 	
 	'S_HIDDEN_FIELDS' => '', 
-	'S_PROFILE_ACTION' => append_sid("profile.$phpEx?mode=sendpassword"))
+	'S_PROFILE_ACTION' => append_sid("profile.php?mode=sendpassword"))
 );
 
 $template->pparse('body');
 
-include($phpbb_root_path . 'includes/page_tail.'.$phpEx);
+include($phpbb_root_path . 'includes/page_tail.php');
 
 ?>

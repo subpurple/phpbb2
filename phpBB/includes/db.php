@@ -28,35 +28,35 @@ if ( !defined('IN_PHPBB') )
 switch($dbms)
 {
 	case 'mysql':
-		include($phpbb_root_path . 'db/mysql.'.$phpEx);
+		include($phpbb_root_path . 'db/mysql.php');
 		break;
 
 	case 'mysql4':
-		include($phpbb_root_path . 'db/mysql4.'.$phpEx);
+		include($phpbb_root_path . 'db/mysql4.php');
 		break;
 
 	case 'mysqli':
-		include($phpbb_root_path . 'db/mysqli.'.$phpEx);
+		include($phpbb_root_path . 'db/mysqli.php');
 		break;
 
 	case 'postgres':
-		include($phpbb_root_path . 'db/postgres7.'.$phpEx);
+		include($phpbb_root_path . 'db/postgres7.php');
 		break;
 
 	case 'mssql':
-		include($phpbb_root_path . 'db/mssql.'.$phpEx);
+		include($phpbb_root_path . 'db/mssql.php');
 		break;
 
 	case 'oracle':
-		include($phpbb_root_path . 'db/oracle.'.$phpEx);
+		include($phpbb_root_path . 'db/oracle.php');
 		break;
 
 	case 'msaccess':
-		include($phpbb_root_path . 'db/msaccess.'.$phpEx);
+		include($phpbb_root_path . 'db/msaccess.php');
 		break;
 
 	case 'mssql-odbc':
-		include($phpbb_root_path . 'db/mssql-odbc.'.$phpEx);
+		include($phpbb_root_path . 'db/mssql-odbc.php');
 		break;
 }
 

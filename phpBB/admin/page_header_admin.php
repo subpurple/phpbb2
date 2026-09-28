@@ -80,11 +80,11 @@ $template->assign_vars(array(
 	'L_INDEX' => sprintf($lang['Forum_Index'], $board_config['sitename']),
 	'L_FAQ' => $lang['FAQ'],
 
-	'U_INDEX' => append_sid('../index.'.$phpEx),
+	'U_INDEX' => append_sid('../index.php'),
 
 	'S_TIMEZONE' => sprintf($lang['All_times'], $l_timezone),
-	'S_LOGIN_ACTION' => append_sid('../login.'.$phpEx),
-	'S_JUMPBOX_ACTION' => append_sid('../viewforum.'.$phpEx),
+	'S_LOGIN_ACTION' => append_sid('../login.php'),
+	'S_JUMPBOX_ACTION' => append_sid('../viewforum.php'),
 	'S_CURRENT_TIME' => sprintf($lang['Current_time'], create_date($board_config['default_dateformat'], time(), $board_config['board_timezone'])), 
 	'S_CONTENT_DIRECTION' => $lang['DIRECTION'], 
 	'S_CONTENT_ENCODING' => $lang['ENCODING'], 

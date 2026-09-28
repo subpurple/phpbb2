@@ -25,8 +25,7 @@ if (!defined('IN_PHPBB'))
     define( 'IN_PHPBB', true);
 }
 $phpbb_root_path = './';
-include($phpbb_root_path . 'extension.inc');
-include($phpbb_root_path . 'common.'.$phpEx);
+include($phpbb_root_path . 'common.php');
 
 //
 // Start session management
@@ -59,10 +58,10 @@ if( $mark_read == 'forums' )
 	}
 
 	$template->assign_vars(array(
-		"META" => '<meta http-equiv="refresh" content="3;url='  .append_sid("index.$phpEx") . '">')
+		"META" => '<meta http-equiv="refresh" content="3;url='  .append_sid("index.php") . '">')
 	);
 
-	$message = $lang['Forums_marked_read'] . '<br /><br />' . sprintf($lang['Click_return_index'], '<a href="' . append_sid("index.$phpEx") . '">', '</a> ');
+	$message = $lang['Forums_marked_read'] . '<br /><br />' . sprintf($lang['Click_return_index'], '<a href="' . append_sid("index.php") . '">', '</a> ');
 
 	message_die(GENERAL_MESSAGE, $message);
 }
@@ -236,7 +235,7 @@ if( ( $total_categories = count($category_rows) ) )
 	$forum_moderators = array();
 	while( $row = $db->sql_fetchrow($result) )
 	{
-		$forum_moderators[$row['forum_id']][] = '<a href="' . append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $row['user_id']) . '">' . $row['username'] . '</a>';
+		$forum_moderators[$row['forum_id']][] = '<a href="' . append_sid("profile.php?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $row['user_id']) . '">' . $row['username'] . '</a>';
 	}
 	$db->sql_freeresult($result);
 
@@ -256,7 +255,7 @@ if( ( $total_categories = count($category_rows) ) )
 
 	while( $row = $db->sql_fetchrow($result) )
 	{
-		$forum_moderators[$row['forum_id']][] = '<a href="' . append_sid("groupcp.$phpEx?" . POST_GROUPS_URL . "=" . $row['group_id']) . '">' . $row['group_name'] . '</a>';
+		$forum_moderators[$row['forum_id']][] = '<a href="' . append_sid("groupcp.php?" . POST_GROUPS_URL . "=" . $row['group_id']) . '">' . $row['group_name'] . '</a>';
 	}
 	$db->sql_freeresult($result);
 
@@ -271,7 +270,7 @@ if( ( $total_categories = count($category_rows) ) )
 	//
 	define('SHOW_ONLINE', true);
 	$page_title = $lang['Index'];
-	include($phpbb_root_path . 'includes/page_header.'.$phpEx);
+	include($phpbb_root_path . 'includes/page_header.php');
 
 	$template->set_filenames(array(
 		'body' => 'index_body.tpl')
@@ -280,7 +279,7 @@ if( ( $total_categories = count($category_rows) ) )
 	$template->assign_vars(array(
 		'TOTAL_POSTS' => sprintf($l_total_post_s, $total_posts),
 		'TOTAL_USERS' => sprintf($l_total_user_s, $total_users),
-		'NEWEST_USER' => sprintf($lang['Newest_user'], '<a href="' . append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=$newest_uid") . '">', $newest_user, '</a>'), 
+		'NEWEST_USER' => sprintf($lang['Newest_user'], '<a href="' . append_sid("profile.php?mode=viewprofile&amp;" . POST_USERS_URL . "=$newest_uid") . '">', $newest_user, '</a>'), 
 
 		'FORUM_IMG' => $images['forum'],
 		'FORUM_NEW_IMG' => $images['forum_new'],
@@ -302,7 +301,7 @@ if( ( $total_categories = count($category_rows) ) )
 		'L_FORUM_LOCKED' => $lang['Forum_is_locked'],
 		'L_MARK_FORUMS_READ' => $lang['Mark_all_forums'], 
 
-		'U_MARK_READ' => append_sid("index.$phpEx?mark=forums"))
+		'U_MARK_READ' => append_sid("index.php?mark=forums"))
 	);
 
 	//
@@ -334,7 +333,7 @@ if( ( $total_categories = count($category_rows) ) )
 			$template->assign_block_vars('catrow', array(
 				'CAT_ID' => $cat_id,
 				'CAT_DESC' => $category_rows[$i]['cat_title'],
-				'U_VIEWCAT' => append_sid("index.$phpEx?" . POST_CAT_URL . "=$cat_id"))
+				'U_VIEWCAT' => append_sid("index.php?" . POST_CAT_URL . "=$cat_id"))
 			);
 
 			if ( $viewcat == $cat_id || $viewcat == -1 )
@@ -411,9 +410,9 @@ if( ( $total_categories = count($category_rows) ) )
 
 								$last_post = $last_post_time . '<br />';
 
-								$last_post .= ( $forum_data[$j]['user_id'] == ANONYMOUS ) ? ( ($forum_data[$j]['post_username'] != '' ) ? $forum_data[$j]['post_username'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . '='  . $forum_data[$j]['user_id']) . '">' . $forum_data[$j]['username'] . '</a> ';
+								$last_post .= ( $forum_data[$j]['user_id'] == ANONYMOUS ) ? ( ($forum_data[$j]['post_username'] != '' ) ? $forum_data[$j]['post_username'] . ' ' : $lang['Guest'] . ' ' ) : '<a href="' . append_sid("profile.php?mode=viewprofile&amp;" . POST_USERS_URL . '='  . $forum_data[$j]['user_id']) . '">' . $forum_data[$j]['username'] . '</a> ';
 								
-								$last_post .= '<a href="' . append_sid("viewtopic.$phpEx?"  . POST_POST_URL . '=' . $forum_data[$j]['forum_last_post_id']) . '#' . $forum_data[$j]['forum_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" border="0" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" /></a>';
+								$last_post .= '<a href="' . append_sid("viewtopic.php?"  . POST_POST_URL . '=' . $forum_data[$j]['forum_last_post_id']) . '#' . $forum_data[$j]['forum_last_post_id'] . '"><img src="' . $images['icon_latest_reply'] . '" border="0" alt="' . $lang['View_latest_post'] . '" title="' . $lang['View_latest_post'] . '" /></a>';
 							}
 							else
 							{
@@ -448,7 +447,7 @@ if( ( $total_categories = count($category_rows) ) )
 								'L_MODERATOR' => $l_moderators, 
 								'L_FORUM_FOLDER_ALT' => $folder_alt, 
 
-								'U_VIEWFORUM' => append_sid("viewforum.$phpEx?" . POST_FORUM_URL . "=$forum_id"))
+								'U_VIEWFORUM' => append_sid("viewforum.php?" . POST_FORUM_URL . "=$forum_id"))
 							);
 						}
 					}
@@ -468,6 +467,6 @@ else
 //
 $template->pparse('body');
 
-include($phpbb_root_path . 'includes/page_tail.'.$phpEx);
+include($phpbb_root_path . 'includes/page_tail.php');
 
 ?>

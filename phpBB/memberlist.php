@@ -24,8 +24,7 @@ if (!defined('IN_PHPBB'))
     define( 'IN_PHPBB', true);
 }
 $phpbb_root_path = './';
-include($phpbb_root_path . 'extension.inc');
-include($phpbb_root_path . 'common.'.$phpEx);
+include($phpbb_root_path . 'common.php');
 
 //
 // Start session management
@@ -90,12 +89,12 @@ $select_sort_order .= '</select>';
 // Generate page
 //
 $page_title = $lang['Memberlist'];
-include($phpbb_root_path . 'includes/page_header.'.$phpEx);
+include($phpbb_root_path . 'includes/page_header.php');
 
 $template->set_filenames(array(
 	'body' => 'memberlist_body.tpl')
 );
-make_jumpbox('viewforum.'.$phpEx);
+make_jumpbox('viewforum.php');
 
 $template->assign_vars(array(
 	'L_SELECT_SORT_METHOD' => $lang['Select_sort_method'],
@@ -115,7 +114,7 @@ $template->assign_vars(array(
 
 	'S_MODE_SELECT' => $select_sort_mode,
 	'S_ORDER_SELECT' => $select_sort_order,
-	'S_MODE_ACTION' => append_sid("memberlist.$phpEx"))
+	'S_MODE_ACTION' => append_sid("memberlist.php"))
 );
 
 switch( $mode )
@@ -186,7 +185,7 @@ if ( $row = $db->sql_fetchrow($result) )
 
 		if ( !empty($row['user_viewemail']) || $userdata['user_level'] == ADMIN )
 		{
-			$email_uri = ( $board_config['board_email_form'] ) ? append_sid("profile.$phpEx?mode=email&amp;" . POST_USERS_URL .'=' . $user_id) : 'mailto:' . $row['user_email'];
+			$email_uri = ( $board_config['board_email_form'] ) ? append_sid("profile.php?mode=email&amp;" . POST_USERS_URL .'=' . $user_id) : 'mailto:' . $row['user_email'];
 
 			$email_img = '<a href="' . $email_uri . '"><img src="' . $images['icon_email'] . '" alt="' . $lang['Send_email'] . '" title="' . $lang['Send_email'] . '" border="0" /></a>';
 			$email = '<a href="' . $email_uri . '">' . $lang['Send_email'] . '</a>';
@@ -197,11 +196,11 @@ if ( $row = $db->sql_fetchrow($result) )
 			$email = '&nbsp;';
 		}
 
-		$temp_url = append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=$user_id");
+		$temp_url = append_sid("profile.php?mode=viewprofile&amp;" . POST_USERS_URL . "=$user_id");
 		$profile_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_profile'] . '" alt="' . $lang['Read_profile'] . '" title="' . $lang['Read_profile'] . '" border="0" /></a>';
 		$profile = '<a href="' . $temp_url . '">' . $lang['Read_profile'] . '</a>';
 
-		$temp_url = append_sid("privmsg.$phpEx?mode=post&amp;" . POST_USERS_URL . "=$user_id");
+		$temp_url = append_sid("privmsg.php?mode=post&amp;" . POST_USERS_URL . "=$user_id");
 		$pm_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_pm'] . '" alt="' . $lang['Send_private_message'] . '" title="' . $lang['Send_private_message'] . '" border="0" /></a>';
 		$pm = '<a href="' . $temp_url . '">' . $lang['Send_private_message'] . '</a>';
 
@@ -224,14 +223,14 @@ if ( $row = $db->sql_fetchrow($result) )
 		$aim_img = ( $row['user_aim'] ) ? '<a href="aim:goim?screenname=' . $row['user_aim'] . '&amp;message=Hello+Are+you+there?"><img src="' . $images['icon_aim'] . '" alt="' . $lang['AIM'] . '" title="' . $lang['AIM'] . '" border="0" /></a>' : '';
 		$aim = ( $row['user_aim'] ) ? '<a href="aim:goim?screenname=' . $row['user_aim'] . '&amp;message=Hello+Are+you+there?">' . $lang['AIM'] . '</a>' : '';
 
-		$temp_url = append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=$user_id");
+		$temp_url = append_sid("profile.php?mode=viewprofile&amp;" . POST_USERS_URL . "=$user_id");
 		$msn_img = ( $row['user_msnm'] ) ? '<a href="' . $temp_url . '"><img src="' . $images['icon_msnm'] . '" alt="' . $lang['MSNM'] . '" title="' . $lang['MSNM'] . '" border="0" /></a>' : '';
 		$msn = ( $row['user_msnm'] ) ? '<a href="' . $temp_url . '">' . $lang['MSNM'] . '</a>' : '';
 
 		$yim_img = ( $row['user_yim'] ) ? '<a href="http://edit.yahoo.com/config/send_webmesg?.target=' . $row['user_yim'] . '&amp;.src=pg"><img src="' . $images['icon_yim'] . '" alt="' . $lang['YIM'] . '" title="' . $lang['YIM'] . '" border="0" /></a>' : '';
 		$yim = ( $row['user_yim'] ) ? '<a href="http://edit.yahoo.com/config/send_webmesg?.target=' . $row['user_yim'] . '&amp;.src=pg">' . $lang['YIM'] . '</a>' : '';
 
-		$temp_url = append_sid("search.$phpEx?search_author=" . urlencode($username) . "&amp;showresults=posts");
+		$temp_url = append_sid("search.php?search_author=" . urlencode($username) . "&amp;showresults=posts");
 		$search_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_search'] . '" alt="' . sprintf($lang['Search_user_posts'], $username) . '" title="' . sprintf($lang['Search_user_posts'], $username) . '" border="0" /></a>';
 		$search = '<a href="' . $temp_url . '">' . sprintf($lang['Search_user_posts'], $username) . '</a>';
 
@@ -267,7 +266,7 @@ if ( $row = $db->sql_fetchrow($result) )
 			'YIM_IMG' => $yim_img,
 			'YIM' => $yim,
 			
-			'U_VIEWPROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=$user_id"))
+			'U_VIEWPROFILE' => append_sid("profile.php?mode=viewprofile&amp;" . POST_USERS_URL . "=$user_id"))
 		);
 
 		$i++;
@@ -291,7 +290,7 @@ if ( $mode != 'topten' || $board_config['topics_per_page'] < 10 )
 	{
 		$total_members = $total['total'];
 
-		$pagination = generate_pagination("memberlist.$phpEx?mode=$mode&amp;order=$sort_order", $total_members, $board_config['topics_per_page'], $start). '&nbsp;';
+		$pagination = generate_pagination("memberlist.php?mode=$mode&amp;order=$sort_order", $total_members, $board_config['topics_per_page'], $start). '&nbsp;';
 	}
 	$db->sql_freeresult($result);
 }
@@ -310,6 +309,6 @@ $template->assign_vars(array(
 
 $template->pparse('body');
 
-include($phpbb_root_path . 'includes/page_tail.'.$phpEx);
+include($phpbb_root_path . 'includes/page_tail.php');
 
 ?>

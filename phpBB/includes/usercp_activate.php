@@ -40,7 +40,7 @@ if ( $row = $db->sql_fetchrow($result) )
 	if ( $row['user_active'] && trim($row['user_actkey']) == '' )
 	{
 		$template->assign_vars(array(
-			'META' => '<meta http-equiv="refresh" content="10;url=' . append_sid("index.$phpEx") . '">')
+			'META' => '<meta http-equiv="refresh" content="10;url=' . append_sid("index.php") . '">')
 		);
 
 		message_die(GENERAL_MESSAGE, $lang['Already_activated']);
@@ -51,7 +51,7 @@ if ( $row = $db->sql_fetchrow($result) )
 		{
 			if (!$userdata['session_logged_in'])
 			{
-				redirect(append_sid('login.' . $phpEx . '?redirect=profile.' . $phpEx . '&mode=activate&' . POST_USERS_URL . '=' . $row['user_id'] . '&act_key=' . trim($HTTP_GET_VARS['act_key'])));
+				redirect(append_sid('login.php?redirect=profile.php&mode=activate&' . POST_USERS_URL . '=' . $row['user_id'] . '&act_key=' . trim($HTTP_GET_VARS['act_key'])));
 			}
 			else if ($userdata['user_level'] != ADMIN)
 			{
@@ -71,7 +71,7 @@ if ( $row = $db->sql_fetchrow($result) )
 
 		if ( intval($board_config['require_activation']) == USER_ACTIVATION_ADMIN && $sql_update_pass == '' )
 		{
-			include($phpbb_root_path . 'includes/emailer.'.$phpEx);
+			include($phpbb_root_path . 'includes/emailer.php');
 			$emailer = new emailer($board_config['smtp_delivery']);
 
 			$emailer->from($board_config['board_email']);
@@ -91,7 +91,7 @@ if ( $row = $db->sql_fetchrow($result) )
 			$emailer->reset();
 
 			$template->assign_vars(array(
-				'META' => '<meta http-equiv="refresh" content="10;url=' . append_sid("index.$phpEx") . '">')
+				'META' => '<meta http-equiv="refresh" content="10;url=' . append_sid("index.php") . '">')
 			);
 
 			message_die(GENERAL_MESSAGE, $lang['Account_active_admin']);
@@ -99,7 +99,7 @@ if ( $row = $db->sql_fetchrow($result) )
 		else
 		{
 			$template->assign_vars(array(
-				'META' => '<meta http-equiv="refresh" content="10;url=' . append_sid("index.$phpEx") . '">')
+				'META' => '<meta http-equiv="refresh" content="10;url=' . append_sid("index.php") . '">')
 			);
 
 			$message = ( $sql_update_pass == '' ) ? $lang['Account_active'] : $lang['Password_activated']; 

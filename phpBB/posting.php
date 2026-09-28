@@ -25,10 +25,9 @@ if (!defined('IN_PHPBB'))
     define( 'IN_PHPBB', true);
 }
 $phpbb_root_path = './';
-include($phpbb_root_path . 'extension.inc');
-include($phpbb_root_path . 'common.'.$phpEx);
-include($phpbb_root_path . 'includes/bbcode.'.$phpEx);
-include($phpbb_root_path . 'includes/functions_post.'.$phpEx);
+include($phpbb_root_path . 'common.php');
+include($phpbb_root_path . 'includes/bbcode.php');
+include($phpbb_root_path . 'includes/functions_post.php');
 
 //
 // Check and set various parameters
@@ -77,7 +76,7 @@ $topic_type = ( in_array($topic_type, array(POST_NORMAL, POST_STICKY, POST_ANNOU
 //
 if ( $mode == 'topicreview' )
 {
-	require($phpbb_root_path . 'includes/topic_review.'.$phpEx);
+	require($phpbb_root_path . 'includes/topic_review.php');
 
 	topic_review($topic_id, false);
 	exit;
@@ -105,22 +104,22 @@ if ( isset($HTTP_POST_VARS['cancel']) )
 {
 	if ( $post_id )
 	{
-		$redirect = "viewtopic.$phpEx?" . POST_POST_URL . "=$post_id";
+		$redirect = "viewtopic.php?" . POST_POST_URL . "=$post_id";
 		$post_append = "#$post_id";
 	}
 	else if ( $topic_id )
 	{
-		$redirect = "viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id";
+		$redirect = "viewtopic.php?" . POST_TOPIC_URL . "=$topic_id";
 		$post_append = '';
 	}
 	else if ( $forum_id )
 	{
-		$redirect = "viewforum.$phpEx?" . POST_FORUM_URL . "=$forum_id";
+		$redirect = "viewforum.php?" . POST_FORUM_URL . "=$forum_id";
 		$post_append = '';
 	}
 	else
 	{
-		$redirect = "index.$phpEx";
+		$redirect = "index.php";
 		$post_append = '';
 	}
 
@@ -298,7 +297,7 @@ if ( ($result = $db->sql_query($sql)) && ($post_info = $db->sql_fetchrow($result
 		if ( $post_info['poster_id'] != $userdata['user_id'] && !$is_auth['auth_mod'] )
 		{
 			$message = ( $delete || $mode == 'delete' ) ? $lang['Delete_own_posts'] : $lang['Edit_own_posts'];
-			$message .= '<br /><br />' . sprintf($lang['Click_return_topic'], '<a href="' . append_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id") . '">', '</a>');
+			$message .= '<br /><br />' . sprintf($lang['Click_return_topic'], '<a href="' . append_sid("viewtopic.php?" . POST_TOPIC_URL . "=$topic_id") . '">', '</a>');
 
 			message_die(GENERAL_MESSAGE, $message);
 		}
@@ -363,7 +362,7 @@ if ( !$is_auth[$is_auth_type] )
 			break;
 	}
 
-	redirect(append_sid("login.$phpEx?redirect=posting.$phpEx&" . $redirect, true));
+	redirect(append_sid("login.php?redirect=posting.php&" . $redirect, true));
 }
 
 //
@@ -441,7 +440,7 @@ if ( ( $delete || $poll_delete || $mode == 'delete' ) && !$confirm )
 	//
 	// Output confirmation page
 	//
-	include($phpbb_root_path . 'includes/page_header.'.$phpEx);
+	include($phpbb_root_path . 'includes/page_header.php');
 
 	$template->set_filenames(array(
 		'confirm_body' => 'confirm_body.tpl')
@@ -454,13 +453,13 @@ if ( ( $delete || $poll_delete || $mode == 'delete' ) && !$confirm )
 		'L_YES' => $lang['Yes'],
 		'L_NO' => $lang['No'],
 
-		'S_CONFIRM_ACTION' => append_sid("posting.$phpEx"),
+		'S_CONFIRM_ACTION' => append_sid("posting.php"),
 		'S_HIDDEN_FIELDS' => $s_hidden_fields)
 	);
 
 	$template->pparse('confirm_body');
 
-	include($phpbb_root_path . 'includes/page_tail.'.$phpEx);
+	include($phpbb_root_path . 'includes/page_tail.php');
 }
 else if ( $mode == 'vote' )
 {
@@ -528,14 +527,14 @@ else if ( $mode == 'vote' )
 		$db->sql_freeresult($result);
 
 		$template->assign_vars(array(
-			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id") . '">')
+			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("viewtopic.php?" . POST_TOPIC_URL . "=$topic_id") . '">')
 		);
-		$message .=  '<br /><br />' . sprintf($lang['Click_view_message'], '<a href="' . append_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id") . '">', '</a>');
+		$message .=  '<br /><br />' . sprintf($lang['Click_view_message'], '<a href="' . append_sid("viewtopic.php?" . POST_TOPIC_URL . "=$topic_id") . '">', '</a>');
 		message_die(GENERAL_MESSAGE, $message);
 	}
 	else
 	{
-		redirect(append_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id", true));
+		redirect(append_sid("viewtopic.php?" . POST_TOPIC_URL . "=$topic_id", true));
 	}
 }
 else if ( $submit || $confirm )
@@ -970,21 +969,21 @@ generate_smilies('inline', PAGE_POSTING);
 //
 // Include page header
 //
-include($phpbb_root_path . 'includes/page_header.'.$phpEx);
+include($phpbb_root_path . 'includes/page_header.php');
 
 $template->set_filenames(array(
 	'body' => 'posting_body.tpl', 
 	'pollbody' => 'posting_poll_body.tpl', 
 	'reviewbody' => 'posting_topic_review.tpl')
 );
-make_jumpbox('viewforum.'.$phpEx);
+make_jumpbox('viewforum.php');
 
 $template->assign_vars(array(
 	'FORUM_NAME' => $forum_name,
 	'L_POST_A' => $page_title,
 	'L_POST_SUBJECT' => $lang['Post_subject'], 
 
-	'U_VIEW_FORUM' => append_sid("viewforum.$phpEx?" . POST_FORUM_URL . "=$forum_id"))
+	'U_VIEW_FORUM' => append_sid("viewforum.php?" . POST_FORUM_URL . "=$forum_id"))
 );
 
 //
@@ -1001,7 +1000,7 @@ $template->assign_vars(array(
 	'SUBJECT' => $subject,
 	'MESSAGE' => $message,
 	'HTML_STATUS' => $html_status,
-	'BBCODE_STATUS' => sprintf($bbcode_status, '<a href="' . append_sid("faq.$phpEx?mode=bbcode") . '" target="_phpbbcode">', '</a>'), 
+	'BBCODE_STATUS' => sprintf($bbcode_status, '<a href="' . append_sid("faq.php?mode=bbcode") . '" target="_phpbbcode">', '</a>'), 
 	'SMILIES_STATUS' => $smilies_status, 
 
 	'L_SUBJECT' => $lang['Subject'],
@@ -1060,8 +1059,8 @@ $template->assign_vars(array(
 	'L_BBCODE_CLOSE_TAGS' => $lang['Close_Tags'], 
 	'L_STYLES_TIP' => $lang['Styles_tip'], 
 
-	'U_VIEWTOPIC' => ( $mode == 'reply' ) ? append_sid("viewtopic.$phpEx?" . POST_TOPIC_URL . "=$topic_id&amp;postorder=desc") : '', 
-	'U_REVIEW_TOPIC' => ( $mode == 'reply' ) ? append_sid("posting.$phpEx?mode=topicreview&amp;" . POST_TOPIC_URL . "=$topic_id") : '', 
+	'U_VIEWTOPIC' => ( $mode == 'reply' ) ? append_sid("viewtopic.php?" . POST_TOPIC_URL . "=$topic_id&amp;postorder=desc") : '', 
+	'U_REVIEW_TOPIC' => ( $mode == 'reply' ) ? append_sid("posting.php?mode=topicreview&amp;" . POST_TOPIC_URL . "=$topic_id") : '', 
 
 	'S_HTML_CHECKED' => ( !$html_on ) ? 'checked="checked"' : '', 
 	'S_BBCODE_CHECKED' => ( !$bbcode_on ) ? 'checked="checked"' : '', 
@@ -1070,7 +1069,7 @@ $template->assign_vars(array(
 	'S_NOTIFY_CHECKED' => ( $notify_user ) ? 'checked="checked"' : '', 
 	'S_TYPE_TOGGLE' => $topic_type_toggle, 
 	'S_TOPIC_ID' => $topic_id, 
-	'S_POST_ACTION' => append_sid("posting.$phpEx"),
+	'S_POST_ACTION' => append_sid("posting.php"),
 	'S_HIDDEN_FORM_FIELDS' => $hidden_form_fields)
 );
 
@@ -1124,7 +1123,7 @@ if( ( $mode == 'newtopic' || ( $mode == 'editpost' && $post_data['edit_poll']) )
 //
 if( $mode == 'reply' && $is_auth['auth_read'] )
 {
-	require($phpbb_root_path . 'includes/topic_review.'.$phpEx);
+	require($phpbb_root_path . 'includes/topic_review.php');
 	topic_review($topic_id, true);
 
 	$template->assign_block_vars('switch_inline_mode', array());
@@ -1133,6 +1132,6 @@ if( $mode == 'reply' && $is_auth['auth_read'] )
 
 $template->pparse('body');
 
-include($phpbb_root_path . 'includes/page_tail.'.$phpEx);
+include($phpbb_root_path . 'includes/page_tail.php');
 
 ?>
