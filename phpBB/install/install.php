@@ -105,21 +105,6 @@ function page_common_form($hidden, $submit)
 
 }
 
-function page_upgrade_form()
-{
-	global $lang;
-
-?>
-					<tr>
-						<td class="catBottom" align="center" colspan="2"><?php echo $lang['continue_upgrade']; ?></td>
-					</tr>
-					<tr>
-						<td class="catBottom" align="center" colspan="2"><input type="submit" name="upgrade_now" value="<?php echo $lang['upgrade_submit']; ?>" /></td>
-					</tr>
-<?php 
-
-}
-
 function page_error($error_title, $error)
 {
 
@@ -375,9 +360,6 @@ else
 	$install_step = '';
 }
 
-$upgrade = (!empty($_POST['upgrade'])) ? $_POST['upgrade']: '';
-$upgrade_now = (!empty($_POST['upgrade_now'])) ? $_POST['upgrade_now']:'';
-
 $dbms = isset($_POST['dbms']) ? $_POST['dbms'] : '';
 
 $dbhost = (!empty($_POST['dbhost'])) ? $_POST['dbhost'] : 'localhost';
@@ -460,15 +442,6 @@ if (defined("PHPBB_INSTALLED"))
 include($phpbb_root_path.'language/lang_' . $language . '/lang_main.php');
 include($phpbb_root_path.'language/lang_' . $language . '/lang_admin.php');
 
-// Ok for the time being I'm commenting this out whilst I'm working on
-// better integration of the install with upgrade as per Bart's request
-// JLH
-if ($upgrade == 1)
-{
-	// require('upgrade.php');
-	$install_step = 1;
-}
-
 // What do we need to do?
 if (!empty($_POST['send_file']) && $_POST['send_file'] == 1 && empty($_POST['upgrade_now']))
 {
@@ -486,11 +459,6 @@ else if (!empty($_POST['send_file']) && $_POST['send_file'] == 2)
 {
 	$s_hidden_fields = '<input type="hidden" name="config_data" value="' . htmlspecialchars(stripslashes($_POST['config_data'])) . '" />';
 	$s_hidden_fields .= '<input type="hidden" name="ftp_file" value="1" />';
-
-	if ($upgrade == 1)
-	{
-		$s_hidden_fields .= '<input type="hidden" name="upgrade" value="1" />';
-	}
 
 	page_header($lang['ftp_instructs']);
 
@@ -531,31 +499,7 @@ else if (!empty($_POST['ftp_file']))
 		$s_hidden_fields = '<input type="hidden" name="config_data" value="' . htmlspecialchars(stripslashes($_POST['config_data'])) . '" />';
 		$s_hidden_fields .= '<input type="hidden" name="send_file" value="1" />';
 
-		// If we're upgrading ...
-		if ($upgrade == 1)
-		{
-			$s_hidden_fields .= '<input type="hidden" name="upgrade" value="1" />';
-			$s_hidden_fields .= '<input type="hidden" name="dbms" value="'.$dmbs.'" />';
-			$s_hidden_fields .= '<input type="hidden" name="prefix" value="'.$table_prefix.'" />';
-			$s_hidden_fields .= '<input type="hidden" name="dbhost" value="'.$dbhost.'" />';
-			$s_hidden_fields .= '<input type="hidden" name="dbname" value="'.$dbname.'" />';
-			$s_hidden_fields .= '<input type="hidden" name="dbuser" value="'.$dbuser.'" />';
-			$s_hidden_fields .= '<input type="hidden" name="dbpasswd" value="'.$dbpasswd.'" />';
-			$s_hidden_fields .= '<input type="hidden" name="install_step" value="1" />';
-			$s_hidden_fields .= '<input type="hidden" name="admin_pass1" value="1" />';
-			$s_hidden_fields .= '<input type="hidden" name="admin_pass2" value="1" />';
-			$s_hidden_fields .= '<input type="hidden" name="server_port" value="'.$server_port.'" />';
-			$s_hidden_fields .= '<input type="hidden" name="server_name" value="'.$server_name.'" />';
-			$s_hidden_fields .= '<input type="hidden" name="script_path" value="'.$script_path.'" />';
-			$s_hidden_fields .= '<input type="hidden" name="board_email" value="'.$board_email.'" />';
-
-			page_upgrade_form();
-		}
-		else
-		{
-			page_common_form($s_hidden_fields, $lang['Download_config']);
-
-		}
+		page_common_form($s_hidden_fields, $lang['Download_config']);
 
 		page_footer();
 		exit;
@@ -581,12 +525,6 @@ else if (!empty($_POST['ftp_file']))
 		@ftp_quit($conn_id);
 
 		unlink($tmpfname);
-
-		if ($upgrade == 1)	
-		{
-			require('upgrade.php');
-			exit;
-		}
 
 		// Ok we are basically done with the install process let's go on 
 		// and let the user configure their board now. We are going to do 
@@ -661,7 +599,6 @@ else if ((empty($install_step) || $admin_pass1 != $admin_pass2 || empty($admin_p
 	$upgrade_option = '<select name="upgrade"';
 	$upgrade_option .= 'onchange="if (this.options[this.selectedIndex].value == 1) { this.form.dbms.selectedIndex = 0; }">';
 	$upgrade_option .= '<option value="0">' . $lang['Install'] . '</option>';
-	$upgrade_option .= '<option value="1">' . $lang['Upgrade'] . '</option></select>';
 	
 	$s_hidden_fields = '<input type="hidden" name="install_step" value="1" /><input type="hidden" name="cur_lang" value="' . $language . '" />';
 
@@ -810,219 +747,181 @@ else
 
 	if ($install_step == 1)
 	{
-		if ($upgrade != 1)
+		if ($dbms != 'msaccess')
 		{
-			if ($dbms != 'msaccess')
+			// Load in the sql parser
+			include($phpbb_root_path.'includes/sql_parse.php');
+
+			// Ok we have the db info go ahead and read in the relevant schema
+			// and work on building the table.. probably ought to provide some
+			// kind of feedback to the user as we are working here in order
+			// to let them know we are actually doing something.
+			$sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema));
+			$sql_query = preg_replace('/phpbb_/', $table_prefix, $sql_query);
+
+			$sql_query = $remove_remarks($sql_query);
+			$sql_query = split_sql_file($sql_query, $delimiter);
+
+			for ($i = 0; $i < sizeof($sql_query); $i++)
 			{
-				// Load in the sql parser
-				include($phpbb_root_path.'includes/sql_parse.php');
-
-				// Ok we have the db info go ahead and read in the relevant schema
-				// and work on building the table.. probably ought to provide some
-				// kind of feedback to the user as we are working here in order
-				// to let them know we are actually doing something.
-				$sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema));
-				$sql_query = preg_replace('/phpbb_/', $table_prefix, $sql_query);
-
-				$sql_query = $remove_remarks($sql_query);
-				$sql_query = split_sql_file($sql_query, $delimiter);
-
-				for ($i = 0; $i < sizeof($sql_query); $i++)
+				if (trim($sql_query[$i]) != '')
 				{
-					if (trim($sql_query[$i]) != '')
+					if (!($result = $db->sql_query($sql_query[$i])))
 					{
-						if (!($result = $db->sql_query($sql_query[$i])))
-						{
-							$error = $db->sql_error();
-			
-							page_header($lang['Install'], '');
-							page_error($lang['Installer_Error'], $lang['Install_db_error'] . '<br />' . $error['message']);
-							page_footer();
-							exit;
-						}
-					}
-				}
+						$error = $db->sql_error();
 		
-				// Ok tables have been built, let's fill in the basic information
-				$sql_query = @fread(@fopen($dbms_basic, 'r'), @filesize($dbms_basic));
-				$sql_query = preg_replace('/phpbb_/', $table_prefix, $sql_query);
-
-				$sql_query = $remove_remarks($sql_query);
-				$sql_query = split_sql_file($sql_query, $delimiter_basic);
-
-				for($i = 0; $i < sizeof($sql_query); $i++)
-				{
-					if (trim($sql_query[$i]) != '')
-					{
-						if (!($result = $db->sql_query($sql_query[$i])))
-						{
-							$error = $db->sql_error();
-
-							page_header($lang['Install'], '');
-							page_error($lang['Installer_Error'], $lang['Install_db_error'] . '<br />' . $error['message']);
-							page_footer();
-							exit;
-						}
+						page_header($lang['Install'], '');
+						page_error($lang['Installer_Error'], $lang['Install_db_error'] . '<br />' . $error['message']);
+						page_footer();
+						exit;
 					}
 				}
 			}
+	
+			// Ok tables have been built, let's fill in the basic information
+			$sql_query = @fread(@fopen($dbms_basic, 'r'), @filesize($dbms_basic));
+			$sql_query = preg_replace('/phpbb_/', $table_prefix, $sql_query);
 
-			// Ok at this point they have entered their admin password, let's go 
-			// ahead and create the admin account with some basic default information
-			// that they can customize later, and write out the config file.  After
-			// this we are going to pass them over to the admin_forum.php script
-			// to set up their forum defaults.
-			$error = '';
+			$sql_query = $remove_remarks($sql_query);
+			$sql_query = split_sql_file($sql_query, $delimiter_basic);
 
-			// Update the default admin user with their information.
-			$sql = "INSERT INTO " . $table_prefix . "config (config_name, config_value) 
-				VALUES ('board_startdate', " . time() . ")";
-			if (!$db->sql_query($sql))
+			for($i = 0; $i < sizeof($sql_query); $i++)
 			{
-				$error .= "Could not insert board_startdate :: " . $sql . " :: " . __LINE__ . " :: " . __FILE__ . "<br /><br />";
-			}
+				if (trim($sql_query[$i]) != '')
+				{
+					if (!($result = $db->sql_query($sql_query[$i])))
+					{
+						$error = $db->sql_error();
 
-			$sql = "INSERT INTO " . $table_prefix . "config (config_name, config_value) 
-				VALUES ('default_lang', '" . str_replace("\'", "''", $language) . "')";
+						page_header($lang['Install'], '');
+						page_error($lang['Installer_Error'], $lang['Install_db_error'] . '<br />' . $error['message']);
+						page_footer();
+						exit;
+					}
+				}
+			}
+		}
+
+		// Ok at this point they have entered their admin password, let's go 
+		// ahead and create the admin account with some basic default information
+		// that they can customize later, and write out the config file.  After
+		// this we are going to pass them over to the admin_forum.php script
+		// to set up their forum defaults.
+		$error = '';
+
+		// Update the default admin user with their information.
+		$sql = "INSERT INTO " . $table_prefix . "config (config_name, config_value) 
+			VALUES ('board_startdate', " . time() . ")";
+		if (!$db->sql_query($sql))
+		{
+			$error .= "Could not insert board_startdate :: " . $sql . " :: " . __LINE__ . " :: " . __FILE__ . "<br /><br />";
+		}
+
+		$sql = "INSERT INTO " . $table_prefix . "config (config_name, config_value) 
+			VALUES ('default_lang', '" . str_replace("\'", "''", $language) . "')";
+		if (!$db->sql_query($sql))
+		{
+			$error .= "Could not insert default_lang :: " . $sql . " :: " . __LINE__ . " :: " . __FILE__ . "<br /><br />";
+		}
+
+		$update_config = array(
+			'board_email'	=> $board_email,
+			'script_path'	=> $script_path,
+			'server_port'	=> $server_port,
+			'server_name'	=> $server_name,
+		);
+
+		foreach ($update_config as $config_name => $config_value)
+		{
+			$sql = "UPDATE " . $table_prefix . "config 
+				SET config_value = '$config_value' 
+				WHERE config_name = '$config_name'";
 			if (!$db->sql_query($sql))
 			{
 				$error .= "Could not insert default_lang :: " . $sql . " :: " . __LINE__ . " :: " . __FILE__ . "<br /><br />";
 			}
-
-			$update_config = array(
-				'board_email'	=> $board_email,
-				'script_path'	=> $script_path,
-				'server_port'	=> $server_port,
-				'server_name'	=> $server_name,
-			);
-
-			foreach ($update_config as $config_name => $config_value)
-			{
-				$sql = "UPDATE " . $table_prefix . "config 
-					SET config_value = '$config_value' 
-					WHERE config_name = '$config_name'";
-				if (!$db->sql_query($sql))
-				{
-					$error .= "Could not insert default_lang :: " . $sql . " :: " . __LINE__ . " :: " . __FILE__ . "<br /><br />";
-				}
-			}
-
-			$admin_pass_md5 = ($confirm && $userdata['user_level'] == ADMIN) ? $admin_pass1 : md5($admin_pass1);
-
-			$sql = "UPDATE " . $table_prefix . "users 
-				SET username = '" . str_replace("\'", "''", $admin_name) . "', user_password='" . str_replace("\'", "''", $admin_pass_md5) . "', user_lang = '" . str_replace("\'", "''", $language) . "', user_email='" . str_replace("\'", "''", $board_email) . "'
-				WHERE username = 'Admin'";
-			if (!$db->sql_query($sql))
-			{
-				$error .= "Could not update admin info :: " . $sql . " :: " . __LINE__ . " :: " . __FILE__ . "<br /><br />";
-			}
-
-			$sql = "UPDATE " . $table_prefix . "users 
-				SET user_regdate = " . time();
-			if (!$db->sql_query($sql))
-			{
-				$error .= "Could not update user_regdate :: " . $sql . " :: " . __LINE__ . " :: " . __FILE__ . "<br /><br />";
-			}
-
-			if ($error != '')
-			{
-				page_header($lang['Install'], '');
-				page_error($lang['Installer_Error'], $lang['Install_db_error'] . '<br /><br />' . $error);
-				page_footer();
-				exit;
-			}
 		}
 
-		if (!$upgrade_now)
+		$admin_pass_md5 = ($confirm && $userdata['user_level'] == ADMIN) ? $admin_pass1 : md5($admin_pass1);
+
+		$sql = "UPDATE " . $table_prefix . "users 
+			SET username = '" . str_replace("\'", "''", $admin_name) . "', user_password='" . str_replace("\'", "''", $admin_pass_md5) . "', user_lang = '" . str_replace("\'", "''", $language) . "', user_email='" . str_replace("\'", "''", $board_email) . "'
+			WHERE username = 'Admin'";
+		if (!$db->sql_query($sql))
 		{
-			// Write out the config file.
-			$config_data = '<?php'."\n\n";
-			$config_data .= "\n// phpBB 2.x auto-generated config file\n// Do not change anything in this file!\n\n";
-			$config_data .= '$dbms = \'' . $dbms . '\';' . "\n\n";
-			$config_data .= '$dbhost = \'' . $dbhost . '\';' . "\n";
-			$config_data .= '$dbname = \'' . $dbname . '\';' . "\n";
-			$config_data .= '$dbuser = \'' . $dbuser . '\';' . "\n";
-			$config_data .= '$dbpasswd = \'' . $dbpasswd . '\';' . "\n\n";
-			$config_data .= '$table_prefix = \'' . $table_prefix . '\';' . "\n\n";
-			$config_data .= 'define(\'PHPBB_INSTALLED\', true);'."\n\n";	
-			$config_data .= '?' . '>'; // Done this to prevent highlighting editors getting confused!
-
-			@umask(0111);
-			$no_open = FALSE;
-
-			// Unable to open the file writeable do something here as an attempt
-			// to get around that...
-			if (!($fp = @fopen($phpbb_root_path . 'config.php', 'w')))
-			{
-				$s_hidden_fields = '<input type="hidden" name="config_data" value="' . htmlspecialchars($config_data) . '" />';
-
-				if (@extension_loaded('ftp') && !defined('NO_FTP'))
-				{
-					page_header($lang['Unwriteable_config'] . '<p>' . $lang['ftp_option'] . '</p>');
-
-?>
-					<tr>
-						<th colspan="2"><?php echo $lang['ftp_choose']; ?></th>
-					</tr>
-					<tr>
-						<td class="row1" align="right" width="50%"><span class="gen"><?php echo $lang['Attempt_ftp']; ?></span></td>
-						<td class="row2"><input type="radio" name="send_file" value="2"></td>
-					</tr>
-					<tr>
-						<td class="row1" align="right" width="50%"><span class="gen"><?php echo $lang['Send_file']; ?></span></td>
-						<td class="row2"><input type="radio" name="send_file" value="1"></td>
-					</tr>
-<?php 
-
-				}
-				else
-				{
-					page_header($lang['Unwriteable_config']);
-					$s_hidden_fields .= '<input type="hidden" name="send_file" value="1" />';
-				}
-
-				if ($upgrade == 1)
-				{
-					$s_hidden_fields .= '<input type="hidden" name="upgrade" value="1" />';
-					$s_hidden_fields .= '<input type="hidden" name="dbms" value="'.$dbms.'" />';
-					$s_hidden_fields .= '<input type="hidden" name="prefix" value="'.$table_prefix.'" />';
-					$s_hidden_fields .= '<input type="hidden" name="dbhost" value="'.$dbhost.'" />';
-					$s_hidden_fields .= '<input type="hidden" name="dbname" value="'.$dbname.'" />';
-					$s_hidden_fields .= '<input type="hidden" name="dbuser" value="'.$dbuser.'" />';
-					$s_hidden_fields .= '<input type="hidden" name="dbpasswd" value="'.$dbpasswd.'" />';
-					$s_hidden_fields .= '<input type="hidden" name="install_step" value="1" />';
-					$s_hidden_fields .= '<input type="hidden" name="admin_pass1" value="1" />';
-					$s_hidden_fields .= '<input type="hidden" name="admin_pass2" value="1" />';
-					$s_hidden_fields .= '<input type="hidden" name="server_port" value="'.$server_port.'" />';
-					$s_hidden_fields .= '<input type="hidden" name="server_name" value="'.$server_name.'" />';
-					$s_hidden_fields .= '<input type="hidden" name="script_path" value="'.$script_path.'" />';
-					$s_hidden_fields .= '<input type="hidden" name="board_email" value="'.$board_email.'" />';
-
-					page_upgrade_form();
-
-				}
-				else
-				{
-					page_common_form($s_hidden_fields, $lang['Download_config']);
-				}
-
-				page_footer();
-				exit;
-			}
-
-			$result = @fputs($fp, $config_data, strlen($config_data));
-
-			@fclose($fp);
-			$upgrade_now = $lang['upgrade_submit'];
+			$error .= "Could not update admin info :: " . $sql . " :: " . __LINE__ . " :: " . __FILE__ . "<br /><br />";
 		}
 
-		// First off let's check and see if we are supposed to be doing an upgrade.
-		if ($upgrade == 1 && $upgrade_now == $lang['upgrade_submit'])
+		$sql = "UPDATE " . $table_prefix . "users 
+			SET user_regdate = " . time();
+		if (!$db->sql_query($sql))
 		{
-			define('INSTALLING', true);
-			require('upgrade.php');
+			$error .= "Could not update user_regdate :: " . $sql . " :: " . __LINE__ . " :: " . __FILE__ . "<br /><br />";
+		}
+
+		if ($error != '')
+		{
+			page_header($lang['Install'], '');
+			page_error($lang['Installer_Error'], $lang['Install_db_error'] . '<br /><br />' . $error);
+			page_footer();
 			exit;
 		}
+
+		// Write out the config file.
+		$config_data = '<?php'."\n\n";
+		$config_data .= "\n// phpBB 2.x auto-generated config file\n// Do not change anything in this file!\n\n";
+		$config_data .= '$dbms = \'' . $dbms . '\';' . "\n\n";
+		$config_data .= '$dbhost = \'' . $dbhost . '\';' . "\n";
+		$config_data .= '$dbname = \'' . $dbname . '\';' . "\n";
+		$config_data .= '$dbuser = \'' . $dbuser . '\';' . "\n";
+		$config_data .= '$dbpasswd = \'' . $dbpasswd . '\';' . "\n\n";
+		$config_data .= '$table_prefix = \'' . $table_prefix . '\';' . "\n\n";
+		$config_data .= 'define(\'PHPBB_INSTALLED\', true);'."\n\n";	
+		$config_data .= '?' . '>'; // Done this to prevent highlighting editors getting confused!
+
+		@umask(0111);
+		$no_open = FALSE;
+
+		// Unable to open the file writeable do something here as an attempt
+		// to get around that...
+		if (!($fp = @fopen($phpbb_root_path . 'config.php', 'w')))
+		{
+			$s_hidden_fields = '<input type="hidden" name="config_data" value="' . htmlspecialchars($config_data) . '" />';
+
+			if (@extension_loaded('ftp') && !defined('NO_FTP'))
+			{
+				page_header($lang['Unwriteable_config'] . '<p>' . $lang['ftp_option'] . '</p>');
+
+?>
+				<tr>
+					<th colspan="2"><?php echo $lang['ftp_choose']; ?></th>
+				</tr>
+				<tr>
+					<td class="row1" align="right" width="50%"><span class="gen"><?php echo $lang['Attempt_ftp']; ?></span></td>
+					<td class="row2"><input type="radio" name="send_file" value="2"></td>
+				</tr>
+				<tr>
+					<td class="row1" align="right" width="50%"><span class="gen"><?php echo $lang['Send_file']; ?></span></td>
+					<td class="row2"><input type="radio" name="send_file" value="1"></td>
+				</tr>
+<?php 
+
+			}
+			else
+			{
+				page_header($lang['Unwriteable_config']);
+				$s_hidden_fields .= '<input type="hidden" name="send_file" value="1" />';
+			}
+
+			page_common_form($s_hidden_fields, $lang['Download_config']);
+
+			page_footer();
+			exit;
+		}
+
+		$result = @fputs($fp, $config_data, strlen($config_data));
+
+		@fclose($fp);
 
 		// Ok we are basically done with the install process let's go on 
 		// and let the user configure their board now. We are going to do
@@ -1039,5 +938,3 @@ else
 		exit;
 	}
 }
-
-?>
