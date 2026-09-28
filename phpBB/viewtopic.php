@@ -232,8 +232,7 @@ if( $userdata['session_logged_in'] )
 			{
 				$is_watching_topic = 0;
 
-				$sql_priority = (SQL_LAYER == "mysql") ? "LOW_PRIORITY" : '';
-				$sql = "DELETE $sql_priority FROM " . TOPICS_WATCH_TABLE . "
+				$sql = "DELETE FROM " . TOPICS_WATCH_TABLE . "
 					WHERE topic_id = $topic_id
 						AND user_id = " . $userdata['user_id'];
 				if ( !($result = $db->sql_query($sql)) )
@@ -255,8 +254,7 @@ if( $userdata['session_logged_in'] )
 
 			if ( $row['notify_status'] )
 			{
-				$sql_priority = (SQL_LAYER == "mysql") ? "LOW_PRIORITY" : '';
-				$sql = "UPDATE $sql_priority " . TOPICS_WATCH_TABLE . "
+				$sql = "UPDATE " . TOPICS_WATCH_TABLE . "
 					SET notify_status = 0
 					WHERE topic_id = $topic_id
 						AND user_id = " . $userdata['user_id'];
@@ -275,8 +273,7 @@ if( $userdata['session_logged_in'] )
 			{
 				$is_watching_topic = TRUE;
 
-				$sql_priority = (SQL_LAYER == "mysql") ? "LOW_PRIORITY" : '';
-				$sql = "INSERT $sql_priority INTO " . TOPICS_WATCH_TABLE . " (user_id, topic_id, notify_status)
+				$sql = "INSERT INTO " . TOPICS_WATCH_TABLE . " (user_id, topic_id, notify_status)
 					VALUES (" . $userdata['user_id'] . ", $topic_id, 0)";
 				if ( !($result = $db->sql_query($sql)) )
 				{

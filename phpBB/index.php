@@ -132,41 +132,11 @@ if( ( $total_categories = count($category_rows) ) )
 	//
 	// Define appropriate SQL
 	//
-	switch(SQL_LAYER)
-	{
-		case 'postgresql':
-			$sql = "SELECT f.*, p.post_time, p.post_username, u.username, u.user_id 
-				FROM " . FORUMS_TABLE . " f, " . POSTS_TABLE . " p, " . USERS_TABLE . " u
-				WHERE p.post_id = f.forum_last_post_id 
-					AND u.user_id = p.poster_id  
-					UNION (
-						SELECT f.*, NULL, NULL, NULL, NULL
-						FROM " . FORUMS_TABLE . " f
-						WHERE NOT EXISTS (
-							SELECT p.post_time
-							FROM " . POSTS_TABLE . " p
-							WHERE p.post_id = f.forum_last_post_id  
-						)
-					)
-					ORDER BY cat_id, forum_order";
-			break;
-
-		case 'oracle':
-			$sql = "SELECT f.*, p.post_time, p.post_username, u.username, u.user_id 
-				FROM " . FORUMS_TABLE . " f, " . POSTS_TABLE . " p, " . USERS_TABLE . " u
-				WHERE p.post_id = f.forum_last_post_id(+)
-					AND u.user_id = p.poster_id(+)
-				ORDER BY f.cat_id, f.forum_order";
-			break;
-
-		default:
-			$sql = "SELECT f.*, p.post_time, p.post_username, u.username, u.user_id
-				FROM (( " . FORUMS_TABLE . " f
-				LEFT JOIN " . POSTS_TABLE . " p ON p.post_id = f.forum_last_post_id )
-				LEFT JOIN " . USERS_TABLE . " u ON u.user_id = p.poster_id )
-				ORDER BY f.cat_id, f.forum_order";
-			break;
-	}
+	$sql = "SELECT f.*, p.post_time, p.post_username, u.username, u.user_id
+		FROM (( " . FORUMS_TABLE . " f
+		LEFT JOIN " . POSTS_TABLE . " p ON p.post_id = f.forum_last_post_id )
+		LEFT JOIN " . USERS_TABLE . " u ON u.user_id = p.poster_id )
+		ORDER BY f.cat_id, f.forum_order";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message_die(GENERAL_ERROR, 'Could not query forums information', '', __LINE__, __FILE__, $sql);

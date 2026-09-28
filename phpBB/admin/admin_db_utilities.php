@@ -83,272 +83,6 @@ function gzip_PrintFourChars($Val)
 
 
 
-//
-// This function is used for grabbing the sequences for postgres...
-//
-function pg_get_sequences($crlf, $backup_type)
-{
-	global $db;
-
-	$get_seq_sql = "SELECT relname FROM pg_class WHERE NOT relname ~ 'pg_.*'
-		AND relkind = 'S' ORDER BY relname";
-
-	$seq = $db->sql_query($get_seq_sql);
-
-	if( !$num_seq = $db->sql_numrows($seq) )
-	{
-
-		$return_val = "# No Sequences Found $crlf";
-
-	}
-	else
-	{
-		$return_val = "# Sequences $crlf";
-		$i_seq = 0;
-
-		while($i_seq < $num_seq)
-		{
-			$row = $db->sql_fetchrow($seq);
-			$sequence = $row['relname'];
-
-			$get_props_sql = "SELECT * FROM $sequence";
-			$seq_props = $db->sql_query($get_props_sql);
-
-			if($db->sql_numrows($seq_props) > 0)
-			{
-				$row1 = $db->sql_fetchrow($seq_props);
-
-				if($backup_type == 'structure')
-				{
-					$row['last_value'] = 1;
-				}
-
-				$return_val .= "CREATE SEQUENCE $sequence start " . $row['last_value'] . ' increment ' . $row['increment_by'] . ' maxvalue ' . $row['max_value'] . ' minvalue ' . $row['min_value'] . ' cache ' . $row['cache_value'] . "; $crlf";
-
-			}  // End if numrows > 0
-
-			if(($row['last_value'] > 1) && ($backup_type != 'structure'))
-			{
-				$return_val .= "SELECT NEXTVALE('$sequence'); $crlf";
-				unset($row['last_value']);
-			}
-
-			$i_seq++;
-
-		} // End while..
-
-	} // End else...
-
-	return $return_val;
-
-} // End function...
-
-//
-// The following functions will return the "CREATE TABLE syntax for the
-// varying DBMS's
-//
-// This function returns, will return the table def's for postgres...
-//
-function get_table_def_postgresql($table, $crlf)
-{
-	global $drop, $db;
-
-	$schema_create = "";
-	$index_create = "";
-	
-	//
-	// Get a listing of the fields, with their associated types, etc.
-	//
-
-	$field_query = "SELECT a.attnum, a.attname AS field, t.typname as type, a.attlen AS length, a.atttypmod as lengthvar, a.attnotnull as notnull
-		FROM pg_class c, pg_attribute a, pg_type t
-		WHERE c.relname = '$table'
-			AND a.attnum > 0
-			AND a.attrelid = c.oid
-			AND a.atttypid = t.oid
-		ORDER BY a.attnum";
-	$result = $db->sql_query($field_query);
-
-	if(!$result)
-	{
-		message_die(GENERAL_ERROR, "Failed in get_table_def (show fields)", "", __LINE__, __FILE__, $field_query);
-	} // end if..
-
-	if ($drop == 1)
-	{
-		$schema_create .= "DROP TABLE $table;$crlf";
-	} // end if
-
-	//
-	// Ok now we actually start building the SQL statements to restore the tables
-	//
-
-	$schema_create .= "CREATE TABLE $table($crlf";
-
-	while ($row = $db->sql_fetchrow($result))
-	{
-		//
-		// Get the data from the table
-		//
-		$sql_get_default = "SELECT d.adsrc AS rowdefault
-			FROM pg_attrdef d, pg_class c
-			WHERE (c.relname = '$table')
-				AND (c.oid = d.adrelid)
-				AND d.adnum = " . $row['attnum'];
-		$def_res = $db->sql_query($sql_get_default);
-
-		if (!$def_res)
-		{
-			unset($row['rowdefault']);
-		}
-		else
-		{
-			$row['rowdefault'] = @pg_result($def_res, 0, 'rowdefault');
-		}
-
-		if ($row['type'] == 'bpchar')
-		{
-			// Internally stored as bpchar, but isn't accepted in a CREATE TABLE statement.
-			$row['type'] = 'char';
-		}
-
-		$schema_create .= '	' . $row['field'] . ' ' . $row['type'];
-
-		if (preg_match('/char/i', $row['type']))
-		{
-			if ($row['lengthvar'] > 0)
-			{
-				$schema_create .= '(' . ($row['lengthvar'] -4) . ')';
-			}
-		}
-
-		if (preg_match('/numeric/i', $row['type']))
-		{
-			$schema_create .= '(';
-			$schema_create .= sprintf("%s,%s", (($row['lengthvar'] >> 16) & 0xffff), (($row['lengthvar'] - 4) & 0xffff));
-			$schema_create .= ')';
-		}
-
-		if (!empty($row['rowdefault']))
-		{
-			$schema_create .= ' DEFAULT ' . $row['rowdefault'];
-		}
-
-		if ($row['notnull'] == 't')
-		{
-			$schema_create .= ' NOT NULL';
-		}
-
-		$schema_create .= ",$crlf";
-
-	}
-	//
-	// Get the listing of primary keys.
-	//
-
-	$sql_pri_keys = "SELECT ic.relname AS index_name, bc.relname AS tab_name, ta.attname AS column_name, i.indisunique AS unique_key, i.indisprimary AS primary_key
-		FROM pg_class bc, pg_class ic, pg_index i, pg_attribute ta, pg_attribute ia
-		WHERE (bc.oid = i.indrelid)
-			AND (ic.oid = i.indexrelid)
-			AND (ia.attrelid = i.indexrelid)
-			AND	(ta.attrelid = bc.oid)
-			AND (bc.relname = '$table')
-			AND (ta.attrelid = i.indrelid)
-			AND (ta.attnum = i.indkey[ia.attnum-1])
-		ORDER BY index_name, tab_name, column_name ";
-	$result = $db->sql_query($sql_pri_keys);
-
-	if(!$result)
-	{
-		message_die(GENERAL_ERROR, "Failed in get_table_def (show fields)", "", __LINE__, __FILE__, $sql_pri_keys);
-	}
-
-	while ( $row = $db->sql_fetchrow($result))
-	{
-		if ($row['primary_key'] == 't')
-		{
-			if (!empty($primary_key))
-			{
-				$primary_key .= ', ';
-			}
-
-			$primary_key .= $row['column_name'];
-			$primary_key_name = $row['index_name'];
-
-		}
-		else
-		{
-			//
-			// We have to store this all this info because it is possible to have a multi-column key...
-			// we can loop through it again and build the statement
-			//
-			$index_rows[$row['index_name']]['table'] = $table;
-			$index_rows[$row['index_name']]['unique'] = ($row['unique_key'] == 't') ? ' UNIQUE ' : '';
-			$index_rows[$row['index_name']]['column_names'] .= $row['column_name'] . ', ';
-		}
-	}
-
-
-	if (!empty($index_rows))
-	{
-		foreach ($index_rows as $idx_name => $props)
-		{
-			$props['column_names'] = preg_replace("/, $/", "" , $props['column_names']);
-			$index_create .= 'CREATE ' . $props['unique'] . " INDEX $idx_name ON $table (" . $props['column_names'] . ");$crlf";
-		}
-	}
-
-	if (!empty($primary_key))
-	{
-		$schema_create .= "	CONSTRAINT $primary_key_name PRIMARY KEY ($primary_key),$crlf";
-	}
-
-	//
-	// Generate constraint clauses for CHECK constraints
-	//
-	$sql_checks = "SELECT rcname as index_name, rcsrc
-		FROM pg_relcheck, pg_class bc
-		WHERE rcrelid = bc.oid
-			AND bc.relname = '$table'
-			AND NOT EXISTS (
-				SELECT *
-					FROM pg_relcheck as c, pg_inherits as i
-					WHERE i.inhrelid = pg_relcheck.rcrelid
-						AND c.rcname = pg_relcheck.rcname
-						AND c.rcsrc = pg_relcheck.rcsrc
-						AND c.rcrelid = i.inhparent
-			)";
-	$result = $db->sql_query($sql_checks);
-
-	if (!$result)
-	{
-		message_die(GENERAL_ERROR, "Failed in get_table_def (show fields)", "", __LINE__, __FILE__, $sql_checks);
-	}
-
-	//
-	// Add the constraints to the sql file.
-	//
-	while ($row = $db->sql_fetchrow($result))
-	{
-		$schema_create .= '	CONSTRAINT ' . $row['index_name'] . ' CHECK ' . $row['rcsrc'] . ",$crlf";
-	}
-
-	$schema_create = preg_replace('/,/' . $crlf . '$', '', $schema_create);
-	$index_create = preg_replace('/,/' . $crlf . '$', '', $index_create);
-
-	$schema_create .= "$crlf);$crlf";
-
-	if (!empty($index_create))
-	{
-		$schema_create .= $index_create;
-	}
-
-	//
-	// Ok now we've built all the sql return it to the calling function.
-	//
-	return (stripslashes($schema_create));
-
-}
 
 //
 // This function returns the "CREATE TABLE" syntax for mysql dbms...
@@ -468,106 +202,6 @@ function get_table_def_mysql($table, $crlf)
 
 
 //
-// This fuction will return a tables create definition to be used as an sql
-// statement.
-//
-//
-// The following functions Get the data from the tables and format it as a
-// series of INSERT statements, for each different DBMS...
-// After every row a custom callback function $handler gets called.
-// $handler must accept one parameter ($sql_insert);
-//
-//
-// Here is the function for postgres...
-//
-function get_table_content_postgresql($table, $handler)
-{
-	global $db;
-
-	//
-	// Grab all of the data from current table.
-	//
-
-	$result = $db->sql_query("SELECT * FROM $table");
-
-	if (!$result)
-	{
-		message_die(GENERAL_ERROR, "Failed in get_table_content (select *)", "", __LINE__, __FILE__, "SELECT * FROM $table");
-	}
-
-	$i_num_fields = $db->sql_numfields($result);
-
-	for ($i = 0; $i < $i_num_fields; $i++)
-	{
-		$aryType[] = $db->sql_fieldtype($i, $result);
-		$aryName[] = $db->sql_fieldname($i, $result);
-	}
-
-	$iRec = 0;
-
-	while($row = $db->sql_fetchrow($result))
-	{
-		$schema_vals = '';
-		$schema_fields = '';
-		$schema_insert = '';
-		//
-		// Build the SQL statement to recreate the data.
-		//
-		for($i = 0; $i < $i_num_fields; $i++)
-		{
-			$strVal = $row[$aryName[$i]];
-			if (preg_match("/char|text|bool/i", $aryType[$i]))
-			{
-				$strQuote = "'";
-				$strEmpty = "";
-				$strVal = addslashes($strVal);
-			}
-			elseif (preg_match("/date|timestamp/i", $aryType[$i]))
-			{
-				if (empty($strVal))
-				{
-					$strQuote = "";
-				}
-				else
-				{
-					$strQuote = "'";
-				}
-			}
-			else
-			{
-				$strQuote = "";
-				$strEmpty = "NULL";
-			}
-
-			if (empty($strVal) && $strVal != "0")
-			{
-				$strVal = $strEmpty;
-			}
-
-			$schema_vals .= " $strQuote$strVal$strQuote,";
-			$schema_fields .= " $aryName[$i],";
-
-		}
-
-		$schema_vals = preg_replace("/,$/", "", $schema_vals);
-		$schema_vals = preg_replace("/^ /", "", $schema_vals);
-		$schema_fields = preg_replace("/,$/", "", $schema_fields);
-		$schema_fields = preg_replace("/^ /", "", $schema_fields);
-
-		//
-		// Take the ordered fields and their associated data and build it
-		// into a valid sql statement to recreate that field in the data.
-		//
-		$schema_insert = "INSERT INTO $table ($schema_fields) VALUES($schema_vals);";
-
-		$handler(trim($schema_insert));
-	}
-
-	return(true);
-
-}// end function get_table_content_postgres...
-
-//
 // This function is for getting the data from a mysql table.
 //
 
@@ -664,42 +298,6 @@ if( isset($_GET['perform']) || isset($_POST['perform']) )
 	switch($perform)
 	{
 		case 'backup':
-
-			$error = false;
-			switch(SQL_LAYER)
-			{
-				case 'oracle':
-					$error = true;
-					break;
-				case 'db2':
-					$error = true;
-					break;
-				case 'msaccess':
-					$error = true;
-					break;
-				case 'mssql':
-				case 'mssql-odbc':
-					$error = true;
-					break;
-			}
-
-			if ($error)
-			{
-				include('./page_header_admin.php');
-
-				$template->set_filenames(array(
-					"body" => "admin/admin_message_body.tpl")
-				);
-
-				$template->assign_vars(array(
-					"MESSAGE_TITLE" => $lang['Information'],
-					"MESSAGE_TEXT" => $lang['Backups_not_supported'])
-				);
-
-				$template->pparse("body");
-
-				include('./page_footer_admin.php');
-			}
 
 			$tables = array('auth_access', 'banlist', 'categories', 'config', 'disallow', 'forums', 'forum_prune', 'groups', 'posts', 'posts_text', 'privmsgs', 'privmsgs_text', 'ranks', 'search_results', 'search_wordlist', 'search_wordmatch', 'sessions', 'smilies', 'themes', 'themes_name', 'topics', 'topics_watch', 'user_group', 'users', 'vote_desc', 'vote_results', 'vote_voters', 'words', 'confirm', 'sessions_keys');
 
@@ -819,38 +417,19 @@ if( isset($_GET['perform']) || isset($_POST['perform']) )
 			echo "#\n# DATE : " .  gmdate("d-m-Y H:i:s", time()) . " GMT\n";
 			echo "#\n";
 
-			if(SQL_LAYER == 'postgresql')
-			{
-				 echo "\n" . pg_get_sequences("\n", $backup_type);
-			}
 			for($i = 0; $i < count($tables); $i++)
 			{
 				$table_name = $tables[$i];
 
-				switch (SQL_LAYER)
-				{
-					case 'postgresql':
-						$table_def_function = "get_table_def_postgresql";
-						$table_content_function = "get_table_content_postgresql";
-						break;
-
-					case 'mysql':
-					case 'mysql4':
-					case 'mysqli':
-						$table_def_function = "get_table_def_mysql";
-						$table_content_function = "get_table_content_mysql";
-						break;
-				}
-
 				if($backup_type != 'data')
 				{
 					echo "#\n# TABLE: " . $table_prefix . $table_name . "\n#\n";
-					echo $table_def_function($table_prefix . $table_name, "\n") . "\n";
+					echo get_table_def_mysql($table_prefix . $table_name, "\n") . "\n";
 				}
 
 				if($backup_type != 'structure')
 				{
-					$table_content_function($table_prefix . $table_name, "output_table_content");
+					get_table_content_mysql($table_prefix . $table_name, "output_table_content");
 				}
 			}
 			
@@ -984,7 +563,7 @@ if( isset($_GET['perform']) || isset($_POST['perform']) )
 
 							$result = $db->sql_query($sql);
 
-							if(!$result && ( !(SQL_LAYER == 'postgresql' && preg_match("/drop table/i", $sql) ) ) )
+							if (!$result)
 							{
 								message_die(GENERAL_ERROR, "Error importing backup file", "", __LINE__, __FILE__, $sql);
 							}

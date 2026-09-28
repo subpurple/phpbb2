@@ -1031,7 +1031,7 @@ switch( $mode )
 			FROM " . POSTS_TABLE . " 
 			WHERE poster_id = $poster_id 
 			GROUP BY poster_ip 
-			ORDER BY " . (( SQL_LAYER == 'msaccess' ) ? 'COUNT(*)' : 'postings' ) . " DESC";
+			ORDER BY postings DESC";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'Could not get IP information for this user', '', __LINE__, __FILE__, $sql);
@@ -1078,7 +1078,7 @@ switch( $mode )
 			WHERE p.poster_id = u.user_id 
 				AND p.poster_ip = '" . $post_row['poster_ip'] . "'
 			GROUP BY u.user_id, u.username
-			ORDER BY " . (( SQL_LAYER == 'msaccess' ) ? 'COUNT(*)' : 'postings' ) . " DESC";
+			ORDER BY postings DESC";
 		if ( !($result = $db->sql_query($sql)) )
 		{
 			message_die(GENERAL_ERROR, 'Could not get posters information based on IP', '', __LINE__, __FILE__, $sql);

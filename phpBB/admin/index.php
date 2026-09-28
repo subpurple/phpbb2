@@ -222,74 +222,21 @@ elseif( isset($_GET['pane']) && $_GET['pane'] == 'right' )
 		$users_per_day = $total_users;
 	}
 
-	//
-	// DB size ... MySQL only
-	//
-	// This code is heavily influenced by a similar routine
-	// in phpMyAdmin 2.2.0
-	//
-	if( preg_match("/^mysql/", SQL_LAYER) )
+	$sql = "SELECT COALESCE(SUM(data_length + index_length), 0) AS dbsize
+			FROM information_schema.tables
+			WHERE table_schema = '$dbname'";
+
+	if ($table_prefix !== '') 
 	{
-		$sql = "SELECT VERSION() AS mysql_version";
-		if($result = $db->sql_query($sql))
-		{
-			$row = $db->sql_fetchrow($result);
-			$version = $row['mysql_version'];
-
-			if( preg_match("/^(3\.23|4\.|5\.)/", $version) )
-			{
-				$db_name = ( preg_match("/^(3\.23\.[6-9])|(3\.23\.[1-9][1-9])|(4\.)|(5\.)/", $version) ) ? "`$dbname`" : $dbname;
-
-				$sql = "SHOW TABLE STATUS 
-					FROM " . $db_name;
-				if($result = $db->sql_query($sql))
-				{
-					$tabledata_ary = $db->sql_fetchrowset($result);
-
-					$dbsize = 0;
-					for($i = 0; $i < count($tabledata_ary); $i++)
-					{
-						if( $tabledata_ary[$i]['Type'] != "MRG_MyISAM" )
-						{
-							if( $table_prefix != "" )
-							{
-								if( strstr($tabledata_ary[$i]['Name'], $table_prefix) )
-								{
-									$dbsize += $tabledata_ary[$i]['Data_length'] + $tabledata_ary[$i]['Index_length'];
-								}
-							}
-							else
-							{
-								$dbsize += $tabledata_ary[$i]['Data_length'] + $tabledata_ary[$i]['Index_length'];
-							}
-						}
-					}
-				} // Else we couldn't get the table status.
-			}
-			else
-			{
-				$dbsize = $lang['Not_available'];
-			}
-		}
-		else
-		{
-			$dbsize = $lang['Not_available'];
-		}
+		$sql .= "AND table_name LIKE '$table_prefix%'";
 	}
-	else if( preg_match("/^mssql/", SQL_LAYER) )
+
+	if ($result = $db->sql_query($sql)) 
 	{
-		$sql = "SELECT ((SUM(size) * 8.0) * 1024.0) as dbsize 
-			FROM sysfiles"; 
-		if( $result = $db->sql_query($sql) )
-		{
-			$dbsize = ( $row = $db->sql_fetchrow($result) ) ? intval($row['dbsize']) : $lang['Not_available'];
-		}
-		else
-		{
-			$dbsize = $lang['Not_available'];
-		}
-	}
-	else
+		$row = $db->sql_fetchrow($result);
+		$dbsize = (int) $row['dbsize'];
+	} 
+	else 
 	{
 		$dbsize = $lang['Not_available'];
 	}

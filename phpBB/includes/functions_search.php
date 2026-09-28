@@ -157,30 +157,9 @@ function add_search_words($mode, $post_id, $post_text, $post_title = '')
 		$word = $temp_word;
 
 		$check_words = array();
-		switch( SQL_LAYER )
-		{
-			case 'postgresql':
-			case 'msaccess':
-			case 'mssql-odbc':
-			case 'oracle':
-			case 'db2':
-				$sql = "SELECT word_id, word_text     
-					FROM " . SEARCH_WORD_TABLE . " 
-					WHERE word_text IN ($word_text_sql)";
-				if ( !($result = $db->sql_query($sql)) )
-				{
-					message_die(GENERAL_ERROR, 'Could not select words', '', __LINE__, __FILE__, $sql);
-				}
-
-				while ( $row = $db->sql_fetchrow($result) )
-				{
-					$check_words[$row['word_text']] = $row['word_id'];
-				}
-				break;
-		}
-
 		$value_sql = '';
 		$match_word = array();
+
 		for ($i = 0; $i < count($word); $i++)
 		{ 
 			$new_match = true;
@@ -191,45 +170,14 @@ function add_search_words($mode, $post_id, $post_text, $post_title = '')
 
 			if ( $new_match )
 			{
-				switch( SQL_LAYER )
-				{
-					case 'mysql':
-					case 'mysql4':
-					case 'mysqli':
-						$value_sql .= ( ( $value_sql != '' ) ? ', ' : '' ) . '(\'' . $word[$i] . '\', 0)';
-						break;
-					case 'mssql':
-					case 'mssql-odbc':
-						$value_sql .= ( ( $value_sql != '' ) ? ' UNION ALL ' : '' ) . "SELECT '" . $word[$i] . "', 0";
-						break;
-					default:
-						$sql = "INSERT INTO " . SEARCH_WORD_TABLE . " (word_text, word_common) 
-							VALUES ('" . $word[$i] . "', 0)"; 
-						if( !$db->sql_query($sql) )
-						{
-							message_die(GENERAL_ERROR, 'Could not insert new word', '', __LINE__, __FILE__, $sql);
-						}
-						break;
-				}
+				$value_sql .= ( ( $value_sql != '' ) ? ', ' : '' ) . '(\'' . $word[$i] . '\', 0)';
 			}
 		}
 
 		if ( $value_sql != '' )
 		{
-			switch ( SQL_LAYER )
-			{
-				case 'mysql':
-				case 'mysql4':
-				case 'mysqli':
-					$sql = "INSERT IGNORE INTO " . SEARCH_WORD_TABLE . " (word_text, word_common) 
-						VALUES $value_sql"; 
-					break;
-				case 'mssql':
-				case 'mssql-odbc':
-					$sql = "INSERT INTO " . SEARCH_WORD_TABLE . " (word_text, word_common) 
-						$value_sql"; 
-					break;
-			}
+			$sql = "INSERT IGNORE INTO " . SEARCH_WORD_TABLE . " (word_text, word_common) 
+				VALUES $value_sql"; 
 
 			if ( !$db->sql_query($sql) )
 			{
@@ -346,75 +294,45 @@ function remove_search_post($post_id_sql)
 
 	$words_removed = false;
 
-	switch ( SQL_LAYER )
+	$sql = "SELECT word_id 
+		FROM " . SEARCH_MATCH_TABLE . " 
+		WHERE post_id IN ($post_id_sql) 
+		GROUP BY word_id";
+	if ( $result = $db->sql_query($sql) )
 	{
-		case 'mysql':
-		case 'mysql4':
-		case 'mysqli':
-			$sql = "SELECT word_id 
-				FROM " . SEARCH_MATCH_TABLE . " 
-				WHERE post_id IN ($post_id_sql) 
-				GROUP BY word_id";
-			if ( $result = $db->sql_query($sql) )
+		$word_id_sql = '';
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$word_id_sql .= ( $word_id_sql != '' ) ? ', ' . $row['word_id'] : $row['word_id']; 
+		}
+
+		$sql = "SELECT word_id 
+			FROM " . SEARCH_MATCH_TABLE . " 
+			WHERE word_id IN ($word_id_sql) 
+			GROUP BY word_id 
+			HAVING COUNT(word_id) = 1";
+		if ( $result = $db->sql_query($sql) )
+		{
+			$word_id_sql = '';
+			while ( $row = $db->sql_fetchrow($result) )
 			{
-				$word_id_sql = '';
-				while ( $row = $db->sql_fetchrow($result) )
-				{
-					$word_id_sql .= ( $word_id_sql != '' ) ? ', ' . $row['word_id'] : $row['word_id']; 
-				}
-
-				$sql = "SELECT word_id 
-					FROM " . SEARCH_MATCH_TABLE . " 
-					WHERE word_id IN ($word_id_sql) 
-					GROUP BY word_id 
-					HAVING COUNT(word_id) = 1";
-				if ( $result = $db->sql_query($sql) )
-				{
-					$word_id_sql = '';
-					while ( $row = $db->sql_fetchrow($result) )
-					{
-						$word_id_sql .= ( $word_id_sql != '' ) ? ', ' . $row['word_id'] : $row['word_id']; 
-					}
-
-					if ( $word_id_sql != '' )
-					{
-						$sql = "DELETE FROM " . SEARCH_WORD_TABLE . " 
-							WHERE word_id IN ($word_id_sql)";
-						if ( !$db->sql_query($sql) )
-						{
-							message_die(GENERAL_ERROR, 'Could not delete word list entry', '', __LINE__, __FILE__, $sql);
-						}
-
-						$words_removed = $db->sql_affectedrows();
-					}
-				}
-			}
-			break;
-
-		default:
-			$sql = "DELETE FROM " . SEARCH_WORD_TABLE . " 
-				WHERE word_id IN ( 
-					SELECT word_id 
-					FROM " . SEARCH_MATCH_TABLE . " 
-					WHERE word_id IN ( 
-						SELECT word_id 
-						FROM " . SEARCH_MATCH_TABLE . " 
-						WHERE post_id IN ($post_id_sql) 
-						GROUP BY word_id 
-					) 
-					GROUP BY word_id 
-					HAVING COUNT(word_id) = 1
-				)"; 
-			if ( !$db->sql_query($sql) )
-			{
-				message_die(GENERAL_ERROR, 'Could not delete old words from word table', '', __LINE__, __FILE__, $sql);
+				$word_id_sql .= ( $word_id_sql != '' ) ? ', ' . $row['word_id'] : $row['word_id']; 
 			}
 
-			$words_removed = $db->sql_affectedrows();
+			if ( $word_id_sql != '' )
+			{
+				$sql = "DELETE FROM " . SEARCH_WORD_TABLE . " 
+					WHERE word_id IN ($word_id_sql)";
+				if ( !$db->sql_query($sql) )
+				{
+					message_die(GENERAL_ERROR, 'Could not delete word list entry', '', __LINE__, __FILE__, $sql);
+				}
 
-			break;
+				$words_removed = $db->sql_affectedrows();
+			}
+		}
 	}
-
+	
 	$sql = "DELETE FROM " . SEARCH_MATCH_TABLE . "  
 		WHERE post_id IN ($post_id_sql)";
 	if ( !$db->sql_query($sql) )

@@ -415,42 +415,11 @@ else if ( $group_id )
 	//
 	// For security, get the ID of the group moderator.
 	//
-	switch(SQL_LAYER)
-	{
-		case 'postgresql':
-			$sql = "SELECT g.group_moderator, g.group_type, aa.auth_mod 
-				FROM " . GROUPS_TABLE . " g, " . AUTH_ACCESS_TABLE . " aa 
-				WHERE g.group_id = $group_id
-					AND aa.group_id = g.group_id 
-					UNION (
-						SELECT g.group_moderator, g.group_type, NULL 
-						FROM " . GROUPS_TABLE . " g
-						WHERE g.group_id = $group_id
-							AND NOT EXISTS (
-							SELECT aa.group_id 
-							FROM " . AUTH_ACCESS_TABLE . " aa 
-							WHERE aa.group_id = g.group_id  
-						)
-					)
-				ORDER BY auth_mod DESC";
-			break;
-
-		case 'oracle':
-			$sql = "SELECT g.group_moderator, g.group_type, aa.auth_mod 
-				FROM " . GROUPS_TABLE . " g, " . AUTH_ACCESS_TABLE . " aa 
-				WHERE g.group_id = $group_id
-					AND aa.group_id (+) = g.group_id
-				ORDER BY aa.auth_mod DESC";
-			break;
-
-		default:
-			$sql = "SELECT g.group_moderator, g.group_type, aa.auth_mod 
-				FROM ( " . GROUPS_TABLE . " g 
-				LEFT JOIN " . AUTH_ACCESS_TABLE . " aa ON aa.group_id = g.group_id )
-				WHERE g.group_id = $group_id
-				ORDER BY aa.auth_mod DESC";
-			break;
-	}
+	$sql = "SELECT g.group_moderator, g.group_type, aa.auth_mod 
+		FROM ( " . GROUPS_TABLE . " g 
+		LEFT JOIN " . AUTH_ACCESS_TABLE . " aa ON aa.group_id = g.group_id )
+		WHERE g.group_id = $group_id
+		ORDER BY aa.auth_mod DESC";
 	if ( !($result = $db->sql_query($sql)) )
 	{
 		message_die(GENERAL_ERROR, 'Could not get moderator information', '', __LINE__, __FILE__, $sql);

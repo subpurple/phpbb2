@@ -295,8 +295,6 @@ else if ( $mode == 'read' )
 			message_die(GENERAL_ERROR, 'Could not obtain sent message info for sendee', '', __LINE__, __FILE__, $sql);
 		}
 
-		$sql_priority = ( SQL_LAYER == 'mysql' ) ? 'LOW_PRIORITY' : '';
-
 		if ( $sent_info = $db->sql_fetchrow($result) )
 		{
 			if ($board_config['max_sentbox_privmsgs'] && $sent_info['sent_items'] >= $board_config['max_sentbox_privmsgs'])
@@ -312,14 +310,14 @@ else if ( $mode == 'read' )
 				$old_privmsgs_id = $db->sql_fetchrow($result);
 				$old_privmsgs_id = $old_privmsgs_id['privmsgs_id'];
 			
-				$sql = "DELETE $sql_priority FROM " . PRIVMSGS_TABLE . " 
+				$sql = "DELETE FROM " . PRIVMSGS_TABLE . " 
 					WHERE privmsgs_id = $old_privmsgs_id";
 				if ( !$db->sql_query($sql) )
 				{
 					message_die(GENERAL_ERROR, 'Could not delete oldest privmsgs (sent)', '', __LINE__, __FILE__, $sql);
 				}
 
-				$sql = "DELETE $sql_priority FROM " . PRIVMSGS_TEXT_TABLE . " 
+				$sql = "DELETE FROM " . PRIVMSGS_TEXT_TABLE . " 
 					WHERE privmsgs_text_id = $old_privmsgs_id";
 				if ( !$db->sql_query($sql) )
 				{
@@ -333,7 +331,7 @@ else if ( $mode == 'read' )
 		// not the most DB friendly way but a lot easier to manage, besides the admin will be able to
 		// set limits on numbers of storable posts for users ... hopefully!
 		//
-		$sql = "INSERT $sql_priority INTO " . PRIVMSGS_TABLE . " (privmsgs_type, privmsgs_subject, privmsgs_from_userid, privmsgs_to_userid, privmsgs_date, privmsgs_ip, privmsgs_enable_html, privmsgs_enable_bbcode, privmsgs_enable_smilies, privmsgs_attach_sig)
+		$sql = "INSERT INTO " . PRIVMSGS_TABLE . " (privmsgs_type, privmsgs_subject, privmsgs_from_userid, privmsgs_to_userid, privmsgs_date, privmsgs_ip, privmsgs_enable_html, privmsgs_enable_bbcode, privmsgs_enable_smilies, privmsgs_attach_sig)
 			VALUES (" . PRIVMSGS_SENT_MAIL . ", '" . str_replace("\'", "''", addslashes($privmsg['privmsgs_subject'])) . "', " . $privmsg['privmsgs_from_userid'] . ", " . $privmsg['privmsgs_to_userid'] . ", " . $privmsg['privmsgs_date'] . ", '" . $privmsg['privmsgs_ip'] . "', " . $privmsg['privmsgs_enable_html'] . ", " . $privmsg['privmsgs_enable_bbcode'] . ", " . $privmsg['privmsgs_enable_smilies'] . ", " .  $privmsg['privmsgs_attach_sig'] . ")";
 		if ( !$db->sql_query($sql) )
 		{
@@ -342,7 +340,7 @@ else if ( $mode == 'read' )
 
 		$privmsg_sent_id = $db->sql_nextid();
 
-		$sql = "INSERT $sql_priority INTO " . PRIVMSGS_TEXT_TABLE . " (privmsgs_text_id, privmsgs_bbcode_uid, privmsgs_text)
+		$sql = "INSERT INTO " . PRIVMSGS_TEXT_TABLE . " (privmsgs_text_id, privmsgs_bbcode_uid, privmsgs_text)
 			VALUES ($privmsg_sent_id, '" . $privmsg['privmsgs_bbcode_uid'] . "', '" . str_replace("\'", "''", addslashes($privmsg['privmsgs_text'])) . "')";
 		if ( !$db->sql_query($sql) )
 		{
@@ -917,8 +915,6 @@ else if ( $save && $mark_list && $folder != 'savebox' && $folder != 'outbox' )
 			message_die(GENERAL_ERROR, 'Could not obtain sent message info for sendee', '', __LINE__, __FILE__, $sql);
 		}
 
-		$sql_priority = ( SQL_LAYER == 'mysql' ) ? 'LOW_PRIORITY' : '';
-
 		if ( $saved_info = $db->sql_fetchrow($result) )
 		{
 			if ($board_config['max_savebox_privmsgs'] && $saved_info['savebox_items'] >= $board_config['max_savebox_privmsgs'] )
@@ -936,14 +932,14 @@ else if ( $save && $mark_list && $folder != 'savebox' && $folder != 'outbox' )
 				$old_privmsgs_id = $db->sql_fetchrow($result);
 				$old_privmsgs_id = $old_privmsgs_id['privmsgs_id'];
 			
-				$sql = "DELETE $sql_priority FROM " . PRIVMSGS_TABLE . " 
+				$sql = "DELETE FROM " . PRIVMSGS_TABLE . " 
 					WHERE privmsgs_id = $old_privmsgs_id";
 				if ( !$db->sql_query($sql) )
 				{
 					message_die(GENERAL_ERROR, 'Could not delete oldest privmsgs (save)', '', __LINE__, __FILE__, $sql);
 				}
 
-				$sql = "DELETE $sql_priority FROM " . PRIVMSGS_TEXT_TABLE . " 
+				$sql = "DELETE FROM " . PRIVMSGS_TEXT_TABLE . " 
 					WHERE privmsgs_text_id = $old_privmsgs_id";
 				if ( !$db->sql_query($sql) )
 				{
@@ -1264,8 +1260,6 @@ else if ( $submit || $refresh || $mode != '' )
 				message_die(GENERAL_MESSAGE, $lang['No_such_user']);
 			}
 
-			$sql_priority = ( SQL_LAYER == 'mysql' ) ? 'LOW_PRIORITY' : '';
-
 			if ( $inbox_info = $db->sql_fetchrow($result) )
 			{
 				if ($board_config['max_inbox_privmsgs'] && $inbox_info['inbox_items'] >= $board_config['max_inbox_privmsgs'])
@@ -1283,14 +1277,14 @@ else if ( $submit || $refresh || $mode != '' )
 					$old_privmsgs_id = $db->sql_fetchrow($result);
 					$old_privmsgs_id = $old_privmsgs_id['privmsgs_id'];
 				
-					$sql = "DELETE $sql_priority FROM " . PRIVMSGS_TABLE . " 
+					$sql = "DELETE FROM " . PRIVMSGS_TABLE . " 
 						WHERE privmsgs_id = $old_privmsgs_id";
 					if ( !$db->sql_query($sql) )
 					{
 						message_die(GENERAL_ERROR, 'Could not delete oldest privmsgs (inbox)'.$sql, '', __LINE__, __FILE__, $sql);
 					}
 
-					$sql = "DELETE $sql_priority FROM " . PRIVMSGS_TEXT_TABLE . " 
+					$sql = "DELETE FROM " . PRIVMSGS_TEXT_TABLE . " 
 						WHERE privmsgs_text_id = $old_privmsgs_id";
 					if ( !$db->sql_query($sql) )
 					{
