@@ -27,70 +27,6 @@ if ( !defined('IN_PHPBB') )
 //
 error_reporting  (E_ERROR | E_WARNING | E_PARSE); // This will NOT report uninitialized variables
 
-// The following code (unsetting globals)
-// Thanks to Matt Kavanagh and Stefan Esser for providing feedback as well as patch files
-
-// PHP5 with register_long_arrays off?
-if (@phpversion() >= '5.0.0' && (!@ini_get('register_long_arrays') || @ini_get('register_long_arrays') == '0' || strtolower(@ini_get('register_long_arrays')) == 'off'))
-{
-	$HTTP_POST_VARS = $_POST;
-	$HTTP_GET_VARS = $_GET;
-	$HTTP_SERVER_VARS = $_SERVER;
-	$HTTP_COOKIE_VARS = $_COOKIE;
-	$HTTP_ENV_VARS = $_ENV;
-	$HTTP_POST_FILES = $_FILES;
-
-	// _SESSION is the only superglobal which is conditionally set
-	if (isset($_SESSION))
-	{
-		$HTTP_SESSION_VARS = $_SESSION;
-	}
-}
-
-// Protect against GLOBALS tricks
-if (isset($HTTP_POST_VARS['GLOBALS']) || isset($HTTP_POST_FILES['GLOBALS']) || isset($HTTP_GET_VARS['GLOBALS']) || isset($HTTP_COOKIE_VARS['GLOBALS']))
-{
-	die("Hacking attempt");
-}
-
-// Protect against HTTP_SESSION_VARS tricks
-if (isset($HTTP_SESSION_VARS) && !is_array($HTTP_SESSION_VARS))
-{
-	die("Hacking attempt");
-}
-
-if (@ini_get('register_globals') == '1' || strtolower(@ini_get('register_globals')) == 'on')
-{
-	// PHP4+ path
-	$not_unset = array('HTTP_GET_VARS', 'HTTP_POST_VARS', 'HTTP_COOKIE_VARS', 'HTTP_SERVER_VARS', 'HTTP_SESSION_VARS', 'HTTP_ENV_VARS', 'HTTP_POST_FILES', 'phpEx', 'phpbb_root_path');
-
-	// Not only will array_merge give a warning if a parameter
-	// is not an array, it will actually fail. So we check if
-	// HTTP_SESSION_VARS has been initialised.
-	if (!isset($HTTP_SESSION_VARS) || !is_array($HTTP_SESSION_VARS))
-	{
-		$HTTP_SESSION_VARS = array();
-	}
-
-	// Merge all into one extremely huge array; unset
-	// this later
-	$input = array_merge($HTTP_GET_VARS, $HTTP_POST_VARS, $HTTP_COOKIE_VARS, $HTTP_SERVER_VARS, $HTTP_SESSION_VARS, $HTTP_ENV_VARS, $HTTP_POST_FILES);
-
-	unset($input['input']);
-	unset($input['not_unset']);
-
-	foreach ($input as $var => $_)
-	{
-		if (in_array($var, $not_unset))
-		{
-			die('Hacking attempt!');
-		}
-		unset($$var);
-	}
-
-	unset($input);
-}
-
 //
 // addslashes to vars if magic_quotes_gpc is off
 // this is a security precaution to prevent someone
@@ -98,64 +34,64 @@ if (@ini_get('register_globals') == '1' || strtolower(@ini_get('register_globals
 //
 if( true )
 {
-	if( is_array($HTTP_GET_VARS) )
+	if( is_array($_GET) )
 	{
-		foreach ($HTTP_GET_VARS as $k => $v)
+		foreach ($_GET as $k => $v)
 		{
-			if( is_array($HTTP_GET_VARS[$k]) )
+			if( is_array($_GET[$k]) )
 			{
-				foreach ($HTTP_GET_VARS[$k] as $k2 => $v2)
+				foreach ($_GET[$k] as $k2 => $v2)
 				{
-					$HTTP_GET_VARS[$k][$k2] = addslashes($v2);
+					$_GET[$k][$k2] = addslashes($v2);
 				}
-				@reset($HTTP_GET_VARS[$k]);
+				@reset($_GET[$k]);
 			}
 			else
 			{
-				$HTTP_GET_VARS[$k] = addslashes($v);
+				$_GET[$k] = addslashes($v);
 			}
 		}
-		@reset($HTTP_GET_VARS);
+		@reset($_GET);
 	}
 
-	if( is_array($HTTP_POST_VARS) )
+	if( is_array($_POST) )
 	{
-		foreach ($HTTP_POST_VARS as $k => $v)
+		foreach ($_POST as $k => $v)
 		{
-			if( is_array($HTTP_POST_VARS[$k]) )
+			if( is_array($_POST[$k]) )
 			{
-				foreach ($HTTP_POST_VARS[$k] as $k2 => $v2)
+				foreach ($_POST[$k] as $k2 => $v2)
 				{
-					$HTTP_POST_VARS[$k][$k2] = addslashes($v2);
+					$_POST[$k][$k2] = addslashes($v2);
 				}
-				@reset($HTTP_POST_VARS[$k]);
+				@reset($_POST[$k]);
 			}
 			else
 			{
-				$HTTP_POST_VARS[$k] = addslashes($v);
+				$_POST[$k] = addslashes($v);
 			}
 		}
-		@reset($HTTP_POST_VARS);
+		@reset($_POST);
 	}
 
-	if( is_array($HTTP_COOKIE_VARS) )
+	if( is_array($_COOKIE) )
 	{
-		foreach ($HTTP_COOKIE_VARS as $k => $v)
+		foreach ($_COOKIE as $k => $v)
 		{
-			if( is_array($HTTP_COOKIE_VARS[$k]) )
+			if( is_array($_COOKIE[$k]) )
 			{
-				foreach ($HTTP_COOKIE_VARS[$k] as $k2 => $v2)
+				foreach ($_COOKIE[$k] as $k2 => $v2)
 				{
-					$HTTP_COOKIE_VARS[$k][$k2] = addslashes($v2);
+					$_COOKIE[$k][$k2] = addslashes($v2);
 				}
-				@reset($HTTP_COOKIE_VARS[$k]);
+				@reset($_COOKIE[$k]);
 			}
 			else
 			{
-				$HTTP_COOKIE_VARS[$k] = addslashes($v);
+				$_COOKIE[$k] = addslashes($v);
 			}
 		}
-		@reset($HTTP_COOKIE_VARS);
+		@reset($_COOKIE);
 	}
 }
 
@@ -199,7 +135,7 @@ unset($dbpasswd);
 // even bother complaining ... go scream and shout at the idiots out there who feel
 // "clever" is doing harm rather than good ... karma is a great thing ... :)
 //
-$client_ip = ( !empty($HTTP_SERVER_VARS['REMOTE_ADDR']) ) ? $HTTP_SERVER_VARS['REMOTE_ADDR'] : ( ( !empty($HTTP_ENV_VARS['REMOTE_ADDR']) ) ? $HTTP_ENV_VARS['REMOTE_ADDR'] : getenv('REMOTE_ADDR') );
+$client_ip = ( !empty($_SERVER['REMOTE_ADDR']) ) ? $_SERVER['REMOTE_ADDR'] : ( ( !empty($_ENV['REMOTE_ADDR']) ) ? $_ENV['REMOTE_ADDR'] : getenv('REMOTE_ADDR') );
 $user_ip = encode_ip($client_ip);
 
 //
@@ -231,5 +167,3 @@ if( $board_config['board_disable'] && !defined("IN_ADMIN") && !defined("IN_LOGIN
 {
 	message_die(GENERAL_MESSAGE, 'Board_disable', 'Information');
 }
-
-?>
